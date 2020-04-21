@@ -10,14 +10,14 @@ import java.sql.*;
 import java.util.Enumeration;
 
 public class RoleDAO extends AbstractDAO<Role> {
-    private ConnectionPoolDAO cpool;
+    private ConnectionPoolDAO pool;
     private Connection$Proxy connection;
     private final static String SQL_COUNT = "SELECT COUNT(role_id) FROM training_schema.roles";
     private final static String SQL_CREATE_ROLE = "INSERT INTO training_schema.roles (name) VALUES (?)";
 
     public RoleDAO() {
-        cpool = ConnectionPoolImpl.getInstance();
-        connection = cpool.getConnection();
+        pool = ConnectionPoolImpl.getInstance();
+        connection = pool.getConnection();
     }
 
     @Override
@@ -45,6 +45,6 @@ public class RoleDAO extends AbstractDAO<Role> {
 
     @Override
     public boolean close() throws SQLException{
-        return cpool.releaseConnection(connection);
+        return pool.releaseConnection(connection);
     }
 }
