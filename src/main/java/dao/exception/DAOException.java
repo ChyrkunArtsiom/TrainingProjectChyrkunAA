@@ -1,4 +1,4 @@
-package by.javatr.training.dao;
+package dao.exception;
 
 public class DAOException extends Exception {
     

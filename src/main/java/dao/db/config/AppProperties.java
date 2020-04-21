@@ -1,4 +1,4 @@
-package by.javatr.training.dao.config;
+package dao.db.config;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -15,7 +15,7 @@ public enum AppProperties {
     private int initialPoolSize = 10;
 
     AppProperties() {
-        try(InputStream inputStream = new FileInputStream("./src/by/javatr/training/resources/application.properties")){
+        try(InputStream inputStream = new FileInputStream("./src/main/resources/application.properties")){
             Properties properties = new Properties();
             properties.load(inputStream);
             url = properties.getProperty("dbUrl");
