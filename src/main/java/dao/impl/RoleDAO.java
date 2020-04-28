@@ -1,8 +1,6 @@
 package dao.impl;
 
 import dao.AbstractDAO;
-import dao.db.ConnectionPoolDAO;
-import dao.db.impl.Connection$Proxy;
 import dao.db.impl.ConnectionPoolImpl;
 import model.Role;
 
@@ -10,14 +8,11 @@ import java.sql.*;
 import java.util.Enumeration;
 
 public class RoleDAO extends AbstractDAO<Role> {
-    private ConnectionPoolDAO pool;
-    private Connection$Proxy connection;
     private final static String SQL_COUNT = "SELECT COUNT(role_id) FROM training_schema.roles";
     private final static String SQL_CREATE_ROLE = "INSERT INTO training_schema.roles (name) VALUES (?)";
 
-    public RoleDAO() {
-        pool = ConnectionPoolImpl.getInstance();
-        connection = pool.getConnection();
+    public RoleDAO(){
+        setConnection(ConnectionPoolImpl.getInstance().getConnection());
     }
 
     @Override
@@ -31,6 +26,7 @@ public class RoleDAO extends AbstractDAO<Role> {
         }finally {
             try{
                 close();
+                ConnectionPoolImpl.getInstance().shutdown();        //shutdown for testing, DELETE!
                 Enumeration<Driver> drivers = DriverManager.getDrivers();
                 while (drivers.hasMoreElements()){
                     Driver driver = drivers.nextElement();
@@ -41,10 +37,5 @@ public class RoleDAO extends AbstractDAO<Role> {
             }
         }
         return false;
-    }
-
-    @Override
-    public boolean close() throws SQLException{
-        return pool.releaseConnection(connection);
     }
 }

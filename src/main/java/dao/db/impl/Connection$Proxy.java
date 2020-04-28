@@ -1,5 +1,10 @@
 package dao.db.impl;
 
+import dao.exception.UncheckedDAOException;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.sql.*;
 import java.util.Map;
 import java.util.Properties;
@@ -7,18 +12,24 @@ import java.util.concurrent.Executor;
 
 public class Connection$Proxy implements Connection {
     private Connection connection;
+    private final static Logger LOGGER = LogManager.getLogger(Connection$Proxy.class);
 
     Connection$Proxy(Connection connection){
         this.connection = connection;
     }
 
     @Override
-    public void close() throws SQLException {
+    public void close() {
         ConnectionPoolImpl.getInstance().releaseConnection(this);
     }
 
-    void ConnectionClose() throws SQLException{
-        connection.close();
+    void connectionClose() {
+        try{
+            connection.close();
+        }catch (SQLException e){
+            LOGGER.log(Level.FATAL, "Cannot close connection");
+            throw new UncheckedDAOException("Cannot close connection", e);
+        }
     }
 
     @Override
