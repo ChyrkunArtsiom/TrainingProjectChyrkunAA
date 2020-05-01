@@ -6,9 +6,11 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 import static dao.db.config.AppProperties.DB_PROPERTIES;
@@ -41,9 +43,9 @@ public enum ConnectionPoolImpl implements ConnectionPoolDAO {
 
         try{
             DriverManager.registerDriver(new org.postgresql.Driver());
-        }catch (SQLException e){
+        }catch (SQLException ex){
             LOGGER.log(Level.FATAL, "Driver cannot be registered");
-            throw new UncheckedDAOException("Driver cannot be registered", e);
+            throw new UncheckedDAOException("Driver cannot be registered", ex);
         }
 
         try{
@@ -51,9 +53,9 @@ public enum ConnectionPoolImpl implements ConnectionPoolDAO {
                 Connection$Proxy connection$Proxy = new Connection$Proxy(DriverManager.getConnection(url, user, password));
                 connectionPool.add(connection$Proxy);
             }
-        }catch (SQLException e){
+        }catch (SQLException ex){
             LOGGER.log(Level.FATAL, "Cannot connect to database with given properties");
-            throw new UncheckedDAOException("Cannot connect to database with given properties", e);
+            throw new UncheckedDAOException("Cannot connect to database with given properties", ex);
         }
     }
 
@@ -70,9 +72,9 @@ public enum ConnectionPoolImpl implements ConnectionPoolDAO {
             if (connection != null) {
                 connection.setAutoCommit(true);
             }
-        }catch (SQLException e){
+        }catch (SQLException ex){
             LOGGER.log(Level.FATAL, "Connection cannot be released");
-            throw new UncheckedDAOException("Connection cannot be released", e);
+            throw new UncheckedDAOException("Connection cannot be released", ex);
         }
 
         connectionPool.add(connection);
@@ -82,10 +84,21 @@ public enum ConnectionPoolImpl implements ConnectionPoolDAO {
     @Override
     public void shutdown() {
         LOGGER.log(Level.INFO, "Shutting down connections...");
-        usedConnections.forEach(this::releaseConnection);
+        connectionPool.addAll(usedConnections);
+        usedConnections.clear();
         for (Connection$Proxy c : connectionPool){
             c.connectionClose();
         }
         connectionPool.clear();
+        Enumeration<Driver> drivers = DriverManager.getDrivers();
+        try{
+            while (drivers.hasMoreElements()){
+                Driver driver = drivers.nextElement();
+                DriverManager.deregisterDriver(driver);
+            }
+        }catch (SQLException ex){
+            LOGGER.log(Level.FATAL, "Connection cannot be released");
+            throw new UncheckedDAOException("Connection cannot be released", ex);
+        }
     }
 }

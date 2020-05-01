@@ -44,4 +44,9 @@ public class Role extends Entity {
     public int hashCode() {
         return Objects.hash(id, name);
     }
+
+    @Override
+    public String toString() {
+        return "Role id: " + this.id + ", name: " + this.name;
+    }
 }
