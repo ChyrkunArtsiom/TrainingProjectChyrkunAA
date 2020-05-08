@@ -1,7 +1,7 @@
-package dao.db.impl;
+package by.chyrkun.training.dao.db.impl;
 
-import dao.db.ConnectionPoolDAO;
-import dao.exception.UncheckedDAOException;
+import by.chyrkun.training.dao.db.ConnectionPoolDAO;
+import by.chyrkun.training.dao.exception.UncheckedDAOException;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
-import static dao.db.config.AppProperties.DB_PROPERTIES;
+import static by.chyrkun.training.dao.db.config.AppProperties.DB_PROPERTIES;
 
 public enum ConnectionPoolImpl implements ConnectionPoolDAO {
     CONNECTION_POOL_INSTANCE;

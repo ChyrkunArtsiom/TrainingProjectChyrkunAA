@@ -1,6 +1,6 @@
-package dao.db.impl;
+package by.chyrkun.training.dao.db.impl;
 
-import dao.exception.UncheckedDAOException;
+import by.chyrkun.training.dao.exception.UncheckedDAOException;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

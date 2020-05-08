@@ -1,4 +1,4 @@
-package dao.db.config;
+package by.chyrkun.training.dao.db.config;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;

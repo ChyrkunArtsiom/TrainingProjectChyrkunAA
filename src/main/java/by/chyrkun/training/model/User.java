@@ -1,4 +1,4 @@
-package model;
+package by.chyrkun.training.model;
 
 import java.util.Objects;
 
@@ -9,6 +9,14 @@ public class User extends Entity {
     private String firstname;
     private String secondname;
     private Role role;
+
+    public User(String login, String password, String firstname, String secondname, Role role) {
+        this.login = login;
+        this.password = password;
+        this.firstname = firstname;
+        this.secondname = secondname;
+        this.role = role;
+    }
 
     public User(int id, String login, String password, String firstname, String secondname, Role role) {
         this.id = id;
@@ -79,5 +87,11 @@ public class User extends Entity {
     @Override
     public int hashCode() {
         return Objects.hash(id, login);
+    }
+
+    @Override
+    public String toString() {
+        return "User id:" + this.id + ", login:" + this.login +
+                ", firstname:" + this.firstname + ", secondname:" + this.secondname + ", role:" + this.role.getName();
     }
 }

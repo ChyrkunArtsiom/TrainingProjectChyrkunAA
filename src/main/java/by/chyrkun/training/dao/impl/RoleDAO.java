@@ -1,9 +1,9 @@
-package dao.impl;
+package by.chyrkun.training.dao.impl;
 
-import dao.AbstractDAO;
-import dao.db.impl.ConnectionPoolImpl;
-import dao.exception.UncheckedDAOException;
-import model.Role;
+import by.chyrkun.training.dao.AbstractDAO;
+import by.chyrkun.training.dao.db.impl.ConnectionPoolImpl;
+import by.chyrkun.training.dao.exception.UncheckedDAOException;
+import by.chyrkun.training.model.Role;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,7 +14,7 @@ import java.util.Optional;
 public class RoleDAO extends AbstractDAO<Role> {
     private final static String SQL_CREATE_ROLE = "INSERT INTO training_schema.roles (name) VALUES (?)";
     private final static String SQL_UPDATE_ROLE = "UPDATE training_schema.roles SET name = (?) WHERE role_id = (?)";
-    private final static String SQL_DELETE_ROLE = "DELETE FROM training_schema.roles WHERE role_id = (?) AND name = (?)";
+    private final static String SQL_DELETE_ROLE = "DELETE FROM training_schema.roles WHERE role_id = (?)";
     private final static String SQL_GET_ROLE = "SELECT * FROM training_schema.roles WHERE role_id = (?)";
     private final static Logger LOGGER = LogManager.getLogger(RoleDAO.class);
 
@@ -41,7 +41,6 @@ public class RoleDAO extends AbstractDAO<Role> {
         LOGGER.log(Level.INFO, "Deleting role column...");
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_ROLE)) {
             preparedStatement.setInt(1, role.getId());
-            preparedStatement.setString(2, role.getName());
             if (preparedStatement.executeUpdate() > 0)
                 return true;
         }catch (SQLException ex){

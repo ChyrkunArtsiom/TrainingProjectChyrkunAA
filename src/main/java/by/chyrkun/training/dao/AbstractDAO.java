@@ -1,8 +1,8 @@
-package dao;
+package by.chyrkun.training.dao;
 
-import dao.db.impl.Connection$Proxy;
-import dao.db.impl.ConnectionPoolImpl;
-import model.Entity;
+import by.chyrkun.training.dao.db.impl.Connection$Proxy;
+import by.chyrkun.training.dao.db.impl.ConnectionPoolImpl;
+import by.chyrkun.training.model.Entity;
 
 import java.util.Optional;
 

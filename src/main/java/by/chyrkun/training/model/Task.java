@@ -1,4 +1,4 @@
-package model;
+package by.chyrkun.training.model;
 
 import java.time.LocalDate;
 

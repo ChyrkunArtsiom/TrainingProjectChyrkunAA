@@ -1,7 +1,7 @@
-package dao.db;
+package by.chyrkun.training.dao.db;
 
-import dao.db.impl.Connection$Proxy;
-import dao.exception.DAOException;
+import by.chyrkun.training.dao.db.impl.Connection$Proxy;
+import by.chyrkun.training.dao.exception.DAOException;
 
 public interface ConnectionPoolDAO {
     Connection$Proxy getConnection();

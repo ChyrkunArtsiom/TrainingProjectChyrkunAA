@@ -1,4 +1,4 @@
-package dao.exception;
+package by.chyrkun.training.dao.exception;
 
 public class DAOException extends Exception {
     
