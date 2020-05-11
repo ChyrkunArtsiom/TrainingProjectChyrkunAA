@@ -1,6 +1,7 @@
 package by.chyrkun.training.dao.impl;
 
 import by.chyrkun.training.dao.AbstractDAO;
+import by.chyrkun.training.dao.db.impl.Connection$Proxy;
 import by.chyrkun.training.dao.db.impl.ConnectionPoolImpl;
 import by.chyrkun.training.dao.exception.UncheckedDAOException;
 import by.chyrkun.training.model.Role;
@@ -20,6 +21,10 @@ public class RoleDAO extends AbstractDAO<Role> {
 
     public RoleDAO(){
         setConnection(ConnectionPoolImpl.getInstance().getConnection());
+    }
+
+    public RoleDAO(Connection$Proxy connection){
+        setConnection(connection);
     }
 
     @Override

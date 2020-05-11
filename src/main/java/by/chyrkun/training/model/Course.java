@@ -7,6 +7,23 @@ public class Course extends Entity {
     private String name;
     private User teacher;
 
+    public Course(Course course){
+        this.id = course.getId();
+        this.name = course.getName();
+        this.teacher = new User(course.getTeacher());
+    }
+
+    public Course(int id, String name, User teacher) {
+        this.id = id;
+        this.name = name;
+        this.teacher = new User(teacher);
+    }
+
+    public Course(String name, User teacher){
+        this.name = name;
+        this.teacher = new User(teacher);
+    }
+
     public int getId() {
         return id;
     }
@@ -31,12 +48,6 @@ public class Course extends Entity {
         this.teacher = teacher;
     }
 
-    public Course(int id, String name, User teacher) {
-        this.id = id;
-        this.name = name;
-        this.teacher = teacher;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -50,5 +61,11 @@ public class Course extends Entity {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, teacher);
+    }
+
+    @Override
+    public String toString() {
+        return "Course id: " + this.id + ", name: " + this.name +
+                ", teacher: " + this.teacher.getFirstname() + " " + this.teacher.getSecondname();
     }
 }

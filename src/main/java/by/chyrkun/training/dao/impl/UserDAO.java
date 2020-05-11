@@ -1,6 +1,7 @@
 package by.chyrkun.training.dao.impl;
 
 import by.chyrkun.training.dao.AbstractDAO;
+import by.chyrkun.training.dao.db.impl.Connection$Proxy;
 import by.chyrkun.training.dao.db.impl.ConnectionPoolImpl;
 import by.chyrkun.training.dao.exception.UncheckedDAOException;
 import by.chyrkun.training.model.Role;
@@ -27,11 +28,15 @@ public class UserDAO extends AbstractDAO<User> {
         setConnection(ConnectionPoolImpl.getInstance().getConnection());
     }
 
+    public UserDAO(Connection$Proxy connection){
+        setConnection(connection);
+    }
+
     @Override
     public boolean create(User user) {
         LOGGER.log(Level.INFO, "Creating user column...");
-        AbstractDAO roleDAO = new RoleDAO();
-        if (roleDAO.getEntityById(user.getRole().getId()).isPresent() == false)
+        AbstractDAO roleDAO = new RoleDAO(this.connection);
+        if (!roleDAO.getEntityById(user.getRole().getId()).isPresent())
             return false;
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_CREATE_USER)) {
             preparedStatement.setString(1, user.getLogin());
@@ -65,16 +70,17 @@ public class UserDAO extends AbstractDAO<User> {
     @Override
     public Optional<User> update(User user){
         LOGGER.log(Level.INFO, "Updating user column...");
-        Optional<User> optional = getEntityById(user.getId());
-        if (optional.isPresent()) {
+        Optional<User> optionalUser = getEntityById(user.getId());
+        if (optionalUser.isPresent()) {
             try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_USER)) {
                 preparedStatement.setString(1, user.getLogin());
                 preparedStatement.setString(2, user.getPassword());
                 preparedStatement.setString(3, user.getFirstname());
                 preparedStatement.setString(4, user.getSecondname());
                 preparedStatement.setInt(5, user.getRole().getId());
+                preparedStatement.setInt(6, user.getId());
                 if (preparedStatement.executeUpdate() > 0)
-                    return optional;
+                    return optionalUser;
             }catch (SQLException ex){
                 LOGGER.log(Level.FATAL, "Exception during user updating");
                 throw new UncheckedDAOException("Exception during user updating", ex);
@@ -103,9 +109,9 @@ public class UserDAO extends AbstractDAO<User> {
                 secondname = resultSet.getString("secondname");
                 role_id = resultSet.getInt("role_id");
             }
-            AbstractDAO roleDAO = new RoleDAO();
+            AbstractDAO roleDAO = new RoleDAO(this.connection);
             Role role = (Role) roleDAO.getEntityById(role_id).get();
-            return Optional.of(new User(role_id, login, password, firstname, secondname, role));
+            return Optional.of(new User(user_id, login, password, firstname, secondname, role));
         }catch (SQLException ex){
             LOGGER.log(Level.FATAL, "Exception during user reading");
             throw new UncheckedDAOException("Exception during user reading", ex);

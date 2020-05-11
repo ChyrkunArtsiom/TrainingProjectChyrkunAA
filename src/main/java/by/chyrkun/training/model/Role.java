@@ -15,6 +15,11 @@ public class Role extends Entity {
         this.name = name;
     }
 
+    public Role(Role role){
+        this.id = role.getId();
+        this.name = role.getName();
+    }
+
     public int getId() {
         return id;
     }
