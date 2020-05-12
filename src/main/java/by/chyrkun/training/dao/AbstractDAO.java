@@ -17,7 +17,7 @@ public abstract class AbstractDAO<T extends Entity> {
     public abstract Optional<T> update(T entity);
     public abstract Optional<T> getEntityById(int id);
 
-    protected boolean close() {
+    public boolean close() {
         return ConnectionPoolImpl.getInstance().releaseConnection(connection);
     }
 }

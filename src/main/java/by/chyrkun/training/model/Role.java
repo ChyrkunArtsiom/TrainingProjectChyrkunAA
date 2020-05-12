@@ -11,13 +11,13 @@ public class Role extends Entity {
     }
 
     public Role(int id, String name) {
-        this.id = id;
-        this.name = name;
+        setId(id);
+        setName(name);
     }
 
     public Role(Role role){
-        this.id = role.getId();
-        this.name = role.getName();
+        setId(role.getId());
+        setName(role.getName());
     }
 
     public int getId() {
@@ -47,7 +47,8 @@ public class Role extends Entity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        return 993;
+        //return Objects.hash(id, name);
     }
 
     @Override

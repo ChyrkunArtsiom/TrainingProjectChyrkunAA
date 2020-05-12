@@ -77,7 +77,7 @@ public class RoleDAO extends AbstractDAO<Role> {
     public Optional<Role> getEntityById(int id){
         LOGGER.log(Level.INFO, "Selecting role column by id...");
         String name = null;
-        int role_id = -1;
+        int role_id = 0;
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_ROLE)) {
             preparedStatement.setInt(1, id);
             ResultSet  resultSet = preparedStatement.executeQuery();

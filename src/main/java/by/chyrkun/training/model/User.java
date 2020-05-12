@@ -11,29 +11,29 @@ public class User extends Entity {
     private Role role;
 
     public User(String login, String password, String firstname, String secondname, Role role) {
-        this.login = login;
-        this.password = password;
-        this.firstname = firstname;
-        this.secondname = secondname;
-        this.role = new Role(role);
+        setLogin(login);
+        setPassword(password);
+        setFirstname(firstname);
+        setSecondname(secondname);
+        setRole(role);
     }
 
     public User(int id, String login, String password, String firstname, String secondname, Role role) {
-        this.id = id;
-        this.login = login;
-        this.password = password;
-        this.firstname = firstname;
-        this.secondname = secondname;
-        this.role = new Role(role);
+        setId(id);
+        setLogin(login);
+        setPassword(password);
+        setFirstname(firstname);
+        setSecondname(secondname);
+        setRole(role);
     }
 
     public User(User user){
-        this.id = user.getId();
-        this.login = user.getLogin();
-        this.password = user.getPassword();
-        this.firstname = user.getFirstname();
-        this.secondname = user.getSecondname();
-        this.role = new Role(user.getRole());
+        setId(user.getId());
+        setLogin(user.getLogin());
+        setPassword(user.getPassword());
+        setFirstname(user.getFirstname());
+        setSecondname(user.getSecondname());
+        setRole(user.getRole());
     }
 
     public int getId() {
@@ -81,7 +81,7 @@ public class User extends Entity {
     }
 
     public void setRole(Role role) {
-        this.role = role;
+        this.role = new Role(role);
     }
 
     @Override

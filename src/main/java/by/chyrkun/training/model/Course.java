@@ -7,21 +7,21 @@ public class Course extends Entity {
     private String name;
     private User teacher;
 
-    public Course(Course course){
-        this.id = course.getId();
-        this.name = course.getName();
-        this.teacher = new User(course.getTeacher());
-    }
-
     public Course(int id, String name, User teacher) {
-        this.id = id;
-        this.name = name;
-        this.teacher = new User(teacher);
+        setId(id);
+        setName(name);
+        setTeacher(teacher);
     }
 
     public Course(String name, User teacher){
-        this.name = name;
-        this.teacher = new User(teacher);
+        setName(name);
+        setTeacher(teacher);
+    }
+
+    public Course(Course course){
+        setId(course.getId());
+        setName(course.getName());
+        setTeacher(course.getTeacher());
     }
 
     public int getId() {
@@ -45,7 +45,7 @@ public class Course extends Entity {
     }
 
     public void setTeacher(User teacher) {
-        this.teacher = teacher;
+        this.teacher = new User(teacher);
     }
 
     @Override

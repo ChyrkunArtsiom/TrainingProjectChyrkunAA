@@ -1,6 +1,7 @@
 package by.chyrkun.training.dao.impl;
 
 import by.chyrkun.training.dao.AbstractDAO;
+import by.chyrkun.training.dao.db.impl.Connection$Proxy;
 import by.chyrkun.training.dao.db.impl.ConnectionPoolImpl;
 import by.chyrkun.training.dao.exception.UncheckedDAOException;
 import by.chyrkun.training.model.Course;
@@ -24,6 +25,10 @@ public class TaskDAO extends AbstractDAO<Task> {
 
     public TaskDAO(){
         setConnection(ConnectionPoolImpl.getInstance().getConnection());
+    }
+
+    public TaskDAO(Connection$Proxy connection){
+        setConnection(connection);
     }
 
     @Override
@@ -93,8 +98,8 @@ public class TaskDAO extends AbstractDAO<Task> {
         String name = null;
         LocalDate startdate = null;
         LocalDate deadline = null;
-        int task_id = -1;
-        int course_id = -1;
+        int task_id = 0;
+        int course_id = 0;
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_TASK)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -103,9 +108,10 @@ public class TaskDAO extends AbstractDAO<Task> {
                 name = resultSet.getString("name");
                 course_id = resultSet.getInt("course_id");
                 startdate = resultSet.getDate("startdate").toLocalDate();
-                deadline = resultSet.getDate("deadline").toLocalDate();
+                if (resultSet.getDate("deadline") != null)
+                    deadline = resultSet.getDate("deadline").toLocalDate();
             }
-            AbstractDAO courseDAO = new CourseDAO(this.connection);
+            AbstractDAO courseDAO = new CourseDAO(connection);
             Course course = (Course) courseDAO.getEntityById(course_id).get();
             return Optional.of(new Task(task_id, name, startdate, deadline, course));
         }catch (SQLException ex){

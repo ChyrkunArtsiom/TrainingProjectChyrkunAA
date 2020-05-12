@@ -11,18 +11,26 @@ public class Task extends Entity {
     private Course course;
 
     public Task(String name, LocalDate startdate, LocalDate deadline, Course course){
-        this.name = name;
-        this.startdate = startdate;
-        this.deadline = deadline;
-        this.course = new Course(course);
+        setName(name);
+        setStartdate(startdate);
+        setDeadline(deadline);
+        setCourse(course);
     }
 
     public Task(Integer id, String name, LocalDate startdate, LocalDate deadline, Course course){
-        this.id = id;
-        this.name = name;
-        this.startdate = startdate;
-        this.deadline = deadline;
-        this.course = new Course(course);
+        setId(id);
+        setName(name);
+        setStartdate(startdate);
+        setDeadline(deadline);
+        setCourse(course);
+    }
+
+    public Task(Task task){
+        setId(task.getId());
+        setName(task.getName());
+        setStartdate(task.getStartdate());
+        setDeadline(task.getDeadline());
+        setCourse(task.getCourse());
     }
 
     public int getId() {
@@ -62,7 +70,7 @@ public class Task extends Entity {
     }
 
     public void setCourse(Course course) {
-        this.course = course;
+        this.course = new Course(course);
     }
 
     @Override
@@ -85,6 +93,6 @@ public class Task extends Entity {
     @Override
     public String toString() {
         return "Task id: " + this.id + ", name: " + this.name + ", course: " + this.course.getName() +
-                ", startdate: " + this.startdate + ", deadline: " + this.deadline;
+                ", startdate: " + this.startdate + (this.deadline == null ? "" : ", deadline: " + this.deadline);
     }
 }

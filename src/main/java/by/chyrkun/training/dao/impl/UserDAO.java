@@ -35,7 +35,7 @@ public class UserDAO extends AbstractDAO<User> {
     @Override
     public boolean create(User user) {
         LOGGER.log(Level.INFO, "Creating user column...");
-        AbstractDAO roleDAO = new RoleDAO(this.connection);
+        AbstractDAO roleDAO = new RoleDAO(connection);
         if (!roleDAO.getEntityById(user.getRole().getId()).isPresent())
             return false;
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_CREATE_USER)) {
@@ -96,8 +96,8 @@ public class UserDAO extends AbstractDAO<User> {
         String password = null;
         String firstname = null;
         String secondname = null;
-        int user_id = -1;
-        int role_id = -1;
+        int user_id = 0;
+        int role_id = 0;
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_USER)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -109,7 +109,7 @@ public class UserDAO extends AbstractDAO<User> {
                 secondname = resultSet.getString("secondname");
                 role_id = resultSet.getInt("role_id");
             }
-            AbstractDAO roleDAO = new RoleDAO(this.connection);
+            AbstractDAO roleDAO = new RoleDAO(connection);
             Role role = (Role) roleDAO.getEntityById(role_id).get();
             return Optional.of(new User(user_id, login, password, firstname, secondname, role));
         }catch (SQLException ex){
