@@ -3,6 +3,8 @@ package by.chyrkun.training.dao.impl;
 import by.chyrkun.training.dao.AbstractDAO;
 import by.chyrkun.training.dao.db.impl.Connection$Proxy;
 import by.chyrkun.training.dao.db.impl.ConnectionPoolImpl;
+import by.chyrkun.training.dao.exception.DAOException;
+import by.chyrkun.training.dao.exception.EntityNotFoundDAOException;
 import by.chyrkun.training.dao.exception.UncheckedDAOException;
 import by.chyrkun.training.model.Course;
 import by.chyrkun.training.model.User;
@@ -33,11 +35,11 @@ public class CourseDAO extends AbstractDAO<Course> {
     }
 
     @Override
-    public boolean create(Course course) {
+    public boolean create(Course course) throws DAOException {
         LOGGER.log(Level.INFO, "Creating course column...");
         AbstractDAO userDAO = new UserDAO(connection);
         if (userDAO.getEntityById(course.getTeacher().getId()).isEmpty())
-            return false;
+            throw new EntityNotFoundDAOException("Cannot create course. User not found");
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_CREATE_COURSE)) {
             preparedStatement.setString(1, course.getName());
             preparedStatement.setInt(2, course.getTeacher().getId());
@@ -92,6 +94,8 @@ public class CourseDAO extends AbstractDAO<Course> {
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_COURSE)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
+            if (!resultSet.isBeforeFirst())
+                return Optional.empty();
             while (resultSet.next()){
                 course_id = resultSet.getInt("course_id");
                 name = resultSet.getString("name");

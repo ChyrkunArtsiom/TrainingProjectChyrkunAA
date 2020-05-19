@@ -3,6 +3,8 @@ package by.chyrkun.training.dao.impl;
 import by.chyrkun.training.dao.AbstractDAO;
 import by.chyrkun.training.dao.db.impl.Connection$Proxy;
 import by.chyrkun.training.dao.db.impl.ConnectionPoolImpl;
+import by.chyrkun.training.dao.exception.DAOException;
+import by.chyrkun.training.dao.exception.EntityNotFoundDAOException;
 import by.chyrkun.training.dao.exception.UncheckedDAOException;
 import by.chyrkun.training.model.Course;
 import by.chyrkun.training.model.CourseRegistration;
@@ -16,7 +18,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
-public class CourseRegistrationDAO extends AbstractDAO<CourseRegistration> {
+public class CourseRegistrationDAO extends AbstractDAO<CourseRegistration>
+        implements StatementSetter<CourseRegistration>{
     private final static String SQL_CREATE_COURSE_REGISTRATION =
             "INSERT INTO training_schema.course_registration (student_id, course_id) VALUES (?,?)";
     private final static String SQL_UPDATE_COURSE_REGISTRATION = "UPDATE training_schema.course_registration SET " +
@@ -36,16 +39,16 @@ public class CourseRegistrationDAO extends AbstractDAO<CourseRegistration> {
     }
 
     @Override
-    public boolean create(CourseRegistration courseRegistration) {
+    public boolean create(CourseRegistration courseRegistration) throws DAOException {
         LOGGER.log(Level.INFO, "Creating course_registration column...");
         AbstractDAO userDAO = new UserDAO(connection);
         AbstractDAO courseDAO = new CourseDAO(connection);
-        if (userDAO.getEntityById(courseRegistration.getStudent().getId()).isEmpty() ||
-        courseDAO.getEntityById(courseRegistration.getCourse().getId()).isEmpty())
-            return false;
+        if (userDAO.getEntityById(courseRegistration.getStudent().getId()).isEmpty())
+            throw new EntityNotFoundDAOException("Cannot create course_registration. User not found");
+        if (courseDAO.getEntityById(courseRegistration.getCourse().getId()).isEmpty())
+            throw new EntityNotFoundDAOException("Cannot create course_registration. Course not found");
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_CREATE_COURSE_REGISTRATION)) {
-            preparedStatement.setInt(1, courseRegistration.getStudent().getId());
-            preparedStatement.setInt(2, courseRegistration.getCourse().getId());
+            set(preparedStatement, courseRegistration);
             if (preparedStatement.executeUpdate() > 0)
                 return true;
         } catch (SQLException ex) {
@@ -75,9 +78,7 @@ public class CourseRegistrationDAO extends AbstractDAO<CourseRegistration> {
         Optional<CourseRegistration> optionalCourseRegistration = getEntityById(courseRegistration.getId());
         if (optionalCourseRegistration.isPresent()) {
             try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_COURSE_REGISTRATION)) {
-                preparedStatement.setInt(1, courseRegistration.getStudent().getId());
-                preparedStatement.setInt(2, courseRegistration.getCourse().getId());
-                preparedStatement.setInt(3, courseRegistration.getId());
+                set(preparedStatement, courseRegistration);
                 if (preparedStatement.executeUpdate() > 0)
                     return optionalCourseRegistration;
             }catch (SQLException ex){
@@ -97,6 +98,8 @@ public class CourseRegistrationDAO extends AbstractDAO<CourseRegistration> {
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_COURSE_REGISTRATION)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
+            if (!resultSet.isBeforeFirst())
+                return Optional.empty();
             while (resultSet.next()){
                 course_registration_id = resultSet.getInt("course_registration_id");
                 course_id = resultSet.getInt("course_id");
@@ -111,5 +114,13 @@ public class CourseRegistrationDAO extends AbstractDAO<CourseRegistration> {
             LOGGER.log(Level.FATAL, "Exception during course_registration reading");
             throw new UncheckedDAOException("Exception during course_registration reading", ex);
         }
+    }
+
+    @Override
+    public void set(PreparedStatement preparedStatement, CourseRegistration courseRegistration) throws SQLException {
+        preparedStatement.setInt(1, courseRegistration.getStudent().getId());
+        preparedStatement.setInt(2, courseRegistration.getCourse().getId());
+        if (courseRegistration.getId() != 0)
+            preparedStatement.setInt(3, courseRegistration.getId());
     }
 }

@@ -10,13 +10,16 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
-public class RoleDAO extends AbstractDAO<Role> {
+public class RoleDAO extends AbstractDAO<Role> implements ResultMapper<Role> {
     private final static String SQL_CREATE_ROLE = "INSERT INTO training_schema.roles (name) VALUES (?)";
     private final static String SQL_UPDATE_ROLE = "UPDATE training_schema.roles SET name = (?) WHERE role_id = (?)";
     private final static String SQL_DELETE_ROLE = "DELETE FROM training_schema.roles WHERE role_id = (?)";
-    private final static String SQL_GET_ROLE = "SELECT * FROM training_schema.roles WHERE role_id = (?)";
+    private final static String SQL_GET_ROLE_BY_ID = "SELECT * FROM training_schema.roles WHERE role_id = (?)";
+    private final static String SQL_GET_ROLE_BY_NAME = "SELECT * FROM training_schema.roles WHERE name = (?)";
     private final static Logger LOGGER = LogManager.getLogger(RoleDAO.class);
 
     public RoleDAO(){
@@ -30,6 +33,8 @@ public class RoleDAO extends AbstractDAO<Role> {
     @Override
     public boolean create(Role role) {
         LOGGER.log(Level.INFO, "Creating role column...");
+        if (getEntityByName(role).isPresent())
+            return false;
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_CREATE_ROLE)) {
             preparedStatement.setString(1, role.getName());
             if (preparedStatement.executeUpdate() > 0)
@@ -76,19 +81,46 @@ public class RoleDAO extends AbstractDAO<Role> {
     @Override
     public Optional<Role> getEntityById(int id){
         LOGGER.log(Level.INFO, "Selecting role column by id...");
-        String name = null;
-        int role_id = 0;
-        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_ROLE)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_ROLE_BY_ID)) {
             preparedStatement.setInt(1, id);
             ResultSet  resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()){
-                role_id = resultSet.getInt("role_id");
-                name = resultSet.getString("name");
-            }
-            return Optional.of(new Role(role_id, name));
+            if (!resultSet.isBeforeFirst())
+                return Optional.empty();
+            List<Role> roles = convert(resultSet);
+            return Optional.of(roles.get(0));
         }catch (SQLException ex){
             LOGGER.log(Level.FATAL, "Exception during role reading");
             throw new UncheckedDAOException("Exception during role reading", ex);
         }
+    }
+
+    public Optional<Role> getEntityByName(Role role){
+        LOGGER.log(Level.INFO, "Selecting role column by fields...");
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_ROLE_BY_NAME)) {
+            preparedStatement.setString(1, role.getName());
+            ResultSet  resultSet = preparedStatement.executeQuery();
+            if (!resultSet.isBeforeFirst())
+                return Optional.empty();
+            List<Role> roles = convert(resultSet);
+            return Optional.of(roles.get(0));
+        }catch (SQLException ex){
+            LOGGER.log(Level.FATAL, "Exception during role reading");
+            throw new UncheckedDAOException("Exception during role reading", ex);
+        }
+    }
+
+    @Override
+    public List<Role> convert(ResultSet resultSet) throws SQLException {
+        List<Role> roles = new ArrayList<>();
+        String name;
+        int role_id;
+        Role role;
+        while (resultSet.next()){
+            role_id = resultSet.getInt("role_id");
+            name = resultSet.getString("name");
+            role = new Role(role_id, name);
+            roles.add(role);
+        }
+        return roles;
     }
 }

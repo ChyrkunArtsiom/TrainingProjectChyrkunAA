@@ -3,6 +3,8 @@ package by.chyrkun.training.dao.impl;
 import by.chyrkun.training.dao.AbstractDAO;
 import by.chyrkun.training.dao.db.impl.Connection$Proxy;
 import by.chyrkun.training.dao.db.impl.ConnectionPoolImpl;
+import by.chyrkun.training.dao.exception.DAOException;
+import by.chyrkun.training.dao.exception.EntityNotFoundDAOException;
 import by.chyrkun.training.dao.exception.UncheckedDAOException;
 import by.chyrkun.training.model.Role;
 import by.chyrkun.training.model.User;
@@ -13,15 +15,18 @@ import org.apache.logging.log4j.Logger;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
-public class UserDAO extends AbstractDAO<User> {
+public class UserDAO extends AbstractDAO<User> implements ResultMapper<User> {
     private final static String SQL_CREATE_USER =
             "INSERT INTO training_schema.users (login, password, firstname, secondname, role_id) VALUES (?,?,?,?,?)";
     private final static String SQL_UPDATE_USER = "UPDATE training_schema.users SET " +
             "login = (?), password = (?), firstname = (?), secondname = (?), role_id = (?)  WHERE user_id = (?)";
     private final static String SQL_DELETE_USER = "DELETE FROM training_schema.users WHERE user_id = (?)";
-    private final static String SQL_GET_USER = "SELECT * FROM training_schema.users WHERE user_id = (?)";
+    private final static String SQL_GET_USER_BY_ID = "SELECT * FROM training_schema.users WHERE user_id = (?)";
+    private final static String SQL_GET_USER_BY_LOGIN = "SELECT * FROM training_schema.users WHERE login = (?)";
     private final static Logger LOGGER = LogManager.getLogger(RoleDAO.class);
 
     public UserDAO() {
@@ -33,11 +38,13 @@ public class UserDAO extends AbstractDAO<User> {
     }
 
     @Override
-    public boolean create(User user) {
+    public boolean create(User user) throws DAOException {
         LOGGER.log(Level.INFO, "Creating user column...");
-        AbstractDAO roleDAO = new RoleDAO(connection);
-        if (!roleDAO.getEntityById(user.getRole().getId()).isPresent())
+        if (getEntityByLogin(user).isPresent())
             return false;
+        AbstractDAO roleDAO = new RoleDAO(connection);
+        if (roleDAO.getEntityById(user.getRole().getId()).isEmpty())
+            throw new EntityNotFoundDAOException("Cannot create user. Role not found");
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_CREATE_USER)) {
             preparedStatement.setString(1, user.getLogin());
             preparedStatement.setString(2, user.getPassword());
@@ -92,29 +99,56 @@ public class UserDAO extends AbstractDAO<User> {
     @Override
     public Optional<User> getEntityById(int id){
         LOGGER.log(Level.INFO, "Selecting user column by id...");
-        String login = null;
-        String password = null;
-        String firstname = null;
-        String secondname = null;
-        int user_id = 0;
-        int role_id = 0;
-        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_USER)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_USER_BY_ID)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()){
-                user_id = resultSet.getInt("user_id");
-                login = resultSet.getString("login");
-                password = resultSet.getString("password");
-                firstname = resultSet.getString("firstname");
-                secondname = resultSet.getString("secondname");
-                role_id = resultSet.getInt("role_id");
-            }
-            AbstractDAO roleDAO = new RoleDAO(connection);
-            Role role = (Role) roleDAO.getEntityById(role_id).get();
-            return Optional.of(new User(user_id, login, password, firstname, secondname, role));
+            if (!resultSet.isBeforeFirst())
+                return Optional.empty();
+            List<User> users = convert(resultSet);
+            return Optional.of(users.get(0));
         }catch (SQLException ex){
             LOGGER.log(Level.FATAL, "Exception during user reading");
             throw new UncheckedDAOException("Exception during user reading", ex);
         }
+    }
+
+    public Optional<User> getEntityByLogin(User user){
+        LOGGER.log(Level.INFO, "Selecting user column by name...");
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_USER_BY_LOGIN)) {
+            preparedStatement.setString(1, user.getLogin());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (!resultSet.isBeforeFirst())
+                return Optional.empty();
+            List<User> users = convert(resultSet);
+            return Optional.of(users.get(0));
+        }catch (SQLException ex){
+            LOGGER.log(Level.FATAL, "Exception during user reading");
+            throw new UncheckedDAOException("Exception during user reading", ex);
+        }
+    }
+
+    @Override
+    public List<User> convert(ResultSet resultSet) throws SQLException{
+        List<User> users = new ArrayList<>();
+        String login;
+        String password;
+        String firstname;
+        String secondname;
+        int user_id;
+        int role_id;
+        User user;
+        while (resultSet.next()){
+            user_id = resultSet.getInt("user_id");
+            login = resultSet.getString("login");
+            password = resultSet.getString("password");
+            firstname = resultSet.getString("firstname");
+            secondname = resultSet.getString("secondname");
+            role_id = resultSet.getInt("role_id");
+            AbstractDAO roleDAO = new RoleDAO(connection);
+            Role role = (Role) roleDAO.getEntityById(role_id).get();
+            user = new User(user_id, login, password, firstname, secondname, role);
+            users.add(user);
+        }
+        return users;
     }
 }
