@@ -1,0 +1,79 @@
+package by.chyrkun.training.service.command.course;
+
+import by.chyrkun.training.controller.CommandResult;
+import by.chyrkun.training.controller.RequestContent;
+import by.chyrkun.training.model.Course;
+import by.chyrkun.training.model.User;
+import by.chyrkun.training.service.command.Command;
+import by.chyrkun.training.service.receiver.CourseReceiver;
+import by.chyrkun.training.service.receiver.UserReceiver;
+import by.chyrkun.training.service.resource.ConfigurationManager;
+import by.chyrkun.training.service.resource.MessageManager;
+import by.chyrkun.training.service.validator.CourseValidator;
+import by.chyrkun.training.service.validator.ParamValidator;
+
+public class UpdateCourseCommand implements Command {
+    public static final String PARAM_ID = "course_id";
+    private static final String PARAM_COURSE_NAME = "course_name";
+    private static final String PARAM_TEACHER_ID = "teacher_id";
+    private static final String ERROR_MESSAGE = "errorMessage";
+    private CourseReceiver receiver = new CourseReceiver();
+
+    @Override
+    public CommandResult execute(RequestContent requestContent) {
+        MessageManager messages = MessageManager.EN;
+        CommandResult result = new CommandResult();
+        String id = requestContent.getRequestParameters().get(PARAM_ID)[0];
+        String name = requestContent.getRequestParameters().get(PARAM_COURSE_NAME)[0];
+        String teacher_id = requestContent.getRequestParameters().get(PARAM_TEACHER_ID)[0];
+        first: try{
+            if (!ParamValidator.isPresent(name, teacher_id)) {
+                requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("lineIsEmpty"));
+                result.setPage(ConfigurationManager.getProperty("fullpath.page.updatecourse"));
+                break first;
+            }
+            else {
+                Course course = receiver.getById(Integer.parseInt(id));
+                if (course == null) {
+                    requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("courseNotFound"));
+                    result.setPage(ConfigurationManager.getProperty("fullpath.page.updatecourse"));
+                    break first;
+                }
+                else {
+                    UserReceiver userReceiver = new UserReceiver();
+                    User teacher = userReceiver.getById(Integer.parseInt(teacher_id));
+                    if (teacher == null) {
+                        requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("userNotFound"));
+                        result.setPage(ConfigurationManager.getProperty("fullpath.page.updatecourse"));
+                        break first;
+                    }
+                    if (!teacher.getRole().getName().equals("teacher")) {
+                        requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("userIsNotTeacher"));
+                        result.setPage(ConfigurationManager.getProperty("fullpath.page.updatecourse"));
+                        break first;
+                    }
+                    if (!CourseValidator.isCourseNameValid(name)) {
+                        requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("nameIsNotValid"));
+                        result.setPage(ConfigurationManager.getProperty("fullpath.page.updatecourse"));
+                        break first;
+                    }
+                    course = new Course(Integer.parseInt(id), name, teacher);
+                    if (receiver.update(course) != null) {
+                        result.setPage(ConfigurationManager.getProperty("shortpath.page.updatecourse"));
+                        requestContent.setSessionAttribute("message", messages.getMessage("courseIsUpdated"));
+                        result.setResponseType(CommandResult.ResponseType.REDIRECT);
+                    }
+                    else {
+                        requestContent.setRequestAttribute(ERROR_MESSAGE, "Course wasn't deleted for some reason");
+                        result.setPage(ConfigurationManager.getProperty("fullpath.page.updatecourse"));
+                    }
+                }
+            }
+        }finally {
+            requestContent.setRequestAttribute(PARAM_ID, id);
+            requestContent.setRequestAttribute(PARAM_COURSE_NAME, name);
+            requestContent.setRequestAttribute(PARAM_TEACHER_ID, teacher_id);
+            return result;
+        }
+    }
+}

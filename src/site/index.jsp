@@ -8,10 +8,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
   <head>
-    <title>Test page</title>
+    <title>index.jsp</title>
   </head>
   <body>
-  <h1>Hello World!</h1>
-  Absolute Path is:<%= pageContext.getServletContext().getRealPath("/")%>
+  <jsp:forward page="jsp/main.jsp"/>
   </body>
 </html>

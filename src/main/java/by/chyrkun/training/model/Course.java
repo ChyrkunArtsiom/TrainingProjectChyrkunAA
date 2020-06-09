@@ -50,8 +50,12 @@ public class Course extends Entity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o){
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()){
+            return false;
+        }
         Course course = (Course) o;
         return id == course.id &&
                 Objects.equals(name, course.name) &&

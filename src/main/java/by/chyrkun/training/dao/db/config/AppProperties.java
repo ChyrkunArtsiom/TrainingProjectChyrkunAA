@@ -1,14 +1,9 @@
 package by.chyrkun.training.dao.db.config;
 
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UncheckedIOException;
-import java.util.Properties;
+import java.util.ResourceBundle;
 
 public enum AppProperties {
 
@@ -19,9 +14,15 @@ public enum AppProperties {
     private String password;
     private int initialPoolSize = 10;
     private final Logger LOGGER = LogManager.getLogger(AppProperties.class);
+    private final ResourceBundle resourceBundle;
 
     AppProperties() {
-        try(InputStream inputStream = new FileInputStream("./src/main/resources/application.properties")){
+        resourceBundle = ResourceBundle.getBundle("application");
+        url = resourceBundle.getString("dbUrl");
+        user = resourceBundle.getString("dbUser");
+        password = resourceBundle.getString("dbPassword");
+
+    /*    try(InputStream inputStream = new FileInputStream("./src/main/resources/application.properties")){
             Properties properties = new Properties();
             properties.load(inputStream);
             url = properties.getProperty("dbUrl");
@@ -31,7 +32,7 @@ public enum AppProperties {
         }catch (IOException ex){
             LOGGER.log(Level.FATAL, "Properties file doesn't exist");
             throw new UncheckedIOException("Properties file doesn't exist", ex);
-        }
+        }*/
     }
 
     public static AppProperties getDbProperties() {
