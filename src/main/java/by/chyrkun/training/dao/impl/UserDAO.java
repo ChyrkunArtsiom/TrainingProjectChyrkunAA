@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class UserDAO extends AbstractDAO<User> implements ResultMapper<User> {
+public class UserDAO extends AbstractDAO<User> implements ResultMapper<List<User>> {
     private final static String SQL_CREATE_USER =
             "INSERT INTO training_schema.users (login, password, firstname, secondname, role_id) VALUES (?,?,?,?,?)";
     private final static String SQL_UPDATE_USER = "UPDATE training_schema.users SET " +

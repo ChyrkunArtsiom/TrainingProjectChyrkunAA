@@ -10,7 +10,7 @@ public class UserValidator {
     }
 
     public static boolean isLoginValid(String login){
-        return (login.matches("^[a-zA-Z0-9]+$"));
+        return (login.matches("^[a-zA-Z0-9]{5,45}$"));
     }
 
     public static boolean isPasswordValid(String password) {
@@ -18,6 +18,6 @@ public class UserValidator {
     }
 
     public static boolean isNameValid(String name) {
-        return  ((name == null) || (name.matches("^[а-яёА-Яa-zA-Z]+$")));
+        return  ((name == null) || (name.matches("^[а-яёА-Яa-zA-Z]{1,45}$")));
     }
 }

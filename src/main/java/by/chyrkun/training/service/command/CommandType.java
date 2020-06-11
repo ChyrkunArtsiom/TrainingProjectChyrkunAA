@@ -3,6 +3,8 @@ package by.chyrkun.training.service.command;
 import by.chyrkun.training.service.command.course.CreateCourseCommand;
 import by.chyrkun.training.service.command.course.DeleteCourseCommand;
 import by.chyrkun.training.service.command.course.UpdateCourseCommand;
+import by.chyrkun.training.service.command.task.CreateTaskCommand;
+import by.chyrkun.training.service.command.task.DeleteTaskCommand;
 import by.chyrkun.training.service.command.user.CreateUserCommand;
 import by.chyrkun.training.service.command.user.DeleteUserCommand;
 import by.chyrkun.training.service.command.user.GetUserCommand;
@@ -17,6 +19,8 @@ public enum CommandType {
     CREATE_COURSE(new CreateCourseCommand()),
     DELETE_COURSE(new DeleteCourseCommand()),
     UPDATE_COURSE(new UpdateCourseCommand()),
+    CREATE_TASK(new CreateTaskCommand()),
+    DELETE_TASK(new DeleteTaskCommand()),
     LOGIN(new LogInCommand()),
     LOGOUT(new LogoutCommand()),
     PROFILE(new GetUserCommand());

@@ -37,10 +37,10 @@ public class UserReceiver {
         }
     }
 
-    public boolean delete(int id) {
+    public boolean delete(String login) {
         UserDAO userDAO = new UserDAO();
         try {
-            Optional<User> user = userDAO.getEntityById(id);
+            Optional<User> user = userDAO.getEntityByLogin(login);
             if (user.isPresent()) {
                 return userDAO.delete(user.get());
             }

@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: Tarakanio
@@ -12,6 +13,10 @@
 </head>
 <body>
 <h3>Teacher page</h3>
-
+<c:import url="header.jsp"/>
+<p><a href="${pageContext.request.contextPath}/teacher/createtask">Create task</a> </p>
+<p><a href="${pageContext.request.contextPath}/teacher/deletetask">Delete task</a> </p>
+<p><a href="${pageContext.request.contextPath}/teacher/opentask">Open task</a> </p>
+<c:import url="footer.jsp"/>
 </body>
 </html>

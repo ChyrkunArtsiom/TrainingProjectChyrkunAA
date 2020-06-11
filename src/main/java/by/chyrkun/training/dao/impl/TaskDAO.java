@@ -14,15 +14,18 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
-public class TaskDAO extends AbstractDAO<Task> implements StatementSetter<Task>{
+public class TaskDAO extends AbstractDAO<Task> implements StatementSetter<Task>, ResultMapper<Task>{
     private final static String SQL_CREATE_TASK =
             "INSERT INTO training_schema.tasks (name, course_id, startdate, deadline) VALUES (?,?,?,?)";
     private final static String SQL_UPDATE_TASK = "UPDATE training_schema.tasks SET " +
             "name = (?), course_id = (?), startdate = (?), deadline = (?) WHERE task_id = (?)";
     private final static String SQL_DELETE_TASK = "DELETE FROM training_schema.tasks WHERE task_id = (?)";
     private final static String SQL_GET_TASK = "SELECT * FROM training_schema.tasks WHERE task_id = (?)";
+    private final static String SQL_GET_ALL_TASKS = "SELECT * FROM training_schema.tasks";
     private final static Logger LOGGER = LogManager.getLogger(RoleDAO.class);
 
     public TaskDAO(){
@@ -34,7 +37,7 @@ public class TaskDAO extends AbstractDAO<Task> implements StatementSetter<Task>{
     }
 
     @Override
-    public boolean create(Task task) throws DAOException {
+    public boolean create(Task task) throws EntityNotFoundDAOException {
         LOGGER.log(Level.INFO, "Creating task column...");
         AbstractDAO courseDAO = new CourseDAO(this.connection);
         if (courseDAO.getEntityById(task.getCourse().getId()).isEmpty()){
@@ -88,11 +91,7 @@ public class TaskDAO extends AbstractDAO<Task> implements StatementSetter<Task>{
     @Override
     public Optional<Task> getEntityById(int id){
         LOGGER.log(Level.INFO, "Selecting task column by id...");
-        String name = null;
-        LocalDate startdate = null;
-        LocalDate deadline = null;
-        int task_id = 0;
-        int course_id = 0;
+        Task task = null;
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_TASK)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -100,20 +99,30 @@ public class TaskDAO extends AbstractDAO<Task> implements StatementSetter<Task>{
                 return Optional.empty();
             }
             while (resultSet.next()){
-                task_id = resultSet.getInt("task_id");
-                name = resultSet.getString("name");
-                course_id = resultSet.getInt("course_id");
-                startdate = resultSet.getDate("startdate").toLocalDate();
-                if (resultSet.getDate("deadline") != null){
-                    deadline = resultSet.getDate("deadline").toLocalDate();
-                }
+                task = convert(resultSet);
             }
-            AbstractDAO courseDAO = new CourseDAO(connection);
-            Course course = (Course) courseDAO.getEntityById(course_id).get();
-            return Optional.of(new Task(task_id, name, startdate, deadline, course));
+            return Optional.of(task);
         }catch (SQLException ex){
             LOGGER.log(Level.FATAL, "Exception during task reading");
             throw new UncheckedDAOException("Exception during task reading", ex);
+        }
+    }
+
+    public List<Task> getAll(){
+        LOGGER.log(Level.INFO, "Selecting all tasks...");
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_ALL_TASKS)) {
+            ResultSet  resultSet = preparedStatement.executeQuery();
+            if (!resultSet.isBeforeFirst()){
+                return null;
+            }
+            List<Task> tasks = new ArrayList<>();
+            while (resultSet.next()) {
+                tasks.add(convert(resultSet));
+            }
+            return tasks;
+        }catch (SQLException ex){
+            LOGGER.log(Level.FATAL, "Exception during getting roles");
+            throw new UncheckedDAOException("Exception during getting roles", ex);
         }
     }
 
@@ -131,5 +140,25 @@ public class TaskDAO extends AbstractDAO<Task> implements StatementSetter<Task>{
         if (task.getId() != 0){
             preparedStatement.setInt(5, task.getId());
         }
+    }
+
+    @Override
+    public Task convert(ResultSet resultSet) throws SQLException {
+        String name;
+        int task_id, course_id;
+        Task task;
+        LocalDate startdate;
+        LocalDate deadline = null;
+        task_id = resultSet.getInt("task_id");
+        name = resultSet.getString("name");
+        course_id = resultSet.getInt("course_id");
+        startdate = resultSet.getDate("startdate").toLocalDate();
+        if (resultSet.getDate("deadline") != null){
+            deadline = resultSet.getDate("deadline").toLocalDate();
+        }
+        AbstractDAO courseDAO = new CourseDAO(connection);
+        Course course = (Course) courseDAO.getEntityById(course_id).get();
+        task = new Task(task_id, name, startdate, deadline, course);
+        return task;
     }
 }

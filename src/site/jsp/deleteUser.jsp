@@ -14,7 +14,7 @@
 <body>
 <form name="DeleteUserForm" method="post" action="${pageContext.request.contextPath}/app">
     <input type="hidden" name="command" value="delete_user"/>
-    <p>User id to delete: <input type="text" name="user_id" value=""/></p>
+    <p>User login to delete: <input type="text" name="login" value="${login}"/></p>
     <p>${sessionScope.message}</p>
     <c:remove var="message" scope="session"/>
     <p>${errorMessage}</p>

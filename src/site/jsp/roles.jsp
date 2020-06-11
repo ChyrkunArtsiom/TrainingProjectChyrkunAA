@@ -12,13 +12,25 @@
     <title>Roles</title>
 </head>
 <body>
-    <c:forEach items="${roles}" var="role">
-        <p><input type="radio" name="role" value="${role.name}"/>${role.name}</p>
-    </c:forEach>
-    <p>${errorRolesMessage}</p>
+<c:if test="${not empty roles}">
+
+</c:if>
+<c:forEach items="${roles}" var="role">
+    <p><input type="radio" name="role" value="${role.name}"/>${role.name}</p>
+</c:forEach>
+<p>${errorRolesMessage}</p>
+<c:if test="${not empty roles}">
+    <select id="selected" name="selected">
+        <c:forEach items="${roles}" var="role">
+            <option value="${role.name}" selected>${role.name}</option>
+        </c:forEach>
+    </select>
+</c:if>
+<c:if test="${empty roles}">
     <form method="get" action="${pageContext.request.contextPath}/app">
         <input type="hidden" name="command" value="get_roles"/>
-        <p><input type="submit" value="Sign up"/></p>
+        <p><input type="submit" value="Show roles"/></p>
     </form>
+</c:if>
 </body>
 </html>

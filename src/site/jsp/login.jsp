@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: Tarakanio
@@ -18,5 +19,6 @@
     <p>${errorMessage}</p>
     <p><input type="submit" value="Log in"/></p>
 </form>
+<c:import url="footer.jsp"/>
 </body>
 </html>

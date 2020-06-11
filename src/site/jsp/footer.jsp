@@ -1,20 +1,19 @@
 <%--
   Created by IntelliJ IDEA.
   User: Tarakanio
-  Date: 26.05.2020
-  Time: 18:13
+  Date: 11.06.2020
+  Time: 20:00
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Footer</title>
 </head>
 <body>
-<form>
-    <input type="radio" name="test" value="First">FirstR</input><br/>
-    <input type="radio" name="test" value="Second">FirstS</input>
-</form>
-
+<br/>
+-----------------------------------------------------------------
+<br/>
+<a href="${pageContext.request.contextPath}/">On main page</a>
 </body>
 </html>

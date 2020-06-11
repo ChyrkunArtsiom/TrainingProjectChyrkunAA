@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebFilter(dispatcherTypes = {DispatcherType.REQUEST},
+@WebFilter(
         urlPatterns = {"/admin/*"}, initParams = {@WebInitParam(name = "INDEX_PATH", value = "/")})
 public class AdminFilter implements Filter {
     private String indexPath;
@@ -23,7 +23,7 @@ public class AdminFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) response;
         RequestDispatcher dispatcher;
         Object role = ((HttpServletRequest) request).getSession().getAttribute("role");
-        if (role != null && !role.toString().equals("admin")) {
+        if (role == null || !role.toString().equals("admin")) {
             resp.sendRedirect(req.getContextPath() + indexPath);
             return;
         }
@@ -31,44 +31,43 @@ public class AdminFilter implements Filter {
             case "/training/admin": {
                 dispatcher = req.getRequestDispatcher("/jsp/admin.jsp");
                 dispatcher.forward(req, resp);
-                return;
+                break;
             }
             case "/training/admin/createuser": {
-                dispatcher = req.getRequestDispatcher("/jsp/createUser.jsp");
+                req.setAttribute("command", "get_roles");
+                dispatcher = req.getRequestDispatcher("/app");
                 dispatcher.forward(req, resp);
-                return;
+                break;
             }
             case "/training/admin/updateuser": {
                 req.setAttribute("command", "update_user");
                 dispatcher = req.getRequestDispatcher("/app");
                 dispatcher.forward(req, resp);
-                return;
+                break;
             }
             case "/training/admin/deleteuser": {
                 dispatcher = req.getRequestDispatcher("/jsp/deleteUser.jsp");
                 dispatcher.forward(req, resp);
-                return;
+                break;
             }
             case "/training/admin/createcourse": {
                 dispatcher = req.getRequestDispatcher("/jsp/createCourse.jsp");
                 dispatcher.forward(req, resp);
-                return;
+                break;
             }
             case "/training/admin/deletecourse": {
                 dispatcher = req.getRequestDispatcher("/jsp/deleteCourse.jsp");
                 dispatcher.forward(req, resp);
-                return;
+                break;
             }
             case "/training/admin/updatecourse": {
                 dispatcher = req.getRequestDispatcher("/jsp/updateCourse.jsp");
                 dispatcher.forward(req, resp);
-                return;
+                break;
             }
             default:{
                 resp.sendError(404, "Page is not found");
-                break;
             }
         }
-        chain.doFilter(request, response);
     }
 }

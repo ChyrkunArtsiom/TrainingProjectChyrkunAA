@@ -11,6 +11,7 @@ import by.chyrkun.training.service.validator.ParamValidator;
 public class DeleteCourseCommand implements Command {
     private static final String PARAM_COURSE_ID = "course_id";
     private static final String ERROR_MESSAGE = "errorMessage";
+    private static final String MESSAGE = "message";
     private CourseReceiver receiver = new CourseReceiver();
 
     @Override
@@ -24,7 +25,7 @@ public class DeleteCourseCommand implements Command {
         }
         else{
             if (receiver.delete(Integer.parseInt(course_id))) {
-                requestContent.setSessionAttribute("message", messages.getMessage("courseWasDeleted"));
+                requestContent.setSessionAttribute(MESSAGE, messages.getMessage("courseWasDeleted"));
                 result.setPage(ConfigurationManager.getProperty("shortpath.page.deletecourse"));
                 result.setResponseType(CommandResult.ResponseType.REDIRECT);
             }

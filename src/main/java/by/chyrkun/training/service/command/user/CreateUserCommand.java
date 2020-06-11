@@ -13,13 +13,17 @@ import by.chyrkun.training.service.resource.ConfigurationManager;
 import by.chyrkun.training.service.validator.ParamValidator;
 import by.chyrkun.training.service.validator.UserValidator;
 
+import java.util.List;
+
 public class CreateUserCommand implements Command {
     private static final String PARAM_NAME_LOGIN = "login";
     private static final String PARAM_NAME_PASSWORD = "password";
     private static final String PARAM_NAME_FIRSTNAME = "firstname";
     private static final String PARAM_NAME_SECONDNAME = "secondname";
-    public static final String PARAM_NAME_ROLE_ID = "role_id";
+    private static final String PARAM_NAME_ROLE_ID = "role_id";
+    private static final String PARAM_NAME_ROLES = "roles";
     private static final String ERROR_MESSAGE = "errorMessage";
+    private static final String MESSAGE = "message";
     private UserReceiver receiver = new UserReceiver();
     @Override
     public CommandResult execute(RequestContent requestContent) {
@@ -31,9 +35,10 @@ public class CreateUserCommand implements Command {
         String secondname = requestContent.getRequestParameters().get(PARAM_NAME_SECONDNAME)[0];
         String role_id_string;
         int role_id;
-        boolean admin = isAdmin(requestContent);
+        boolean shouldShowRoles = true;
+        boolean isAdmin = isAdmin(requestContent);
         first: try {
-            if (admin) {
+            if (isAdmin) {
                 role_id_string = requestContent.getRequestParameters().get(PARAM_NAME_ROLE_ID)[0];
                 if (!ParamValidator.isPresent(login, password, firstname, secondname, role_id_string)) {
                     requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("lineIsEmpty"));
@@ -74,8 +79,8 @@ public class CreateUserCommand implements Command {
             }
             User user = new User(login, password, firstname, secondname, role);
             if (receiver.create(user)) {
-                if (admin) {
-                    requestContent.setSessionAttribute("message", messages.getMessage("courseWasDeleted"));
+                if (isAdmin) {
+                    requestContent.setSessionAttribute(MESSAGE, messages.getMessage("userWasCreated"));
                     result.setPage(ConfigurationManager.getProperty("shortpath.page.admin.createuser"));
                     result.setResponseType(CommandResult.ResponseType.REDIRECT);
                 }
@@ -85,6 +90,7 @@ public class CreateUserCommand implements Command {
                     result.setPage(ConfigurationManager.getProperty("shortpath.page.main"));
                     result.setResponseType(CommandResult.ResponseType.REDIRECT);
                 }
+                shouldShowRoles = false;
             }
             else {
                 requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("suchUserAlreadyExists"));
@@ -95,6 +101,16 @@ public class CreateUserCommand implements Command {
             requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("roleNotFound"));
             result.setPage(ConfigurationManager.getProperty("fullpath.page.createuser"));
         }finally {
+            if (shouldShowRoles) {
+                List<Role> roles;
+                RoleReceiver roleReceiver = new RoleReceiver();
+                roles = roleReceiver.getAll();
+                if (roles == null) {
+                    requestContent.setRequestAttribute("errorMessage", "Roles not found");
+                }else {
+                    requestContent.setRequestAttribute(PARAM_NAME_ROLES, roles);
+                }
+            }
             requestContent.setRequestAttribute(PARAM_NAME_LOGIN, login);
             requestContent.setRequestAttribute(PARAM_NAME_FIRSTNAME, firstname);
             requestContent.setRequestAttribute(PARAM_NAME_SECONDNAME, secondname);

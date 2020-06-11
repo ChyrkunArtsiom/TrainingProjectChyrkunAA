@@ -5,5 +5,5 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface ResultMapper<T> {
-    List<T> convert(ResultSet resultSet) throws SQLException;
+    T convert(ResultSet resultSet) throws SQLException;
 }

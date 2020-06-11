@@ -31,62 +31,53 @@ public class UpdateUserCommand implements Command {
         String role_id_string;
         int role_id;
         boolean admin = isAdmin(requestContent);
-        first: try {
-            if (admin) {
-                login = requestContent.getRequestParameters().get(PARAM_NAME_LOGIN)[0];
-                role_id_string = requestContent.getRequestParameters().get(PARAM_NAME_ROLE_ID)[0];
-                if (!ParamValidator.isPresent(login, password, firstname, secondname, role_id_string)) {
-                    requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("lineIsEmpty"));
-                    result.setPage(ConfigurationManager.getProperty("fullpath.page.updateuser"));
-                    break first;
-                }
-                role_id = Integer.parseInt(role_id_string);
-            }
-            else {
-                login = requestContent.getSessionAttributes().get("userName").toString();
-                if (!ParamValidator.isPresent(login, password, firstname, secondname)) {
-                    requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("lineIsEmpty"));
-                    result.setPage(ConfigurationManager.getProperty("fullpath.page.updateuser"));
-                    break first;
-                }
-                role_id = 2;
-            }
-            RoleReceiver roleReceiver = new RoleReceiver();
-            Role role = roleReceiver.getById(role_id);
-            if (role == null) {
-                requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("roleNotFound"));
+        if (admin) {
+            login = requestContent.getRequestParameters().get(PARAM_NAME_LOGIN)[0];
+            role_id_string = requestContent.getRequestParameters().get(PARAM_NAME_ROLE_ID)[0];
+            if (!ParamValidator.isPresent(login, password, firstname, secondname, role_id_string)) {
+                requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("lineIsEmpty"));
                 result.setPage(ConfigurationManager.getProperty("fullpath.page.updateuser"));
-                break first;
             }
-            if (!UserValidator.isLoginValid(login)) {
-                requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("usernameIsNotValid"));
-                result.setPage(ConfigurationManager.getProperty("fullpath.page.updateuser"));
-                break first;
-            }
-            if (!UserValidator.isPasswordValid(password)) {
-                requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("passwordIsNotValid"));
-                result.setPage(ConfigurationManager.getProperty("fullpath.page.updateuser"));
-                break first;
-            }
-            if (!UserValidator.isNameValid(firstname) || !UserValidator.isNameValid(secondname)) {
-                requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("nameIsNotValid"));
-                result.setPage(ConfigurationManager.getProperty("fullpath.page.updateuser"));
-                break first;
-            }
-            User user = new User(login, password, firstname, secondname, role);
-            if (receiver.update(user) != null) {
-                if (admin) {
-                    result.setPage(ConfigurationManager.getProperty("shortpath.page.admin.updateuser"));
-                    result.setResponseType(CommandResult.ResponseType.REDIRECT);
-                }
-                else{
-                    result.setPage(ConfigurationManager.getProperty("shortpath.page.updateuser"));
-                    result.setResponseType(CommandResult.ResponseType.REDIRECT);
-                }
-            }
-        }finally {
-            return result;
+            role_id = Integer.parseInt(role_id_string);
         }
+        else {
+            login = requestContent.getSessionAttributes().get("userName").toString();
+            if (!ParamValidator.isPresent(login, password, firstname, secondname)) {
+                requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("lineIsEmpty"));
+                result.setPage(ConfigurationManager.getProperty("fullpath.page.updateuser"));
+            }
+            role_id = 2;
+        }
+        RoleReceiver roleReceiver = new RoleReceiver();
+        Role role = roleReceiver.getById(role_id);
+        if (role == null) {
+            requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("roleNotFound"));
+            result.setPage(ConfigurationManager.getProperty("fullpath.page.updateuser"));
+        }
+        else if (!UserValidator.isLoginValid(login)) {
+            requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("usernameIsNotValid"));
+            result.setPage(ConfigurationManager.getProperty("fullpath.page.updateuser"));
+        }
+        else if (!UserValidator.isPasswordValid(password)) {
+            requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("passwordIsNotValid"));
+            result.setPage(ConfigurationManager.getProperty("fullpath.page.updateuser"));
+        }
+        else if (!UserValidator.isNameValid(firstname) || !UserValidator.isNameValid(secondname)) {
+            requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("nameIsNotValid"));
+            result.setPage(ConfigurationManager.getProperty("fullpath.page.updateuser"));
+        }
+        User user = new User(login, password, firstname, secondname, role);
+        if (receiver.update(user) != null) {
+            if (admin) {
+                result.setPage(ConfigurationManager.getProperty("shortpath.page.admin.updateuser"));
+                result.setResponseType(CommandResult.ResponseType.REDIRECT);
+            }
+            else{
+                result.setPage(ConfigurationManager.getProperty("shortpath.page.updateuser"));
+                result.setResponseType(CommandResult.ResponseType.REDIRECT);
+            }
+        }
+        return result;
     }
 
     boolean isAdmin(RequestContent requestContent) {

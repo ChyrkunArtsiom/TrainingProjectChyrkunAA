@@ -16,11 +16,11 @@ public class GetRolesCommand implements Command {
         List<Role> roles;
         roles = receiver.getAll();
         if (roles == null) {
-            requestContent.setRequestAttribute("errorRolesMessage", "Roles not found");
+            requestContent.setRequestAttribute("errorMessage", "Roles not found");
         }else {
             requestContent.setRequestAttribute("roles", roles);
         }
-        result.setPage("/jsp/roles.jsp");
+        result.setPage("/jsp/createUser.jsp");
         return result;
     }
 }

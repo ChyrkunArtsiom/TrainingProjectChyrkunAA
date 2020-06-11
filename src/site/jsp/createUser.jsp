@@ -19,8 +19,13 @@
     <p>Password has to be from 8 to 15 characters with digits or underscore</p>
     <p>First name: <input type="text" name="firstname" value="${firstname}"/></p>
     <p>Second name: <input type="text" name="secondname" value="${secondname}"/></p>
-    <c:if test="${sessionScope.role eq 'admin'}">
-        <p>Role id: <input type="text" name="role_id" value=""/></p>
+    <c:if test="${sessionScope.role eq 'admin' && not empty roles}">
+            <p>Role: <select id="role_id" name="role_id">
+                <c:forEach items="${roles}" var="role">
+                    <option value="${role.id}" selected>${role.name}</option>
+                </c:forEach>
+            </select>
+            </p>
     </c:if>
     <p>${sessionScope.message}</p>
     <c:remove var="message" scope="session"/>
