@@ -48,6 +48,12 @@ public class TeacherFilter implements Filter {
                 dispatcher.forward(req, resp);
                 break;
             }
+            case "/training/teacher/showcourses": {
+                req.setAttribute("command", "get_courses_by_teacher");
+                dispatcher = req.getRequestDispatcher("/app");
+                dispatcher.forward(req, resp);
+                break;
+            }
             case "/training/teacher/session": {
                 dispatcher = req.getRequestDispatcher("/app");
                 dispatcher.forward(req, resp);

@@ -10,6 +10,7 @@ import by.chyrkun.training.service.receiver.CourseReceiver;
 import by.chyrkun.training.service.receiver.UserReceiver;
 import by.chyrkun.training.service.resource.ConfigurationManager;
 import by.chyrkun.training.service.resource.MessageManager;
+import by.chyrkun.training.service.util.RequestContentSetter;
 import by.chyrkun.training.service.validator.CourseValidator;
 import by.chyrkun.training.service.validator.ParamValidator;
 
@@ -25,6 +26,7 @@ public class CreateCourseCommand implements Command {
         CommandResult result = new CommandResult();
         String name = requestContent.getRequestParameters().get(PARAM_NAME)[0];
         String teacher_id = requestContent.getRequestParameters().get(PARAM_TEACHER_ID)[0];
+        boolean showTeachers = true;
         first: try{
             if (!ParamValidator.isPresent(name, teacher_id)) {
                 requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("lineIsEmpty"));
@@ -51,6 +53,7 @@ public class CreateCourseCommand implements Command {
                 }
                 Course course = new Course(name, teacher);
                 if (receiver.create(course)) {
+                    showTeachers = false;
                     result.setPage(ConfigurationManager.getProperty("shortpath.page.createcourse"));
                     result.setResponseType(CommandResult.ResponseType.REDIRECT);
                 }
@@ -59,6 +62,9 @@ public class CreateCourseCommand implements Command {
             requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("userNotFound"));
             result.setPage(ConfigurationManager.getProperty("fullpath.page.createcourse"));
         }finally {
+            if (showTeachers) {
+                RequestContentSetter.showTeachers(requestContent);
+            }
             requestContent.setRequestAttribute(PARAM_NAME, name);
             requestContent.setRequestAttribute(PARAM_TEACHER_ID, teacher_id);
             return result;

@@ -5,18 +5,15 @@ import java.util.Optional;
 
 public class Main {
     public static void main(String[] args) {
-        boolean a = true;
-        boolean b = true;
-        boolean c = true;
+        try{
+            test(0);
+        }catch (ArithmeticException ex){
+            System.out.println(ex);
+        }
+        System.out.println("end");
+    }
 
-        if (!a) {
-            System.out.println("a");
-        }
-        else if(!b){
-            System.out.println("b");
-        }
-        else if (c){
-            System.out.println("c");
-        }
+    public static void test(int n){
+        int a = 10/n;
     }
 }

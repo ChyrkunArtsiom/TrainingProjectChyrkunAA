@@ -9,9 +9,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Create user form</title>
+    <title>Create user</title>
 </head>
 <body>
+<c:import url="header.jsp"/>
 <form name="CreateUserForm" method="post" action="${pageContext.request.contextPath}/session">
     <input type="hidden" name="command" value="create_user"/>
     <p>Login: <input type="text" name="login" value="${login}"/></p>
@@ -33,5 +34,6 @@
     <p><input type="submit" value="Sign up"/></p>
     <a href="${pageContext.request.contextPath}/">On main page</a>
 </form>
+<c:import url="footer.jsp"/>
 </body>
 </html>

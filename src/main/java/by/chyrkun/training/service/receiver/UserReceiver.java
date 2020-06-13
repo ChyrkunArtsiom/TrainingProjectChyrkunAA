@@ -5,6 +5,8 @@ import by.chyrkun.training.model.User;
 import by.chyrkun.training.dao.impl.UserDAO;
 import by.chyrkun.training.service.exception.EntityNotFoundServiceException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class UserReceiver {
@@ -77,6 +79,17 @@ public class UserReceiver {
             else {
                 return null;
             }
+        }finally {
+            userDAO.close();
+        }
+    }
+
+    public List<User> getTeachers() {
+        List<User> teachers = new ArrayList<>();
+        UserDAO userDAO = new UserDAO();
+        try {
+            teachers = userDAO.getTeachers();
+            return teachers;
         }finally {
             userDAO.close();
         }

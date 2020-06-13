@@ -15,6 +15,8 @@ import org.apache.logging.log4j.Logger;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class CourseDAO extends AbstractDAO<Course> {
@@ -24,6 +26,7 @@ public class CourseDAO extends AbstractDAO<Course> {
             "name = (?), teacher_id = (?) WHERE course_id = (?)";
     private final static String SQL_DELETE_COURSE = "DELETE FROM training_schema.courses WHERE course_id = (?)";
     private final static String SQL_GET_COURSE = "SELECT * FROM training_schema.courses WHERE course_id = (?)";
+    private final static String SQL_GET_COURSES_BY_TEACHER = "SELECT * FROM training_schema.courses WHERE teacher_id = (?)";
     private final static Logger LOGGER = LogManager.getLogger(RoleDAO.class);
 
     public CourseDAO(){
@@ -112,6 +115,31 @@ public class CourseDAO extends AbstractDAO<Course> {
         }catch (SQLException ex){
             LOGGER.log(Level.FATAL, "Exception during course reading");
             throw new UncheckedDAOException("Exception during course reading", ex);
+        }
+    }
+
+    public List<Course> getByTeacher(int teacher_id) {
+        LOGGER.log(Level.INFO, "Selecting courses by teacher...");
+        List<Course> courses = new ArrayList<>();
+        String name;
+        int course_id;
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_COURSES_BY_TEACHER)) {
+            preparedStatement.setInt(1, teacher_id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (!resultSet.isBeforeFirst()){
+                return null;
+            }
+            AbstractDAO userDAO = new UserDAO(connection);
+            User teacher = (User) userDAO.getEntityById(teacher_id).get();
+            while (resultSet.next()){
+                course_id = resultSet.getInt("course_id");
+                name = resultSet.getString("name");
+                courses.add(new Course(course_id, name, teacher));
+            }
+            return courses;
+        }catch (SQLException ex) {
+            LOGGER.log(Level.FATAL, "Exception during course reading by teacher");
+            throw new UncheckedDAOException("Exception during course reading by teacher", ex);
         }
     }
 }

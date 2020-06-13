@@ -26,6 +26,7 @@ public class UserDAO extends AbstractDAO<User> implements ResultMapper<List<User
     private final static String SQL_DELETE_USER = "DELETE FROM training_schema.users WHERE user_id = (?)";
     private final static String SQL_GET_USER_BY_ID = "SELECT * FROM training_schema.users WHERE user_id = (?)";
     private final static String SQL_GET_USER_BY_LOGIN = "SELECT * FROM training_schema.users WHERE login = (?)";
+    private final static String SQL_GET_ALL_TEACHERS = "SELECT * FROM training_schema.users WHERE role_id = '3'";
     private final static Logger LOGGER = LogManager.getLogger(RoleDAO.class);
 
     public UserDAO() {
@@ -129,6 +130,21 @@ public class UserDAO extends AbstractDAO<User> implements ResultMapper<List<User
         }catch (SQLException ex){
             LOGGER.log(Level.FATAL, "Exception during user reading");
             throw new UncheckedDAOException("Exception during user reading", ex);
+        }
+    }
+
+    public List<User> getTeachers(){
+        LOGGER.log(Level.INFO, "Selecting all teachers...");
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_ALL_TEACHERS)) {
+            ResultSet  resultSet = preparedStatement.executeQuery();
+            if (!resultSet.isBeforeFirst()){
+                return null;
+            }
+            List<User> teachers = convert(resultSet);
+            return teachers;
+        }catch (SQLException ex){
+            LOGGER.log(Level.FATAL, "Exception during getting teachers");
+            throw new UncheckedDAOException("Exception during getting teachers", ex);
         }
     }
 

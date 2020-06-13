@@ -5,10 +5,11 @@
     <title>Create task</title>
 </head>
 <body>
+<c:import url="header.jsp"/>
 <form name="CreateTaskForm" method="post" action="${pageContext.request.contextPath}/session">
     <input type="hidden" name="command" value="create_task"/>
+    <input type="hidden" name="course_id" value="${param.course_id}"/>
     <p>Name: <input type="text" name="name" value="${name}"/></p>
-    <p>Course id: <input type="text" name="course_id" value="${course_id}"/></p>
     <p>Start date: <input type="date" name="startdate" value="${startdate}"/></p>
     <p>Start date: <input type="date" name="deadline" value="${deadline}"/></p>
     <p>${sessionScope.message}</p>
@@ -17,5 +18,6 @@
     <p><input type="submit" value="Create task"/></p>
     <a href="${pageContext.request.contextPath}/">On main page</a>
 </form>
+<c:import url="footer.jsp"/>
 </body>
 </html>

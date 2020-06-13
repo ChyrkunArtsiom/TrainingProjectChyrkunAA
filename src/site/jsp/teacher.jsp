@@ -14,6 +14,8 @@
 <body>
 <h3>Teacher page</h3>
 <c:import url="header.jsp"/>
+<p><a href="${pageContext.request.contextPath}/teacher/showcourses">Show courses</a> </p>
+<br/>
 <p><a href="${pageContext.request.contextPath}/teacher/createtask">Create task</a> </p>
 <p><a href="${pageContext.request.contextPath}/teacher/deletetask">Delete task</a> </p>
 <p><a href="${pageContext.request.contextPath}/teacher/opentask">Open task</a> </p>

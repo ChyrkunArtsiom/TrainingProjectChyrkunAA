@@ -5,6 +5,7 @@ import by.chyrkun.training.dao.impl.TaskDAO;
 import by.chyrkun.training.model.Task;
 import by.chyrkun.training.service.exception.EntityNotFoundServiceException;
 
+import java.util.List;
 import java.util.Optional;
 
 public class TaskReceiver {
@@ -27,6 +28,22 @@ public class TaskReceiver {
                 return taskDAO.delete(task.get());
             }
             return false;
+        }finally {
+            taskDAO.close();
+        }
+    }
+
+    public List<Task> getByCourse(int course_id) {
+        List<Task> tasks;
+        TaskDAO taskDAO = new TaskDAO();
+        try {
+            tasks = taskDAO.getByCourse(course_id);
+            if (tasks != null) {
+                return tasks;
+            }
+            else {
+                return null;
+            }
         }finally {
             taskDAO.close();
         }

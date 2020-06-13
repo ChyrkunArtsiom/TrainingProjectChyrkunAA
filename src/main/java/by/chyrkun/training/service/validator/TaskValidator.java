@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class TaskValidator {
     public static boolean isNameValid(String name) {
-        return  name.matches("^[а-яёА-Яa-zA-Z]{1,100}$");
+        return  name.matches("^[\\w\\W]{1,100}$");
     }
 
     public static boolean isDateValid(LocalDate startdate, LocalDate deadline) {

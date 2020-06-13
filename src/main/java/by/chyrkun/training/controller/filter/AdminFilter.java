@@ -51,7 +51,8 @@ public class AdminFilter implements Filter {
                 break;
             }
             case "/training/admin/createcourse": {
-                dispatcher = req.getRequestDispatcher("/jsp/createCourse.jsp");
+                req.setAttribute("command", "get_teachers");
+                dispatcher = req.getRequestDispatcher("/app");
                 dispatcher.forward(req, resp);
                 break;
             }

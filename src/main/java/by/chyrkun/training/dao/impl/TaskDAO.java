@@ -26,6 +26,7 @@ public class TaskDAO extends AbstractDAO<Task> implements StatementSetter<Task>,
     private final static String SQL_DELETE_TASK = "DELETE FROM training_schema.tasks WHERE task_id = (?)";
     private final static String SQL_GET_TASK = "SELECT * FROM training_schema.tasks WHERE task_id = (?)";
     private final static String SQL_GET_ALL_TASKS = "SELECT * FROM training_schema.tasks";
+    private final static String SQL_GET_TASKS_BY_COURSE = "SELECT * FROM training_schema.tasks WHERE course_id = (?)";
     private final static Logger LOGGER = LogManager.getLogger(RoleDAO.class);
 
     public TaskDAO(){
@@ -108,10 +109,11 @@ public class TaskDAO extends AbstractDAO<Task> implements StatementSetter<Task>,
         }
     }
 
+    /*
     public List<Task> getAll(){
         LOGGER.log(Level.INFO, "Selecting all tasks...");
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_ALL_TASKS)) {
-            ResultSet  resultSet = preparedStatement.executeQuery();
+            ResultSet resultSet = preparedStatement.executeQuery();
             if (!resultSet.isBeforeFirst()){
                 return null;
             }
@@ -121,8 +123,27 @@ public class TaskDAO extends AbstractDAO<Task> implements StatementSetter<Task>,
             }
             return tasks;
         }catch (SQLException ex){
-            LOGGER.log(Level.FATAL, "Exception during getting roles");
-            throw new UncheckedDAOException("Exception during getting roles", ex);
+            LOGGER.log(Level.FATAL, "Exception during getting tasks");
+            throw new UncheckedDAOException("Exception during getting tasks", ex);
+        }
+    }*/
+
+    public List<Task> getByCourse(int teacher_id) {
+        LOGGER.log(Level.INFO, "Selecting all tasks by course...");
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_TASKS_BY_COURSE)) {
+            preparedStatement.setInt(1, teacher_id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (!resultSet.isBeforeFirst()) {
+                return null;
+            }
+            List<Task> tasks = new ArrayList<>();
+            while (resultSet.next()) {
+                tasks.add(convert(resultSet));
+            }
+            return tasks;
+        }catch (SQLException ex) {
+            LOGGER.log(Level.FATAL, "Exception during getting tasks by course");
+            throw new UncheckedDAOException("Exception during getting tasks by course", ex);
         }
     }
 

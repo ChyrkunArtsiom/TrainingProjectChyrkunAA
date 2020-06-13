@@ -12,14 +12,16 @@
     <title>Delete task</title>
 </head>
 <body>
+<c:import url="header.jsp"/>
 <form name="DeleteTaskForm" method="post" action="${pageContext.request.contextPath}/session">
     <input type="hidden" name="command" value="delete_task"/>
-    <p>Course id: <input type="text" name="task_id" value="${task_id}"/></p>
+    <p>Task id: <input type="text" name="task_id" value="${task_id}"/></p>
     <p>${sessionScope.message}</p>
     <c:remove var="message" scope="session"/>
     <p>${errorMessage}</p>
     <p><input type="submit" value="Delete task"/></p>
     <a href="${pageContext.request.contextPath}/">On main page</a>
 </form>
+<c:import url="footer.jsp"/>
 </body>
 </html>

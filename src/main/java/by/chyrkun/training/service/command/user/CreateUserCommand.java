@@ -10,6 +10,7 @@ import by.chyrkun.training.service.receiver.RoleReceiver;
 import by.chyrkun.training.service.receiver.UserReceiver;
 import by.chyrkun.training.service.resource.MessageManager;
 import by.chyrkun.training.service.resource.ConfigurationManager;
+import by.chyrkun.training.service.util.RequestContentSetter;
 import by.chyrkun.training.service.validator.ParamValidator;
 import by.chyrkun.training.service.validator.UserValidator;
 
@@ -21,7 +22,6 @@ public class CreateUserCommand implements Command {
     private static final String PARAM_NAME_FIRSTNAME = "firstname";
     private static final String PARAM_NAME_SECONDNAME = "secondname";
     private static final String PARAM_NAME_ROLE_ID = "role_id";
-    private static final String PARAM_NAME_ROLES = "roles";
     private static final String ERROR_MESSAGE = "errorMessage";
     private static final String MESSAGE = "message";
     private UserReceiver receiver = new UserReceiver();
@@ -100,22 +100,14 @@ public class CreateUserCommand implements Command {
         }catch (EntityNotFoundServiceException ex) {
             requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("roleNotFound"));
             result.setPage(ConfigurationManager.getProperty("fullpath.page.createuser"));
-        }finally {
-            if (shouldShowRoles) {
-                List<Role> roles;
-                RoleReceiver roleReceiver = new RoleReceiver();
-                roles = roleReceiver.getAll();
-                if (roles == null) {
-                    requestContent.setRequestAttribute("errorMessage", "Roles not found");
-                }else {
-                    requestContent.setRequestAttribute(PARAM_NAME_ROLES, roles);
-                }
-            }
-            requestContent.setRequestAttribute(PARAM_NAME_LOGIN, login);
-            requestContent.setRequestAttribute(PARAM_NAME_FIRSTNAME, firstname);
-            requestContent.setRequestAttribute(PARAM_NAME_SECONDNAME, secondname);
-            return result;
         }
+        if (shouldShowRoles) {
+            RequestContentSetter.showRoles(requestContent);
+        }
+        requestContent.setRequestAttribute(PARAM_NAME_LOGIN, login);
+        requestContent.setRequestAttribute(PARAM_NAME_FIRSTNAME, firstname);
+        requestContent.setRequestAttribute(PARAM_NAME_SECONDNAME, secondname);
+        return result;
     }
 
     boolean isAdmin(RequestContent requestContent) {

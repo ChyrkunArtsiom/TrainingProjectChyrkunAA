@@ -5,6 +5,7 @@ import by.chyrkun.training.dao.impl.CourseDAO;
 import by.chyrkun.training.model.Course;
 import by.chyrkun.training.service.exception.EntityNotFoundServiceException;
 
+import java.util.List;
 import java.util.Optional;
 
 public class CourseReceiver {
@@ -43,6 +44,17 @@ public class CourseReceiver {
             else {
                 return null;
             }
+        }finally {
+            courseDAO.close();
+        }
+    }
+
+    public List<Course> getByTeacher(int teacher_id) {
+        List<Course> teachers;
+        CourseDAO courseDAO = new CourseDAO();
+        try {
+            teachers = courseDAO.getByTeacher(teacher_id);
+            return teachers;
         }finally {
             courseDAO.close();
         }

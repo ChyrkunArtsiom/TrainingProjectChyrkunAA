@@ -12,6 +12,7 @@
     <title>Delete user</title>
 </head>
 <body>
+<c:import url="header.jsp"/>
 <form name="DeleteUserForm" method="post" action="${pageContext.request.contextPath}/app">
     <input type="hidden" name="command" value="delete_user"/>
     <p>User login to delete: <input type="text" name="login" value="${login}"/></p>
@@ -20,5 +21,6 @@
     <p>${errorMessage}</p>
     <p><input type="submit" value="Delete"/></p>
 </form>
+<c:import url="footer.jsp"/>
 </body>
 </html>

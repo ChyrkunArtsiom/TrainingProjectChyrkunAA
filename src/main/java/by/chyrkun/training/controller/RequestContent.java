@@ -8,23 +8,30 @@ public class RequestContent {
     private HashMap<String, Object> requestAttributes;
     private HashMap<String, String[]> requestParameters;
     private HashMap<String, Object> sessionAttributes;
+//    private HashMap<String, String> headers;
 
     public void extractValues(HttpServletRequest req){
         requestParameters = new HashMap<>(req.getParameterMap());
         requestAttributes = new HashMap<>();
         sessionAttributes = new HashMap<>();
         Enumeration<?> reqAttributeNames = req.getAttributeNames();
-        while (reqAttributeNames.hasMoreElements() == true) {
+        while (reqAttributeNames.hasMoreElements()) {
             String name = (String) reqAttributeNames.nextElement();
             Object value = req.getAttribute(name);
             requestAttributes.put(name, value);
         }
         Enumeration<?> sessionAttributeNames = req.getSession().getAttributeNames();
-        while (sessionAttributeNames.hasMoreElements() == true) {
+        while (sessionAttributeNames.hasMoreElements()) {
             String name = (String) sessionAttributeNames.nextElement();
             Object value = req.getSession().getAttribute(name);
             sessionAttributes.put(name, value);
         }
+    /*    Enumeration<String> headerNames = req.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String name = headerNames.nextElement();
+            String value = req.getHeader(name);
+            headers.put(name, value);
+        }*/
     }
 
     public void insertRequestAttributes(HttpServletRequest req) {

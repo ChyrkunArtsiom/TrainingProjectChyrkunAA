@@ -4,22 +4,16 @@ import by.chyrkun.training.controller.CommandResult;
 import by.chyrkun.training.controller.RequestContent;
 import by.chyrkun.training.model.Role;
 import by.chyrkun.training.service.receiver.RoleReceiver;
+import by.chyrkun.training.service.util.RequestContentSetter;
 
 import java.util.List;
 
 public class GetRolesCommand implements Command {
-    private RoleReceiver receiver = new RoleReceiver();
     private CommandResult result = new CommandResult();
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
-        List<Role> roles;
-        roles = receiver.getAll();
-        if (roles == null) {
-            requestContent.setRequestAttribute("errorMessage", "Roles not found");
-        }else {
-            requestContent.setRequestAttribute("roles", roles);
-        }
+        RequestContentSetter.showRoles(requestContent);
         result.setPage("/jsp/createUser.jsp");
         return result;
     }

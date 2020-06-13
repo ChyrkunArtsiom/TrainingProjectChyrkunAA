@@ -24,11 +24,10 @@
         </form>
         <form name="LogoutForm" method="post" action="${pageContext.request.contextPath}/app">
             <input type="hidden" name="command" value="logout"/>
-            <br/><input type="submit" value="Log out"/>
+            <input type="submit" value="Log out"/>
         </form>
     </c:otherwise>
 </c:choose>
-<br/>
 -----------------------------------------------------------------
 <br/>
 </body>
