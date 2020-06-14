@@ -4,19 +4,18 @@ import by.chyrkun.training.controller.CommandResult;
 import by.chyrkun.training.controller.RequestContent;
 import by.chyrkun.training.model.Role;
 import by.chyrkun.training.model.User;
+import by.chyrkun.training.service.command.BaseCommand;
 import by.chyrkun.training.service.command.Command;
+import by.chyrkun.training.service.command.role.GetRolesCommand;
 import by.chyrkun.training.service.exception.EntityNotFoundServiceException;
 import by.chyrkun.training.service.receiver.RoleReceiver;
 import by.chyrkun.training.service.receiver.UserReceiver;
 import by.chyrkun.training.service.resource.MessageManager;
 import by.chyrkun.training.service.resource.ConfigurationManager;
-import by.chyrkun.training.service.util.RequestContentSetter;
 import by.chyrkun.training.service.validator.ParamValidator;
 import by.chyrkun.training.service.validator.UserValidator;
 
-import java.util.List;
-
-public class CreateUserCommand implements Command {
+public class CreateUserCommand extends BaseCommand implements Command {
     private static final String PARAM_NAME_LOGIN = "login";
     private static final String PARAM_NAME_PASSWORD = "password";
     private static final String PARAM_NAME_FIRSTNAME = "firstname";
@@ -102,7 +101,8 @@ public class CreateUserCommand implements Command {
             result.setPage(ConfigurationManager.getProperty("fullpath.page.createuser"));
         }
         if (shouldShowRoles) {
-            RequestContentSetter.showRoles(requestContent);
+            setNext(new GetRolesCommand());
+            next.execute(requestContent);
         }
         requestContent.setRequestAttribute(PARAM_NAME_LOGIN, login);
         requestContent.setRequestAttribute(PARAM_NAME_FIRSTNAME, firstname);

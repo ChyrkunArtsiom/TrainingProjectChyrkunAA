@@ -27,7 +27,8 @@ public class CourseRegistrationDAO extends AbstractDAO<CourseRegistration>
     private final static String SQL_DELETE_COURSE_REGISTRATION =
             "DELETE FROM training_schema.course_registration WHERE course_registration_id = (?)";
     private final static String SQL_GET_COURSE_REGISTRATION =
-            "SELECT * FROM training_schema.course_registration WHERE course_registration_id = (?)";
+            "SELECT student_id, course_id, course_registration_id " +
+                    "FROM training_schema.course_registration WHERE course_registration_id = (?)";
     private final static Logger LOGGER = LogManager.getLogger(RoleDAO.class);
 
     public CourseRegistrationDAO(){

@@ -27,7 +27,8 @@ public class TaskRegistrationDAO extends AbstractDAO<TaskRegistration> implement
     private final static String SQL_DELETE_TASK_REGISTRATION =
             "DELETE FROM training_schema.task_registration WHERE task_registration_id = (?)";
     private final static String SQL_GET_TASK_REGISTRATION =
-            "SELECT * FROM training_schema.task_registration WHERE task_registration_id = (?)";
+            "SELECT task_id, student_id, grade, review, task_registration_id " +
+                    "FROM training_schema.task_registration WHERE task_registration_id = (?)";
     private final static Logger LOGGER = LogManager.getLogger(RoleDAO.class);
 
     public TaskRegistrationDAO(){

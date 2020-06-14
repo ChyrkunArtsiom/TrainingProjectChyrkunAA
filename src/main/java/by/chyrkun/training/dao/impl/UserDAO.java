@@ -18,15 +18,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class UserDAO extends AbstractDAO<User> implements ResultMapper<List<User>> {
+public class UserDAO extends AbstractDAO<User> {
     private final static String SQL_CREATE_USER =
             "INSERT INTO training_schema.users (login, password, firstname, secondname, role_id) VALUES (?,?,?,?,?)";
     private final static String SQL_UPDATE_USER = "UPDATE training_schema.users SET " +
             "password = (?), firstname = (?), secondname = (?), role_id = (?)  WHERE login = (?)";
     private final static String SQL_DELETE_USER = "DELETE FROM training_schema.users WHERE user_id = (?)";
-    private final static String SQL_GET_USER_BY_ID = "SELECT * FROM training_schema.users WHERE user_id = (?)";
-    private final static String SQL_GET_USER_BY_LOGIN = "SELECT * FROM training_schema.users WHERE login = (?)";
-    private final static String SQL_GET_ALL_TEACHERS = "SELECT * FROM training_schema.users WHERE role_id = '3'";
+    private final static String SQL_GET_USER_BY_ID = "SELECT user_id, login, firstname, secondname, role_id " +
+            "FROM training_schema.users WHERE user_id = (?)";
+    private final static String SQL_GET_USER_BY_LOGIN = "SELECT user_id, login, password, firstname, secondname, role_id " +
+            "FROM training_schema.users WHERE login = (?)";
+    private final static String SQL_GET_ALL_TEACHERS = "SELECT user_id, firstname, secondname" +
+            " FROM training_schema.users " +
+            "INNER JOIN training_schema.roles ON users.role_id = roles.role_id WHERE name = 'teacher'";
     private final static Logger LOGGER = LogManager.getLogger(RoleDAO.class);
 
     public UserDAO() {
@@ -109,7 +113,7 @@ public class UserDAO extends AbstractDAO<User> implements ResultMapper<List<User
             if (!resultSet.isBeforeFirst()){
                 return Optional.empty();
             }
-            List<User> users = convert(resultSet);
+            List<User> users = getList(resultSet, false);
             return Optional.of(users.get(0));
         }catch (SQLException ex){
             LOGGER.log(Level.FATAL, "Exception during user reading");
@@ -125,7 +129,7 @@ public class UserDAO extends AbstractDAO<User> implements ResultMapper<List<User
             if (!resultSet.isBeforeFirst()){
                 return Optional.empty();
             }
-            List<User> users = convert(resultSet);
+            List<User> users = getList(resultSet, true);
             return Optional.of(users.get(0));
         }catch (SQLException ex){
             LOGGER.log(Level.FATAL, "Exception during user reading");
@@ -140,7 +144,16 @@ public class UserDAO extends AbstractDAO<User> implements ResultMapper<List<User
             if (!resultSet.isBeforeFirst()){
                 return null;
             }
-            List<User> teachers = convert(resultSet);
+            String firstname;
+            String secondname;
+            int user_id;
+            List<User> teachers = new ArrayList<>();
+            while (resultSet.next()){
+                user_id = resultSet.getInt("user_id");
+                firstname = resultSet.getString("firstname");
+                secondname = resultSet.getString("secondname");
+                teachers.add(new User(user_id, firstname, secondname));
+            }
             return teachers;
         }catch (SQLException ex){
             LOGGER.log(Level.FATAL, "Exception during getting teachers");
@@ -148,11 +161,10 @@ public class UserDAO extends AbstractDAO<User> implements ResultMapper<List<User
         }
     }
 
-    @Override
-    public List<User> convert(ResultSet resultSet) throws SQLException{
+    private List<User> getList(ResultSet resultSet, boolean hasPassword) throws SQLException{
         List<User> users = new ArrayList<>();
         String login;
-        String password;
+        String password = null;
         String firstname;
         String secondname;
         int user_id;
@@ -161,7 +173,9 @@ public class UserDAO extends AbstractDAO<User> implements ResultMapper<List<User
         while (resultSet.next()){
             user_id = resultSet.getInt("user_id");
             login = resultSet.getString("login");
-            password = resultSet.getString("password");
+            if (hasPassword) {
+                password = resultSet.getString("password");
+            }
             firstname = resultSet.getString("firstname");
             secondname = resultSet.getString("secondname");
             role_id = resultSet.getInt("role_id");

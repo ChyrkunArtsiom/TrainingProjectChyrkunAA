@@ -7,9 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebFilter(
-        urlPatterns = {"/teacher/*"}, initParams = {@WebInitParam(name = "INDEX_PATH", value = "/")})
-public class TeacherFilter implements Filter {
+@WebFilter(urlPatterns = {"/student/*"}, initParams = {@WebInitParam(name = "INDEX_PATH", value = "/")})
+public class StudentFilter implements Filter {
     private String indexPath;
 
     @Override
@@ -23,38 +22,26 @@ public class TeacherFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) response;
         RequestDispatcher dispatcher;
         Object role = ((HttpServletRequest) request).getSession().getAttribute("role");
-        if (role == null || !role.toString().equals("teacher")) {
+        if (role == null || !role.toString().equals("student")) {
             resp.sendRedirect(req.getContextPath() + indexPath);
             return;
         }
         switch(req.getRequestURI()){
-            case "/training/teacher": {
-                dispatcher = req.getRequestDispatcher("/jsp/teacher.jsp");
+            case "/training/student": {
+                dispatcher = req.getRequestDispatcher("/jsp/student.jsp");
                 dispatcher.forward(req, resp);
                 break;
             }
-            case "/training/teacher/createtask": {
-                dispatcher = req.getRequestDispatcher("/jsp/createTask.jsp");
-                dispatcher.forward(req, resp);
-                break;
-            }
-            case "/training/teacher/deletetask": {
-                dispatcher = req.getRequestDispatcher("/jsp/deleteTask.jsp");
-                dispatcher.forward(req, resp);
-                break;
-            }
-            case "/training/teacher/opentask": {
-                dispatcher = req.getRequestDispatcher("/jsp/openTask.jsp");
-                dispatcher.forward(req, resp);
-                break;
-            }
-            case "/training/teacher/courses": {
+            case "/training/student/courses": {
                 req.setAttribute("command", "get_courses");
+                req.setAttribute("chosen", "false");
                 dispatcher = req.getRequestDispatcher("/app");
                 dispatcher.forward(req, resp);
                 break;
             }
-            case "/training/teacher/session": {
+            case "/training/student/registered": {
+                req.setAttribute("command", "get_courses");
+                req.setAttribute("chosen", "true");
                 dispatcher = req.getRequestDispatcher("/app");
                 dispatcher.forward(req, resp);
                 break;

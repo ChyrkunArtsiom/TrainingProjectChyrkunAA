@@ -18,9 +18,9 @@ public class RoleDAO extends AbstractDAO<Role> implements ResultMapper<List<Role
     private final static String SQL_CREATE_ROLE = "INSERT INTO training_schema.roles (name) VALUES (?)";
     private final static String SQL_UPDATE_ROLE = "UPDATE training_schema.roles SET name = (?) WHERE role_id = (?)";
     private final static String SQL_DELETE_ROLE = "DELETE FROM training_schema.roles WHERE role_id = (?)";
-    private final static String SQL_GET_ROLE_BY_ID = "SELECT * FROM training_schema.roles WHERE role_id = (?)";
-    private final static String SQL_GET_ROLE_BY_NAME = "SELECT * FROM training_schema.roles WHERE name = (?)";
-    private final static String SQL_GET_ROLES = "SELECT * FROM training_schema.roles";
+    private final static String SQL_GET_ROLE_BY_ID = "SELECT role_id, name FROM training_schema.roles WHERE role_id = (?)";
+    private final static String SQL_GET_ROLE_BY_NAME = "SELECT role_id, name FROM training_schema.roles WHERE name = (?)";
+    private final static String SQL_GET_ROLES = "SELECT role_id, name FROM training_schema.roles";
     private final static Logger LOGGER = LogManager.getLogger(RoleDAO.class);
 
     public RoleDAO(){

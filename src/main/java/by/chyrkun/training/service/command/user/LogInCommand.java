@@ -1,8 +1,9 @@
-package by.chyrkun.training.service.command;
+package by.chyrkun.training.service.command.user;
 
 import by.chyrkun.training.controller.CommandResult;
 import by.chyrkun.training.controller.RequestContent;
 import by.chyrkun.training.model.User;
+import by.chyrkun.training.service.command.Command;
 import by.chyrkun.training.service.receiver.UserReceiver;
 import by.chyrkun.training.service.resource.ConfigurationManager;
 import by.chyrkun.training.service.resource.MessageManager;

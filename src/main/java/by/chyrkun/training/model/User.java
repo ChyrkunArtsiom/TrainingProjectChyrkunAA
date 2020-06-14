@@ -27,6 +27,12 @@ public class User extends Entity {
         setRole(role);
     }
 
+    public User(int id, String firstname, String secondname) {
+        setId(id);
+        setFirstname(firstname);
+        setSecondname(secondname);
+    }
+
     public User(User user){
         setId(user.getId());
         setLogin(user.getLogin());
@@ -105,6 +111,6 @@ public class User extends Entity {
     @Override
     public String toString() {
         return "User id: " + this.id + ", login: " + this.login + ", firstname: " +
-                this.firstname + ", secondname: " + this.secondname + ", role: " + this.role.getName();
+                this.firstname + ", secondname: " + this.secondname + ", role: " + this.role.toString();
     }
 }

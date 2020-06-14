@@ -50,11 +50,22 @@ public class CourseReceiver {
     }
 
     public List<Course> getByTeacher(int teacher_id) {
-        List<Course> teachers;
+        List<Course> courses;
         CourseDAO courseDAO = new CourseDAO();
         try {
-            teachers = courseDAO.getByTeacher(teacher_id);
-            return teachers;
+            courses = courseDAO.getByTeacher(teacher_id);
+            return courses;
+        }finally {
+            courseDAO.close();
+        }
+    }
+
+    public List<Course> getByStudent(int student_id, boolean chosen) {
+        List<Course> courses;
+        CourseDAO courseDAO = new CourseDAO();
+        try {
+            courses = courseDAO.getCoursesByStudent(student_id, chosen);
+            return courses;
         }finally {
             courseDAO.close();
         }

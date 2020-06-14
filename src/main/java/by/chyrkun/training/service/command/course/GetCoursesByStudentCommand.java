@@ -9,23 +9,28 @@ import by.chyrkun.training.service.resource.ConfigurationManager;
 
 import java.util.List;
 
-public class GetCoursesByTeacherCommand implements Command {
+public class GetCoursesByStudentCommand implements Command {
     private static final String COURSES = "courses";
+    private static final String CHOSEN = "chosen";
     private static final String ERROR_MESSAGE = "errorMessage";
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
         CommandResult result = new CommandResult();
         List<Course> courses;
-        int teacher_id = (Integer)requestContent.getSessionAttributes().get("user_id");
+        boolean chosen = Boolean.parseBoolean(requestContent.getRequestAttributes().get("chosen").toString());
+        int student_id = (Integer)requestContent.getSessionAttributes().get("user_id");
         CourseReceiver courseReceiver = new CourseReceiver();
-        courses = courseReceiver.getByTeacher(teacher_id);
+        courses = courseReceiver.getByStudent(student_id, chosen);
         if (courses == null) {
             requestContent.setRequestAttribute(ERROR_MESSAGE, "Courses not found");
         }else {
             requestContent.setRequestAttribute(COURSES, courses);
         }
-        result.setPage(ConfigurationManager.getProperty("fullpath.page.courses"));
+        if (chosen) {
+            result.setPage(ConfigurationManager.getProperty("fullpath.page.courses"));
+        }
+
         return result;
     }
 }

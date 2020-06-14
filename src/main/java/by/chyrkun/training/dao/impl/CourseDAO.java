@@ -2,7 +2,6 @@ package by.chyrkun.training.dao.impl;
 
 import by.chyrkun.training.dao.AbstractDAO;
 import by.chyrkun.training.dao.db.impl.ConnectionPoolImpl;
-import by.chyrkun.training.dao.exception.DAOException;
 import by.chyrkun.training.dao.exception.EntityNotFoundDAOException;
 import by.chyrkun.training.dao.exception.UncheckedDAOException;
 import by.chyrkun.training.model.Course;
@@ -25,9 +24,19 @@ public class CourseDAO extends AbstractDAO<Course> {
     private final static String SQL_UPDATE_COURSE = "UPDATE training_schema.courses SET " +
             "name = (?), teacher_id = (?) WHERE course_id = (?)";
     private final static String SQL_DELETE_COURSE = "DELETE FROM training_schema.courses WHERE course_id = (?)";
-    private final static String SQL_GET_COURSE = "SELECT * FROM training_schema.courses WHERE course_id = (?)";
-    private final static String SQL_GET_COURSES_BY_TEACHER = "SELECT * FROM training_schema.courses WHERE teacher_id = (?)";
+    private final static String SQL_GET_COURSE = "SELECT course_id, name, teacher_id " +
+            "FROM training_schema.courses WHERE course_id = (?)";
+    private final static String SQL_GET_COURSES_BY_TEACHER = "SELECT course_id, name, teacher_id " +
+            "FROM training_schema.courses WHERE teacher_id = (?)";
     private final static Logger LOGGER = LogManager.getLogger(RoleDAO.class);
+    private final static String SQL_GET_UNCHOSEN_COURSES = "SELECT course_id, name, teacher_id " +
+            "FROM training_schema.courses " +
+            "WHERE course_id NOT IN (SELECT course_registration.course_id " +
+            "FROM training_schema.courses INNER JOIN training_schema.course_registration " +
+            "ON courses.course_id = course_registration.course_id WHERE student_id = (?))";
+    private final static String SQL_GET_CHOSEN_COURSES = "SELECT courses.course_id, name, teacher_id " +
+            "FROM training_schema.courses LEFT JOIN training_schema.course_registration " +
+            "ON courses.course_id = course_registration.course_id WHERE student_id = (?)";
 
     public CourseDAO(){
         setConnection(ConnectionPoolImpl.getInstance().getConnection());
@@ -140,6 +149,37 @@ public class CourseDAO extends AbstractDAO<Course> {
         }catch (SQLException ex) {
             LOGGER.log(Level.FATAL, "Exception during course reading by teacher");
             throw new UncheckedDAOException("Exception during course reading by teacher", ex);
+        }
+    }
+
+    public List<Course> getCoursesByStudent(int student_id, boolean chosen) {
+        LOGGER.log(Level.INFO, "Selecting courses for student...");
+        List<Course> courses = new ArrayList<>();
+        String name, query;
+        int course_id, teacher_id;
+        if (chosen) {
+            query = SQL_GET_CHOSEN_COURSES;
+        }else {
+            query = SQL_GET_UNCHOSEN_COURSES;
+        }
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, student_id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (!resultSet.isBeforeFirst()){
+                return null;
+            }
+            AbstractDAO userDAO = new UserDAO(connection);
+            while (resultSet.next()){
+                course_id = resultSet.getInt("course_id");
+                name = resultSet.getString("name");
+                teacher_id = resultSet.getInt("teacher_id");
+                User teacher = (User) userDAO.getEntityById(teacher_id).get();
+                courses.add(new Course(course_id, name, teacher));
+            }
+            return courses;
+        }catch (SQLException ex) {
+            LOGGER.log(Level.FATAL, "Exception during reading courses for student");
+            throw new UncheckedDAOException("Exception during reading courses for student", ex);
         }
     }
 }

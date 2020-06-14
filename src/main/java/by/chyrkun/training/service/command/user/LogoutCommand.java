@@ -1,7 +1,8 @@
-package by.chyrkun.training.service.command;
+package by.chyrkun.training.service.command.user;
 
 import by.chyrkun.training.controller.CommandResult;
 import by.chyrkun.training.controller.RequestContent;
+import by.chyrkun.training.service.command.Command;
 import by.chyrkun.training.service.resource.ConfigurationManager;
 
 public class LogoutCommand implements Command {

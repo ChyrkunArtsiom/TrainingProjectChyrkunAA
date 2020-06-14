@@ -3,12 +3,13 @@ package by.chyrkun.training.service.command.course;
 import by.chyrkun.training.controller.CommandResult;
 import by.chyrkun.training.controller.RequestContent;
 import by.chyrkun.training.model.Course;
+import by.chyrkun.training.service.command.BaseCommand;
 import by.chyrkun.training.service.command.Command;
+import by.chyrkun.training.service.command.task.GetTasksByCourseCommand;
 import by.chyrkun.training.service.receiver.CourseReceiver;
 import by.chyrkun.training.service.resource.ConfigurationManager;
-import by.chyrkun.training.service.util.RequestContentSetter;
 
-public class GetCourseCommand implements Command {
+public class GetCourseCommand extends BaseCommand implements Command {
     private static final String PARAM_COURSE_ID = "course_id";
     private static final String ERROR_MESSAGE = "errorMessage";
     CourseReceiver courseReceiver = new CourseReceiver();
@@ -22,8 +23,9 @@ public class GetCourseCommand implements Command {
             requestContent.setRequestAttribute(ERROR_MESSAGE, "Course not found");
         }else {
             requestContent.setRequestAttribute("course", course);
+            setNext(new GetTasksByCourseCommand());
+            next.execute(requestContent);
         }
-        RequestContentSetter.showTasks(requestContent);
         result.setPage(ConfigurationManager.getProperty("fullpath.page.course"));
         return result;
     }

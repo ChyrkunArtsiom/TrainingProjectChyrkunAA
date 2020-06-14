@@ -1,6 +1,7 @@
 package by.chyrkun.training.service.command;
 
 import by.chyrkun.training.service.command.course.*;
+import by.chyrkun.training.service.command.role.GetRolesCommand;
 import by.chyrkun.training.service.command.task.CreateTaskCommand;
 import by.chyrkun.training.service.command.task.DeleteTaskCommand;
 import by.chyrkun.training.service.command.user.*;
@@ -15,13 +16,14 @@ public enum CommandType {
     CREATE_COURSE(new CreateCourseCommand()),
     DELETE_COURSE(new DeleteCourseCommand()),
     UPDATE_COURSE(new UpdateCourseCommand()),
-    GET_COURSES_BY_TEACHER(new GetCoursesByTeacherCommand()),
+    GET_COURSES(new GetCoursesCommand()),
     COURSE(new GetCourseCommand()),
     CREATE_TASK(new CreateTaskCommand()),
     DELETE_TASK(new DeleteTaskCommand()),
     LOGIN(new LogInCommand()),
     LOGOUT(new LogoutCommand()),
     PROFILE(new GetUserCommand());
+
     private Command command;
 
     CommandType(Command command){

@@ -19,6 +19,9 @@
 <c:if test="${sessionScope.role eq 'teacher'}">
     <p><a href="${pageContext.request.contextPath}/teacher">Teacher page</a> </p>
 </c:if>
+<c:if test="${sessionScope.role eq 'student'}">
+    <p><a href="${pageContext.request.contextPath}/student">Student page</a> </p>
+</c:if>
 <a href="${pageContext.request.contextPath}/roles">roles</a>
 </body>
 </html>

@@ -24,9 +24,12 @@ public class TaskDAO extends AbstractDAO<Task> implements StatementSetter<Task>,
     private final static String SQL_UPDATE_TASK = "UPDATE training_schema.tasks SET " +
             "name = (?), course_id = (?), startdate = (?), deadline = (?) WHERE task_id = (?)";
     private final static String SQL_DELETE_TASK = "DELETE FROM training_schema.tasks WHERE task_id = (?)";
-    private final static String SQL_GET_TASK = "SELECT * FROM training_schema.tasks WHERE task_id = (?)";
-    private final static String SQL_GET_ALL_TASKS = "SELECT * FROM training_schema.tasks";
-    private final static String SQL_GET_TASKS_BY_COURSE = "SELECT * FROM training_schema.tasks WHERE course_id = (?)";
+    private final static String SQL_GET_TASK = "SELECT task_id, name, course_id, startdate, deadline " +
+            "FROM training_schema.tasks WHERE task_id = (?)";
+    private final static String SQL_GET_ALL_TASKS = "SELECT task_id, name, course_id, startdate, deadline " +
+            "FROM training_schema.tasks";
+    private final static String SQL_GET_TASKS_BY_COURSE = "SELECT task_id, name, course_id, startdate, deadline " +
+            "FROM training_schema.tasks WHERE course_id = (?)";
     private final static Logger LOGGER = LogManager.getLogger(RoleDAO.class);
 
     public TaskDAO(){

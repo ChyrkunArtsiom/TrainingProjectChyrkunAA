@@ -6,7 +6,6 @@ import by.chyrkun.training.service.command.Command;
 import by.chyrkun.training.service.receiver.CourseReceiver;
 import by.chyrkun.training.service.resource.ConfigurationManager;
 import by.chyrkun.training.service.resource.MessageManager;
-import by.chyrkun.training.service.validator.ParamValidator;
 
 public class DeleteCourseCommand implements Command {
     private static final String PARAM_COURSE_ID = "course_id";
@@ -24,7 +23,7 @@ public class DeleteCourseCommand implements Command {
         else {
             requestContent.setSessionAttribute(MESSAGE, messages.getMessage("courseNotFound"));
         }
-        result.setPage(ConfigurationManager.getProperty("shortpath.page.teacher.showcourses"));
+        result.setPage(ConfigurationManager.getProperty("shortpath.page.teacher.courses"));
         result.setResponseType(CommandResult.ResponseType.REDIRECT);
         requestContent.setRequestAttribute(PARAM_COURSE_ID, course_id);
         return result;

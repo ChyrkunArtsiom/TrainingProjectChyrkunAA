@@ -32,7 +32,6 @@
     <c:remove var="message" scope="session"/>
     <p>${errorMessage}</p>
     <p><input type="submit" value="Sign up"/></p>
-    <a href="${pageContext.request.contextPath}/">On main page</a>
 </form>
 <c:import url="footer.jsp"/>
 </body>

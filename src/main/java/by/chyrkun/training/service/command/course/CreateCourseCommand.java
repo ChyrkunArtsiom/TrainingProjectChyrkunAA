@@ -4,17 +4,18 @@ import by.chyrkun.training.controller.CommandResult;
 import by.chyrkun.training.controller.RequestContent;
 import by.chyrkun.training.model.Course;
 import by.chyrkun.training.model.User;
+import by.chyrkun.training.service.command.BaseCommand;
 import by.chyrkun.training.service.command.Command;
+import by.chyrkun.training.service.command.user.GetTeachersCommand;
 import by.chyrkun.training.service.exception.EntityNotFoundServiceException;
 import by.chyrkun.training.service.receiver.CourseReceiver;
 import by.chyrkun.training.service.receiver.UserReceiver;
 import by.chyrkun.training.service.resource.ConfigurationManager;
 import by.chyrkun.training.service.resource.MessageManager;
-import by.chyrkun.training.service.util.RequestContentSetter;
 import by.chyrkun.training.service.validator.CourseValidator;
 import by.chyrkun.training.service.validator.ParamValidator;
 
-public class CreateCourseCommand implements Command {
+public class CreateCourseCommand extends BaseCommand implements Command {
     private static final String PARAM_NAME = "name";
     private static final String PARAM_TEACHER_ID = "teacher_id";
     private static final String ERROR_MESSAGE = "errorMessage";
@@ -63,7 +64,8 @@ public class CreateCourseCommand implements Command {
             result.setPage(ConfigurationManager.getProperty("fullpath.page.createcourse"));
         }finally {
             if (showTeachers) {
-                RequestContentSetter.showTeachers(requestContent);
+                setNext(new GetTeachersCommand());
+                next.execute(requestContent);
             }
             requestContent.setRequestAttribute(PARAM_NAME, name);
             requestContent.setRequestAttribute(PARAM_TEACHER_ID, teacher_id);
