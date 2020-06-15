@@ -44,11 +44,11 @@ public class UserDAO extends AbstractDAO<User> {
     @Override
     public boolean create(User user) throws EntityNotFoundDAOException {
         LOGGER.log(Level.INFO, "Creating user column...");
-        if (getEntityByLogin(user.getLogin()).isPresent()){
+        if (getEntityByLogin(user.getLogin()).isPresent()) {
             return false;
         }
         AbstractDAO roleDAO = new RoleDAO(connection);
-        if (roleDAO.getEntityById(user.getRole().getId()).isEmpty()){
+        if (roleDAO.getEntityById(user.getRole().getId()).isEmpty()) {
             throw new EntityNotFoundDAOException("Cannot create user. Role not found");
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_CREATE_USER)) {
@@ -57,7 +57,7 @@ public class UserDAO extends AbstractDAO<User> {
             preparedStatement.setString(3, user.getFirstname());
             preparedStatement.setString(4, user.getSecondname());
             preparedStatement.setInt(5, user.getRole().getId());
-            if (preparedStatement.executeUpdate() > 0){
+            if (preparedStatement.executeUpdate() > 0) {
                 return true;
             }
         } catch (SQLException ex) {
@@ -68,14 +68,14 @@ public class UserDAO extends AbstractDAO<User> {
     }
 
     @Override
-    public boolean delete(User user){
+    public boolean delete(User user) {
         LOGGER.log(Level.INFO, "Deleting user column...");
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_USER)) {
             preparedStatement.setInt(1, user.getId());
-            if (preparedStatement.executeUpdate() > 0){
+            if (preparedStatement.executeUpdate() > 0) {
                 return true;
             }
-        }catch (SQLException ex){
+        }catch (SQLException ex) {
             LOGGER.log(Level.FATAL, "Exception during user deleting");
             throw new UncheckedDAOException("Exception during user deleting", ex);
         }
@@ -83,7 +83,7 @@ public class UserDAO extends AbstractDAO<User> {
     }
 
     @Override
-    public Optional<User> update(User user){
+    public Optional<User> update(User user) {
         LOGGER.log(Level.INFO, "Updating user column...");
         Optional<User> optionalUser = getEntityByLogin(user.getLogin());
         if (optionalUser.isPresent()) {
@@ -93,10 +93,10 @@ public class UserDAO extends AbstractDAO<User> {
                 preparedStatement.setString(3, user.getSecondname());
                 preparedStatement.setInt(4, user.getRole().getId());
                 preparedStatement.setString(5, user.getLogin());
-                if (preparedStatement.executeUpdate() > 0){
+                if (preparedStatement.executeUpdate() > 0) {
                     return optionalUser;
                 }
-            }catch (SQLException ex){
+            }catch (SQLException ex) {
                 LOGGER.log(Level.FATAL, "Exception during user updating");
                 throw new UncheckedDAOException("Exception during user updating", ex);
             }
@@ -105,63 +105,63 @@ public class UserDAO extends AbstractDAO<User> {
     }
 
     @Override
-    public Optional<User> getEntityById(int id){
+    public Optional<User> getEntityById(int id) {
         LOGGER.log(Level.INFO, "Selecting user column by id...");
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_USER_BY_ID)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            if (!resultSet.isBeforeFirst()){
+            if (!resultSet.isBeforeFirst()) {
                 return Optional.empty();
             }
             List<User> users = getList(resultSet, false);
             return Optional.of(users.get(0));
-        }catch (SQLException ex){
+        }catch (SQLException ex) {
             LOGGER.log(Level.FATAL, "Exception during user reading");
             throw new UncheckedDAOException("Exception during user reading", ex);
         }
     }
 
-    public Optional<User> getEntityByLogin(String login){
+    public Optional<User> getEntityByLogin(String login) {
         LOGGER.log(Level.INFO, "Selecting user column by name...");
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_USER_BY_LOGIN)) {
             preparedStatement.setString(1, login);
             ResultSet resultSet = preparedStatement.executeQuery();
-            if (!resultSet.isBeforeFirst()){
+            if (!resultSet.isBeforeFirst()) {
                 return Optional.empty();
             }
             List<User> users = getList(resultSet, true);
             return Optional.of(users.get(0));
-        }catch (SQLException ex){
+        }catch (SQLException ex) {
             LOGGER.log(Level.FATAL, "Exception during user reading");
             throw new UncheckedDAOException("Exception during user reading", ex);
         }
     }
 
-    public List<User> getTeachers(){
+    public List<User> getTeachers() {
         LOGGER.log(Level.INFO, "Selecting all teachers...");
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_ALL_TEACHERS)) {
             ResultSet  resultSet = preparedStatement.executeQuery();
-            if (!resultSet.isBeforeFirst()){
+            if (!resultSet.isBeforeFirst()) {
                 return null;
             }
             String firstname;
             String secondname;
             int user_id;
             List<User> teachers = new ArrayList<>();
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 user_id = resultSet.getInt("user_id");
                 firstname = resultSet.getString("firstname");
                 secondname = resultSet.getString("secondname");
                 teachers.add(new User(user_id, firstname, secondname));
             }
             return teachers;
-        }catch (SQLException ex){
+        }catch (SQLException ex) {
             LOGGER.log(Level.FATAL, "Exception during getting teachers");
             throw new UncheckedDAOException("Exception during getting teachers", ex);
         }
     }
 
-    private List<User> getList(ResultSet resultSet, boolean hasPassword) throws SQLException{
+    private List<User> getList(ResultSet resultSet, boolean hasPassword) throws SQLException {
         List<User> users = new ArrayList<>();
         String login;
         String password = null;
@@ -170,7 +170,7 @@ public class UserDAO extends AbstractDAO<User> {
         int user_id;
         int role_id;
         User user;
-        while (resultSet.next()){
+        while (resultSet.next()) {
             user_id = resultSet.getInt("user_id");
             login = resultSet.getString("login");
             if (hasPassword) {

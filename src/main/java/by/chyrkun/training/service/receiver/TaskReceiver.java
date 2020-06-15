@@ -11,9 +11,9 @@ import java.util.Optional;
 public class TaskReceiver {
     public boolean create(Task task) throws EntityNotFoundServiceException {
         TaskDAO taskDAO = new TaskDAO();
-        try{
+        try {
             return taskDAO.create(task);
-        }catch (EntityNotFoundDAOException ex){
+        }catch (EntityNotFoundDAOException ex) {
             throw new EntityNotFoundServiceException(ex.getMessage(), ex);
         }finally {
             taskDAO.close();

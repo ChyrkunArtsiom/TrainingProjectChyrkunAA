@@ -21,18 +21,6 @@ public enum AppProperties {
         url = resourceBundle.getString("dbUrl");
         user = resourceBundle.getString("dbUser");
         password = resourceBundle.getString("dbPassword");
-
-    /*    try(InputStream inputStream = new FileInputStream("./src/main/resources/application.properties")){
-            Properties properties = new Properties();
-            properties.load(inputStream);
-            url = properties.getProperty("dbUrl");
-            user = properties.getProperty("dbUser");
-            password = properties.getProperty("dbPassword");
-
-        }catch (IOException ex){
-            LOGGER.log(Level.FATAL, "Properties file doesn't exist");
-            throw new UncheckedIOException("Properties file doesn't exist", ex);
-        }*/
     }
 
     public static AppProperties getDbProperties() {

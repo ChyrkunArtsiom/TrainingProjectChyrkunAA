@@ -10,14 +10,14 @@ public class Task extends Entity {
     private LocalDate deadline;
     private Course course;
 
-    public Task(String name, LocalDate startdate, LocalDate deadline, Course course){
+    public Task(String name, LocalDate startdate, LocalDate deadline, Course course) {
         setName(name);
         setStartdate(startdate);
         setDeadline(deadline);
         setCourse(course);
     }
 
-    public Task(Integer id, String name, LocalDate startdate, LocalDate deadline, Course course){
+    public Task(Integer id, String name, LocalDate startdate, LocalDate deadline, Course course) {
         setId(id);
         setName(name);
         setStartdate(startdate);
@@ -25,7 +25,7 @@ public class Task extends Entity {
         setCourse(course);
     }
 
-    public Task(Task task){
+    public Task(Task task) {
         setId(task.getId());
         setName(task.getName());
         setStartdate(task.getStartdate());
@@ -75,7 +75,7 @@ public class Task extends Entity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o){
+        if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()){

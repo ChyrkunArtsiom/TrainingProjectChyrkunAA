@@ -50,13 +50,13 @@ public class CourseDAO extends AbstractDAO<Course> {
     public boolean create(Course course) throws EntityNotFoundDAOException {
         LOGGER.log(Level.INFO, "Creating course column...");
         AbstractDAO userDAO = new UserDAO(connection);
-        if (userDAO.getEntityById(course.getTeacher().getId()).isEmpty()){
+        if (userDAO.getEntityById(course.getTeacher().getId()).isEmpty()) {
             throw new EntityNotFoundDAOException("Cannot create course. User not found");
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_CREATE_COURSE)) {
             preparedStatement.setString(1, course.getName());
             preparedStatement.setInt(2, course.getTeacher().getId());
-            if (preparedStatement.executeUpdate() > 0){
+            if (preparedStatement.executeUpdate() > 0) {
                 return true;
             }
         } catch (SQLException ex) {
@@ -67,14 +67,14 @@ public class CourseDAO extends AbstractDAO<Course> {
     }
 
     @Override
-    public boolean delete(Course course){
+    public boolean delete(Course course) {
         LOGGER.log(Level.INFO, "Deleting course column...");
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_COURSE)) {
             preparedStatement.setInt(1, course.getId());
-            if (preparedStatement.executeUpdate() > 0){
+            if (preparedStatement.executeUpdate() > 0) {
                 return true;
             }
-        }catch (SQLException ex){
+        }catch (SQLException ex) {
             LOGGER.log(Level.FATAL, "Exception during course deleting");
             throw new UncheckedDAOException("Exception during course deleting", ex);
         }
@@ -82,7 +82,7 @@ public class CourseDAO extends AbstractDAO<Course> {
     }
 
     @Override
-    public Optional<Course> update(Course course){
+    public Optional<Course> update(Course course) {
         LOGGER.log(Level.INFO, "Updating course column...");
         Optional<Course> optionalCourse = getEntityById(course.getId());
         if (optionalCourse.isPresent()) {
@@ -90,10 +90,10 @@ public class CourseDAO extends AbstractDAO<Course> {
                 preparedStatement.setString(1, course.getName());
                 preparedStatement.setInt(2, course.getTeacher().getId());
                 preparedStatement.setInt(3, course.getId());
-                if (preparedStatement.executeUpdate() > 0){
+                if (preparedStatement.executeUpdate() > 0) {
                     return optionalCourse;
                 }
-            }catch (SQLException ex){
+            }catch (SQLException ex) {
                 LOGGER.log(Level.FATAL, "Exception during course updating");
                 throw new UncheckedDAOException("Exception during course updating", ex);
             }
@@ -102,7 +102,7 @@ public class CourseDAO extends AbstractDAO<Course> {
     }
 
     @Override
-    public Optional<Course> getEntityById(int id){
+    public Optional<Course> getEntityById(int id) {
         LOGGER.log(Level.INFO, "Selecting course column by id...");
         String name = null;
         int course_id = 0;
@@ -110,10 +110,10 @@ public class CourseDAO extends AbstractDAO<Course> {
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_COURSE)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            if (!resultSet.isBeforeFirst()){
+            if (!resultSet.isBeforeFirst()) {
                 return Optional.empty();
             }
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 course_id = resultSet.getInt("course_id");
                 name = resultSet.getString("name");
                 teacher_id = resultSet.getInt("teacher_id");
@@ -121,7 +121,7 @@ public class CourseDAO extends AbstractDAO<Course> {
             AbstractDAO userDAO = new UserDAO(connection);
             User teacher = (User) userDAO.getEntityById(teacher_id).get();
             return Optional.of(new Course(course_id, name, teacher));
-        }catch (SQLException ex){
+        }catch (SQLException ex) {
             LOGGER.log(Level.FATAL, "Exception during course reading");
             throw new UncheckedDAOException("Exception during course reading", ex);
         }
@@ -135,12 +135,12 @@ public class CourseDAO extends AbstractDAO<Course> {
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_COURSES_BY_TEACHER)) {
             preparedStatement.setInt(1, teacher_id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            if (!resultSet.isBeforeFirst()){
+            if (!resultSet.isBeforeFirst()) {
                 return null;
             }
             AbstractDAO userDAO = new UserDAO(connection);
             User teacher = (User) userDAO.getEntityById(teacher_id).get();
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 course_id = resultSet.getInt("course_id");
                 name = resultSet.getString("name");
                 courses.add(new Course(course_id, name, teacher));
@@ -165,11 +165,11 @@ public class CourseDAO extends AbstractDAO<Course> {
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setInt(1, student_id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            if (!resultSet.isBeforeFirst()){
+            if (!resultSet.isBeforeFirst()) {
                 return null;
             }
             AbstractDAO userDAO = new UserDAO(connection);
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 course_id = resultSet.getInt("course_id");
                 name = resultSet.getString("name");
                 teacher_id = resultSet.getInt("teacher_id");

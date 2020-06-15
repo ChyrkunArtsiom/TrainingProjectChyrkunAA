@@ -4,7 +4,7 @@ import by.chyrkun.training.controller.CommandResult;
 import by.chyrkun.training.controller.RequestContent;
 import by.chyrkun.training.service.command.Command;
 import by.chyrkun.training.service.receiver.CourseReceiver;
-import by.chyrkun.training.service.resource.ConfigurationManager;
+import by.chyrkun.training.service.resource.PageManager;
 import by.chyrkun.training.service.resource.MessageManager;
 
 public class DeleteCourseCommand implements Command {
@@ -23,7 +23,7 @@ public class DeleteCourseCommand implements Command {
         else {
             requestContent.setSessionAttribute(MESSAGE, messages.getMessage("courseNotFound"));
         }
-        result.setPage(ConfigurationManager.getProperty("shortpath.page.teacher.courses"));
+        result.setPage(PageManager.getProperty("shortpath.page.teacher.courses"));
         result.setResponseType(CommandResult.ResponseType.REDIRECT);
         requestContent.setRequestAttribute(PARAM_COURSE_ID, course_id);
         return result;

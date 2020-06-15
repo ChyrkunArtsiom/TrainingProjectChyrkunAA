@@ -8,12 +8,12 @@ import java.util.Optional;
 
 public class RoleReceiver {
 
-    public Role getById(int id){
+    public Role getById(int id) {
         Optional<Role> role;
         RoleDAO roleDAO = new RoleDAO();
         try {
             role = roleDAO.getEntityById(id);
-            if (role.isPresent()){
+            if (role.isPresent()) {
                 return role.get();
             }
             else {

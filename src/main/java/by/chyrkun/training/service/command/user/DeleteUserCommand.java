@@ -4,7 +4,7 @@ import by.chyrkun.training.controller.CommandResult;
 import by.chyrkun.training.controller.RequestContent;
 import by.chyrkun.training.service.command.Command;
 import by.chyrkun.training.service.receiver.UserReceiver;
-import by.chyrkun.training.service.resource.ConfigurationManager;
+import by.chyrkun.training.service.resource.PageManager;
 import by.chyrkun.training.service.resource.MessageManager;
 
 public class DeleteUserCommand implements Command {
@@ -21,17 +21,17 @@ public class DeleteUserCommand implements Command {
         if (login != null) {
             if (receiver.delete(login)) {
                 requestContent.setRequestAttribute(MESSAGE, messages.getMessage("userWasDeleted"));
-                result.setPage(ConfigurationManager.getProperty("shortpath.page.admin.deleteuser"));
+                result.setPage(PageManager.getProperty("shortpath.page.admin.deleteuser"));
                 result.setResponseType(CommandResult.ResponseType.REDIRECT);
             }
             else {
                 requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("userNotFound"));
-                result.setPage(ConfigurationManager.getProperty("fullpath.page.admin.deleteuser"));
+                result.setPage(PageManager.getProperty("fullpath.page.admin.deleteuser"));
             }
         }
         else {
             requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("lineIsEmpty"));
-            result.setPage(ConfigurationManager.getProperty("fullpath.page.admin.deleteuser"));
+            result.setPage(PageManager.getProperty("fullpath.page.admin.deleteuser"));
         }
         requestContent.setRequestAttribute(PARAM_NAME_USER_LOGIN, login);
         return result;

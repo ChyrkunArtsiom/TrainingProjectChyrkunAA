@@ -33,7 +33,7 @@ public class User extends Entity {
         setSecondname(secondname);
     }
 
-    public User(User user){
+    public User(User user) {
         setId(user.getId());
         setLogin(user.getLogin());
         setPassword(user.getPassword());
@@ -92,7 +92,7 @@ public class User extends Entity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o){
+        if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()){

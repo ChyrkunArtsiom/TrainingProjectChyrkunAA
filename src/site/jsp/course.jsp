@@ -19,19 +19,27 @@
 <body>
 <c:import url="header.jsp"/>
 <c:if test="${not empty course}">
-    <p>Id: ${course.id}</p>
     <p>Name: ${course.name}</p>
     <p>Teacher: ${course.teacher.firstname} ${course.teacher.secondname}</p>
-    <form name="CreateTaskForm" method="get" action="${pageContext.request.contextPath}/teacher/createtask">
-        <input type="hidden" name="course_id" value="${course.id}"/>
-        <input type="submit" value="Create task"/>
-    </form>
-    <br/>
-    <form name="DeleteCourseForm" method="post" action="${pageContext.request.contextPath}/session">
-        <input type="hidden" name="command" value="delete_course"/>
-        <input type="hidden" name="course_id" value="${course.id}"/>
-        <input type="submit" value="Delete Course"/>
-    </form>
+    <c:if test="${sessionScope.role eq 'teacher'}">
+        <form name="CreateTaskForm" method="post" action="${pageContext.request.contextPath}/teacher/createtask">
+            <input type="hidden" name="course_id" value="${course.id}"/>
+            <input type="submit" value="Create task"/>
+        </form>
+        <br/>
+        <form name="DeleteCourseForm" method="post" action="${pageContext.request.contextPath}/session">
+            <input type="hidden" name="command" value="delete_course"/>
+            <input type="hidden" name="course_id" value="${course.id}"/>
+            <input type="submit" value="Delete Course"/>
+        </form>
+    </c:if>
+    <c:if test="${sessionScope.role eq 'student' and registered eq 'false'}">
+        <form name="RegisterForm" method="post" action="${pageContext.request.contextPath}/session">
+            <input type="hidden" name="command" value="register_course"/>
+            <input type="hidden" name="course_id" value="${course.id}"/>
+            <input type="submit" value="Register"/>
+        </form>
+    </c:if>
     <c:if test="${not empty tasks}">
         Tasks:<br/>
         <table>
@@ -49,7 +57,6 @@
             </c:forEach>
         </table>
     </c:if>
-
 </c:if>
 <p>${errorMessage}</p>
 <c:import url="footer.jsp"/>

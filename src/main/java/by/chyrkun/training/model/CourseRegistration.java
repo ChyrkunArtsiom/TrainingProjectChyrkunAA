@@ -7,19 +7,19 @@ public class CourseRegistration extends Entity {
     private Course course;
     private User student;
 
-    public CourseRegistration(CourseRegistration courseRegistration){
+    public CourseRegistration(CourseRegistration courseRegistration) {
         setId(courseRegistration.getId());
         setCourse(courseRegistration.getCourse());
         setStudent(courseRegistration.getStudent());
     }
 
-    public CourseRegistration(int id, Course course, User student){
+    public CourseRegistration(int id, Course course, User student) {
         setId(id);
         setCourse(course);
         setStudent(student);
     }
 
-    public CourseRegistration(Course course, User student){
+    public CourseRegistration(Course course, User student) {
         setCourse(course);
         setStudent(student);
     }
@@ -50,7 +50,7 @@ public class CourseRegistration extends Entity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o){
+        if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()){

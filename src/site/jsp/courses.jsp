@@ -9,13 +9,34 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
+    <title>Course</title>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+        }
+    </style>
     <title>Courses</title>
 </head>
 <body>
 <c:import url="header.jsp"/>
-<c:forEach items="${courses}" var="course">
-    <p><a href="${pageContext.request.contextPath}/course?command=course&course_id=${course.id}">${course.name}</a></p>
-</c:forEach>
+<c:if test="${not empty courses}">
+    <table>
+        <tr>
+            <th>Name</th>
+            <c:if test="${sessionScope.role eq 'student'}">
+                <th>Teacher</th>
+            </c:if>
+        </tr>
+        <c:forEach items="${courses}" var="course">
+            <tr>
+                <th><a href="${pageContext.request.contextPath}/course?command=course&course_id=${course.id}">${course.name}</a></th>
+                <c:if test="${sessionScope.role eq 'student'}">
+                    <th>${course.teacher.firstname} ${course.teacher.secondname}</th>
+                </c:if>
+            </tr>
+        </c:forEach>
+    </table>
+</c:if>
 <p>${sessionScope.message}</p>
 <c:remove var="message" scope="session"/>
 ${errorMessage}

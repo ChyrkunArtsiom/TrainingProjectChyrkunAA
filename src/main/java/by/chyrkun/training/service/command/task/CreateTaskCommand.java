@@ -8,7 +8,7 @@ import by.chyrkun.training.service.command.Command;
 import by.chyrkun.training.service.exception.EntityNotFoundServiceException;
 import by.chyrkun.training.service.receiver.CourseReceiver;
 import by.chyrkun.training.service.receiver.TaskReceiver;
-import by.chyrkun.training.service.resource.ConfigurationManager;
+import by.chyrkun.training.service.resource.PageManager;
 import by.chyrkun.training.service.resource.MessageManager;
 import by.chyrkun.training.service.validator.ParamValidator;
 import by.chyrkun.training.service.validator.TaskValidator;
@@ -33,10 +33,10 @@ public class CreateTaskCommand implements Command {
         String course_id = requestContent.getRequestParameters().get(PARAM_COURSE_ID)[0];
         String startdate = requestContent.getRequestParameters().get(PARAM_STARTDATE)[0];
         String deadline = requestContent.getRequestParameters().get(PARAM_DEADLINE)[0];
-        first: try{
+        first: try {
             if (!ParamValidator.isPresent(name, course_id, startdate)) {
                 requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("lineIsEmpty"));
-                result.setPage(ConfigurationManager.getProperty("fullpath.page.createtask"));
+                result.setPage(PageManager.getProperty("fullpath.page.createtask"));
                 break first;
             }
             else {
@@ -44,12 +44,12 @@ public class CreateTaskCommand implements Command {
                 Course course = courseReceiver.getById(Integer.parseInt(course_id));
                 if (course == null) {
                     requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("courseNotFound"));
-                    result.setPage(ConfigurationManager.getProperty("fullpath.page.createtask"));
+                    result.setPage(PageManager.getProperty("fullpath.page.createtask"));
                     break first;
                 }
                 if (!TaskValidator.isNameValid(name)) {
                     requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("nameIsNotValid"));
-                    result.setPage(ConfigurationManager.getProperty("fullpath.page.createtask"));
+                    result.setPage(PageManager.getProperty("fullpath.page.createtask"));
                     break first;
                 }
                 LocalDate start = LocalDate.parse(startdate);
@@ -59,24 +59,24 @@ public class CreateTaskCommand implements Command {
                 }
                 if (!TaskValidator.isDateValid(start, end)) {
                     requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("dateIsNotValid"));
-                    result.setPage(ConfigurationManager.getProperty("fullpath.page.createtask"));
+                    result.setPage(PageManager.getProperty("fullpath.page.createtask"));
                     break first;
                 }
                 Task task = new Task(name, start, end, course);
                 if (receiver.create(task)) {
                     requestContent.setSessionAttribute(MESSAGE, messages.getMessage("taskWasCreated"));
-                    result.setPage(ConfigurationManager.getProperty("shortpath.page.createtask"));
+                    result.setPage(PageManager.getProperty("shortpath.page.createtask"));
                     result.setResponseType(CommandResult.ResponseType.REDIRECT);
                 }
             }
         }
-        catch (DateTimeParseException ex){
+        catch (DateTimeParseException ex) {
             requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("dateIsNotValid"));
-            result.setPage(ConfigurationManager.getProperty("fullpath.page.createtask"));
+            result.setPage(PageManager.getProperty("fullpath.page.createtask"));
         }
         catch (EntityNotFoundServiceException ex) {
             requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("courseNotFound"));
-            result.setPage(ConfigurationManager.getProperty("fullpath.page.createtask"));
+            result.setPage(PageManager.getProperty("fullpath.page.createtask"));
         }
         finally {
             requestContent.setRequestAttribute(PARAM_NAME, name);

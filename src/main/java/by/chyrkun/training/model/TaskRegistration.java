@@ -7,7 +7,7 @@ public class TaskRegistration extends Entity {
     private int grade;
     private String review;
 
-    public TaskRegistration(int id, Task task, User student, int grade, String review){
+    public TaskRegistration(int id, Task task, User student, int grade, String review) {
         setId(id);
         setTask(task);
         setStudent(student);
@@ -15,14 +15,14 @@ public class TaskRegistration extends Entity {
         setReview(review);
     }
 
-    public TaskRegistration(Task task, User student, int grade, String review){
+    public TaskRegistration(Task task, User student, int grade, String review) {
         setTask(task);
         setStudent(student);
         setGrade(grade);
         setReview(review);
     }
 
-    public TaskRegistration(TaskRegistration taskRegistration){
+    public TaskRegistration(TaskRegistration taskRegistration) {
         setId(taskRegistration.getId());
         setTask(taskRegistration.getTask());
         setStudent(taskRegistration.getStudent());

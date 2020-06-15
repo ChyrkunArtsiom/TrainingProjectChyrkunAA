@@ -13,11 +13,11 @@ public class GetRolesCommand extends BaseCommand implements Command {
     private static final String PARAM_NAME_ROLES = "roles";
     private static final String ERROR_MESSAGE = "errorMessage";
     private CommandResult result = new CommandResult();
+    private  RoleReceiver roleReceiver = new RoleReceiver();
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
         List<Role> roles;
-        RoleReceiver roleReceiver = new RoleReceiver();
         roles = roleReceiver.getAll();
         if (roles == null) {
             requestContent.setRequestAttribute(ERROR_MESSAGE, "Roles not found");

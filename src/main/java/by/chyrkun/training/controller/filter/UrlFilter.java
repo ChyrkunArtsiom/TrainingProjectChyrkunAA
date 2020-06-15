@@ -1,6 +1,6 @@
 package by.chyrkun.training.controller.filter;
 
-import by.chyrkun.training.service.resource.ConfigurationManager;
+import by.chyrkun.training.service.resource.PageManager;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -16,24 +16,24 @@ public class UrlFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
         switch(req.getRequestURI()) {
-            case "/training/signup":{
+            case "/training/signup": {
                 dispatcher = req.getRequestDispatcher("/jsp/createUser.jsp");
                 dispatcher.forward(req, resp);
                 break;
             }
-            case "/training/login":{
+            case "/training/login": {
                 dispatcher = req.getRequestDispatcher("/jsp/login.jsp");
                 dispatcher.forward(req, resp);
                 break;
             }
-            case "/training/userProfile":{
+            case "/training/userProfile": {
                 dispatcher = req.getRequestDispatcher("/app");
                 dispatcher.forward(req, resp);
                 break;
             }
             case "/training/session": {
                 if (req.getHeader("referer") == null) {
-                    resp.sendRedirect(ConfigurationManager.getProperty("shortpath.page.login"));
+                    resp.sendRedirect("/training" + PageManager.getProperty("shortpath.page.login"));
                 }
                 else {
                     dispatcher = req.getRequestDispatcher("/app");

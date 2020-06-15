@@ -14,14 +14,16 @@
 <body>
 <c:import url="header.jsp"/>
 <c:if test="${sessionScope.role eq 'admin'}">
+    <c:import url="admin.jsp"/>
     <p><a href="${pageContext.request.contextPath}/admin">Admin page</a> </p>
 </c:if>
 <c:if test="${sessionScope.role eq 'teacher'}">
+    <c:import url="teacher.jsp"/>
     <p><a href="${pageContext.request.contextPath}/teacher">Teacher page</a> </p>
 </c:if>
 <c:if test="${sessionScope.role eq 'student'}">
+    <c:import url="student.jsp"/>
     <p><a href="${pageContext.request.contextPath}/student">Student page</a> </p>
 </c:if>
-<a href="${pageContext.request.contextPath}/roles">roles</a>
 </body>
 </html>

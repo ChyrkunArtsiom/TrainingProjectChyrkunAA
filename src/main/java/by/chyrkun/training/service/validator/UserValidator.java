@@ -20,4 +20,12 @@ public class UserValidator {
     public static boolean isNameValid(String name) {
         return  ((name == null) || (name.matches("^[а-яёА-Яa-zA-Z]{1,45}$")));
     }
+
+    public static boolean isTecaher(User user) {
+        return user.getRole().getName().equals("teacher");
+    }
+
+    public static boolean isStudent(User user) {
+        return user.getRole().getName().equals("student");
+    }
 }

@@ -5,7 +5,7 @@ import by.chyrkun.training.controller.RequestContent;
 import by.chyrkun.training.model.User;
 import by.chyrkun.training.service.command.Command;
 import by.chyrkun.training.service.receiver.UserReceiver;
-import by.chyrkun.training.service.resource.ConfigurationManager;
+import by.chyrkun.training.service.resource.PageManager;
 
 public class GetUserCommand implements Command {
     private static final String PARAM_NAME_LOGIN = "login";
@@ -23,6 +23,6 @@ public class GetUserCommand implements Command {
         }else {
             requestContent.setRequestAttribute("user", user);
         }
-        result.setPage(ConfigurationManager.getProperty("fullpath.page.profile"));
+        result.setPage(PageManager.getProperty("fullpath.page.profile"));
         return result;    }
 }

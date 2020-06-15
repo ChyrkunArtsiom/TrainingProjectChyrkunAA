@@ -27,7 +27,7 @@ public class CommandResult {
     }
 
     public void setResponseType(ResponseType responseType) {
-        if (responseType == null){
+        if (responseType == null) {
             this.responseType = ResponseType.FORWARD;
         }
         this.responseType = responseType;

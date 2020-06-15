@@ -6,7 +6,7 @@ import by.chyrkun.training.model.User;
 import by.chyrkun.training.service.command.BaseCommand;
 import by.chyrkun.training.service.command.Command;
 import by.chyrkun.training.service.receiver.UserReceiver;
-import by.chyrkun.training.service.resource.ConfigurationManager;
+import by.chyrkun.training.service.resource.PageManager;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ public class GetTeachersCommand extends BaseCommand implements Command {
         }else {
             requestContent.setRequestAttribute(TEACHERS, teachers);
         }
-        result.setPage(ConfigurationManager.getProperty("fullpath.page.createcourse"));
+        result.setPage(PageManager.getProperty("fullpath.page.createcourse"));
         return result;
     }
 }

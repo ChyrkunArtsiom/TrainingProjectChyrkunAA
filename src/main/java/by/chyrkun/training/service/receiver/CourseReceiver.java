@@ -11,9 +11,9 @@ import java.util.Optional;
 public class CourseReceiver {
     public boolean create(Course course) throws EntityNotFoundServiceException {
         CourseDAO courseDAO = new CourseDAO();
-        try{
+        try {
             return courseDAO.create(course);
-        }catch (EntityNotFoundDAOException ex){
+        }catch (EntityNotFoundDAOException ex) {
             throw new EntityNotFoundServiceException(ex.getMessage(), ex);
         }finally {
             courseDAO.close();
@@ -33,7 +33,7 @@ public class CourseReceiver {
         }
     }
 
-    public Course getById(int id){
+    public Course getById(int id) {
         Optional<Course> course;
         CourseDAO courseDAO = new CourseDAO();
         try {

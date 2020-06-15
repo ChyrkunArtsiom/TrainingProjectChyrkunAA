@@ -10,7 +10,7 @@ public class RequestContent {
     private HashMap<String, Object> sessionAttributes;
 //    private HashMap<String, String> headers;
 
-    public void extractValues(HttpServletRequest req){
+    public void extractValues(HttpServletRequest req) {
         requestParameters = new HashMap<>(req.getParameterMap());
         requestAttributes = new HashMap<>();
         sessionAttributes = new HashMap<>();
@@ -54,7 +54,7 @@ public class RequestContent {
         return sessionAttributes;
     }
 
-    public void setRequestAttribute(String name, Object value){
+    public void setRequestAttribute(String name, Object value) {
         requestAttributes.put(name, value);
     }
 

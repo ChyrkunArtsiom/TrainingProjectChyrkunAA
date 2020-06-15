@@ -13,7 +13,7 @@ public class CommandFactoryClient {
         return INSTANCE;
     }
 
-    public Command initCommand(HttpServletRequest req) throws CommandNotFoundException{
+    public Command initCommand(HttpServletRequest req) throws CommandNotFoundException {
         Command command;
         try {
             String action = req.getParameter("command");
@@ -25,7 +25,7 @@ public class CommandFactoryClient {
             }
             CommandType type = CommandType.valueOf(action.toUpperCase());
             command = type.getCommand();
-        }catch (IllegalArgumentException ex){
+        }catch (IllegalArgumentException ex) {
             throw new CommandNotFoundException("Command not found");
         }
         return command;

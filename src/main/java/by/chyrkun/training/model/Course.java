@@ -13,12 +13,12 @@ public class Course extends Entity {
         setTeacher(teacher);
     }
 
-    public Course(String name, User teacher){
+    public Course(String name, User teacher) {
         setName(name);
         setTeacher(teacher);
     }
 
-    public Course(Course course){
+    public Course(Course course) {
         setId(course.getId());
         setName(course.getName());
         setTeacher(course.getTeacher());
@@ -50,7 +50,7 @@ public class Course extends Entity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o){
+        if (this == o) {
             return true;
         }
         if (o == null || getClass() != o.getClass()){

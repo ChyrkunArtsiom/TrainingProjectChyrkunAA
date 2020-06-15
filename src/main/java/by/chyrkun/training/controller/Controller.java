@@ -1,5 +1,6 @@
 package by.chyrkun.training.controller;
 
+import by.chyrkun.training.dao.db.impl.ConnectionPoolImpl;
 import by.chyrkun.training.service.command.Command;
 import by.chyrkun.training.service.exception.CommandNotFoundException;
 import by.chyrkun.training.service.factory.CommandFactoryClient;
@@ -56,7 +57,7 @@ public class Controller extends HttpServlet {
 
     @Override
     public void destroy() {
-        System.out.println("test_destroy");
+        ConnectionPoolImpl.getInstance().shutdown();
         super.destroy();
     }
 }

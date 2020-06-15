@@ -12,10 +12,9 @@
     <title>Student page</title>
 </head>
 <body>
-<c:import url="header.jsp"/>
 <p><a href="${pageContext.request.contextPath}/student/courses">Show courses</a></p>
 <p><a href="${pageContext.request.contextPath}/student/registered">Show registered courses</a></p>
-<br/>
-<c:import url="footer.jsp"/>
+<p>${sessionScope.message}</p>
+<c:remove var="message" scope="session"/>
 </body>
 </html>

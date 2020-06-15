@@ -13,9 +13,9 @@ public class UserReceiver {
 
     public boolean create(User user) throws EntityNotFoundServiceException {
         UserDAO userDAO = new UserDAO();
-        try{
+        try {
             return userDAO.create(user);
-        }catch (EntityNotFoundDAOException ex){
+        }catch (EntityNotFoundDAOException ex) {
             throw new EntityNotFoundServiceException(ex.getMessage(), ex);
         }
         finally {

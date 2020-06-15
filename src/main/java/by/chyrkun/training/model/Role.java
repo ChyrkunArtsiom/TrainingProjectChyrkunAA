@@ -15,7 +15,7 @@ public class Role extends Entity {
         setName(name);
     }
 
-    public Role(Role role){
+    public Role(Role role) {
         setId(role.getId());
         setName(role.getName());
     }
@@ -38,10 +38,10 @@ public class Role extends Entity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o){
+        if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()){
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
         Role role = (Role) o;

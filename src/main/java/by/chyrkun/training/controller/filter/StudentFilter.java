@@ -26,7 +26,7 @@ public class StudentFilter implements Filter {
             resp.sendRedirect(req.getContextPath() + indexPath);
             return;
         }
-        switch(req.getRequestURI()){
+        switch(req.getRequestURI()) {
             case "/training/student": {
                 dispatcher = req.getRequestDispatcher("/jsp/student.jsp");
                 dispatcher.forward(req, resp);
@@ -46,7 +46,7 @@ public class StudentFilter implements Filter {
                 dispatcher.forward(req, resp);
                 break;
             }
-            default:{
+            default: {
                 resp.sendError(404, "Page is not found");
             }
         }

@@ -11,7 +11,7 @@ import by.chyrkun.training.service.exception.EntityNotFoundServiceException;
 import by.chyrkun.training.service.receiver.RoleReceiver;
 import by.chyrkun.training.service.receiver.UserReceiver;
 import by.chyrkun.training.service.resource.MessageManager;
-import by.chyrkun.training.service.resource.ConfigurationManager;
+import by.chyrkun.training.service.resource.PageManager;
 import by.chyrkun.training.service.validator.ParamValidator;
 import by.chyrkun.training.service.validator.UserValidator;
 
@@ -24,6 +24,7 @@ public class CreateUserCommand extends BaseCommand implements Command {
     private static final String ERROR_MESSAGE = "errorMessage";
     private static final String MESSAGE = "message";
     private UserReceiver receiver = new UserReceiver();
+
     @Override
     public CommandResult execute(RequestContent requestContent) {
         MessageManager messages = MessageManager.EN;
@@ -41,7 +42,7 @@ public class CreateUserCommand extends BaseCommand implements Command {
                 role_id_string = requestContent.getRequestParameters().get(PARAM_NAME_ROLE_ID)[0];
                 if (!ParamValidator.isPresent(login, password, firstname, secondname, role_id_string)) {
                     requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("lineIsEmpty"));
-                    result.setPage(ConfigurationManager.getProperty("fullpath.page.createuser"));
+                    result.setPage(PageManager.getProperty("fullpath.page.createuser"));
                     break first;
                 }
                 role_id = Integer.parseInt(role_id_string);
@@ -49,7 +50,7 @@ public class CreateUserCommand extends BaseCommand implements Command {
             else {
                 if (!ParamValidator.isPresent(login, password, firstname, secondname)) {
                     requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("lineIsEmpty"));
-                    result.setPage(ConfigurationManager.getProperty("fullpath.page.createuser"));
+                    result.setPage(PageManager.getProperty("fullpath.page.createuser"));
                     break first;
                 }
                 role_id = 2;
@@ -58,47 +59,47 @@ public class CreateUserCommand extends BaseCommand implements Command {
             Role role = roleReceiver.getById(role_id);
             if (role == null) {
                 requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("roleNotFound"));
-                result.setPage(ConfigurationManager.getProperty("fullpath.page.createuser"));
+                result.setPage(PageManager.getProperty("fullpath.page.createuser"));
                 break first;
             }
             if (!UserValidator.isLoginValid(login)) {
                 requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("usernameIsNotValid"));
-                result.setPage(ConfigurationManager.getProperty("fullpath.page.createuser"));
+                result.setPage(PageManager.getProperty("fullpath.page.createuser"));
                 break first;
             }
             if (!UserValidator.isPasswordValid(password)) {
                 requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("passwordIsNotValid"));
-                result.setPage(ConfigurationManager.getProperty("fullpath.page.createuser"));
+                result.setPage(PageManager.getProperty("fullpath.page.createuser"));
                 break first;
             }
             if (!UserValidator.isNameValid(firstname) || !UserValidator.isNameValid(secondname)) {
                 requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("nameIsNotValid"));
-                result.setPage(ConfigurationManager.getProperty("fullpath.page.createuser"));
+                result.setPage(PageManager.getProperty("fullpath.page.createuser"));
                 break first;
             }
             User user = new User(login, password, firstname, secondname, role);
             if (receiver.create(user)) {
                 if (isAdmin) {
                     requestContent.setSessionAttribute(MESSAGE, messages.getMessage("userWasCreated"));
-                    result.setPage(ConfigurationManager.getProperty("shortpath.page.admin.createuser"));
+                    result.setPage(PageManager.getProperty("shortpath.page.admin.createuser"));
                     result.setResponseType(CommandResult.ResponseType.REDIRECT);
                 }
                 else{
                     requestContent.setSessionAttribute("user_id", user.getId());
                     requestContent.setSessionAttribute("userName", user.getLogin());
-                    result.setPage(ConfigurationManager.getProperty("shortpath.page.main"));
+                    result.setPage(PageManager.getProperty("shortpath.page.main"));
                     result.setResponseType(CommandResult.ResponseType.REDIRECT);
                 }
                 shouldShowRoles = false;
             }
             else {
                 requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("suchUserAlreadyExists"));
-                result.setPage(ConfigurationManager.getProperty("fullpath.page.createuser"));
+                result.setPage(PageManager.getProperty("fullpath.page.createuser"));
             }
 
         }catch (EntityNotFoundServiceException ex) {
             requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("roleNotFound"));
-            result.setPage(ConfigurationManager.getProperty("fullpath.page.createuser"));
+            result.setPage(PageManager.getProperty("fullpath.page.createuser"));
         }
         if (shouldShowRoles) {
             setNext(new GetRolesCommand());

@@ -26,7 +26,7 @@ public class AdminFilter implements Filter {
             resp.sendRedirect(req.getContextPath() + indexPath);
             return;
         }
-        switch(req.getRequestURI()){
+        switch(req.getRequestURI()) {
             case "/training/admin": {
                 dispatcher = req.getRequestDispatcher("/jsp/admin.jsp");
                 dispatcher.forward(req, resp);

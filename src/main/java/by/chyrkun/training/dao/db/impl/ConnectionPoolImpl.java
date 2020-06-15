@@ -43,24 +43,24 @@ public enum ConnectionPoolImpl implements ConnectionPoolDAO {
 
         try{
             DriverManager.registerDriver(new org.postgresql.Driver());
-        }catch (SQLException ex){
+        }catch (SQLException ex) {
             LOGGER.log(Level.FATAL, "Driver cannot be registered");
             throw new UncheckedDAOException("Driver cannot be registered", ex);
         }
 
         try{
-            for (int i = 0; i < poolSize; i++){
+            for (int i = 0; i < poolSize; i++) {
                 Connection$Proxy connection$Proxy = new Connection$Proxy(DriverManager.getConnection(url, user, password));
                 connectionPool.add(connection$Proxy);
             }
-        }catch (SQLException ex){
+        }catch (SQLException ex) {
             LOGGER.log(Level.FATAL, "Cannot connect to database with given properties");
             throw new UncheckedDAOException("Cannot connect to database with given properties", ex);
         }
     }
 
     @Override
-    public Connection$Proxy getConnection(){
+    public Connection$Proxy getConnection() {
         Connection$Proxy connection$Proxy = connectionPool.remove(connectionPool.size()-1);
         usedConnections.add(connection$Proxy);
         return connection$Proxy;
@@ -72,7 +72,7 @@ public enum ConnectionPoolImpl implements ConnectionPoolDAO {
             if (connection != null) {
                 connection.setAutoCommit(true);
             }
-        }catch (SQLException ex){
+        }catch (SQLException ex) {
             LOGGER.log(Level.FATAL, "Connection cannot be released");
             throw new UncheckedDAOException("Connection cannot be released", ex);
         }
@@ -86,17 +86,17 @@ public enum ConnectionPoolImpl implements ConnectionPoolDAO {
         LOGGER.log(Level.INFO, "Shutting down connections...");
         connectionPool.addAll(usedConnections);
         usedConnections.clear();
-        for (Connection$Proxy c : connectionPool){
+        for (Connection$Proxy c : connectionPool) {
             c.connectionClose();
         }
         connectionPool.clear();
         Enumeration<Driver> drivers = DriverManager.getDrivers();
-        try{
-            while (drivers.hasMoreElements()){
+        try {
+            while (drivers.hasMoreElements()) {
                 Driver driver = drivers.nextElement();
                 DriverManager.deregisterDriver(driver);
             }
-        }catch (SQLException ex){
+        }catch (SQLException ex) {
             LOGGER.log(Level.FATAL, "Connection cannot be released");
             throw new UncheckedDAOException("Connection cannot be released", ex);
         }

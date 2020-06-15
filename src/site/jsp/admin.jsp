@@ -13,13 +13,11 @@
 </head>
 <body>
 <h3>Admin page</h3>
-<c:import url="header.jsp"/>
 <p><a href="${pageContext.request.contextPath}/admin/createuser">Create user</a> </p>
 <p><a href="${pageContext.request.contextPath}/admin/deleteuser">Delete user</a> </p>
 <br/>
 <p><a href="${pageContext.request.contextPath}/admin/createcourse">Create course</a> </p>
 <p><a href="${pageContext.request.contextPath}/admin/deletecourse">Delete course</a> </p>
 <p><a href="${pageContext.request.contextPath}/admin/updatecourse">Update course</a> </p>
-<c:import url="footer.jsp"/>
 </body>
 </html>

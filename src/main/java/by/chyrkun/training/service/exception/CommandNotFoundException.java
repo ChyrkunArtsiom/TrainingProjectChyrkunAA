@@ -1,6 +1,6 @@
 package by.chyrkun.training.service.exception;
 
-public class CommandNotFoundException extends ServiceException{
+public class CommandNotFoundException extends ServiceException {
     public CommandNotFoundException(String message) {
         super(message);
     }

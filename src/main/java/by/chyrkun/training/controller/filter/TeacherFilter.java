@@ -59,7 +59,7 @@ public class TeacherFilter implements Filter {
                 dispatcher.forward(req, resp);
                 break;
             }
-            default:{
+            default: {
                 resp.sendError(404, "Page is not found");
             }
         }
