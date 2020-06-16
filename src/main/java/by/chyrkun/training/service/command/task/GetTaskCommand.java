@@ -4,8 +4,9 @@ import by.chyrkun.training.controller.CommandResult;
 import by.chyrkun.training.controller.RequestContent;
 import by.chyrkun.training.model.Task;
 import by.chyrkun.training.service.command.Command;
+import by.chyrkun.training.service.receiver.CourseRegistrationReceiver;
 import by.chyrkun.training.service.receiver.TaskReceiver;
-import by.chyrkun.training.service.resource.MessageManager;
+import by.chyrkun.training.service.receiver.TaskRegistrationReceiver;
 import by.chyrkun.training.service.resource.PageManager;
 
 public class GetTaskCommand implements Command {
@@ -13,14 +14,26 @@ public class GetTaskCommand implements Command {
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
-        MessageManager messages = MessageManager.EN;
         CommandResult result = new CommandResult();
-        String task_id = requestContent.getRequestParameters().get("task_id")[0];
-        Task task = receiver.getById(Integer.parseInt(task_id));
-        if (task == null) {
-            requestContent.setRequestAttribute("errorMessage", messages.getMessage("taskNotFound"));
-        }else {
-            requestContent.setRequestAttribute("task", task);
+        int task_id = Integer.parseInt(requestContent.getRequestParameters().get("task_id")[0]);
+        int user_id = Integer.parseInt(requestContent.getSessionAttributes().get("user_id").toString());
+        String role = requestContent.getSessionAttributes().get("role").toString();
+        Task task = receiver.getById(task_id);
+        if (task != null) {
+            if (role.equals("teacher") && task.getCourse().getTeacher().getId() == user_id) {
+                requestContent.setRequestAttribute("task", task);
+            }else if (role.equals("student")) {
+                CourseRegistrationReceiver courseRegistrationReceiver = new CourseRegistrationReceiver();
+                boolean registered = courseRegistrationReceiver.isCourseRegistered(task.getCourse().getId(), user_id);
+                if (registered) {
+                    TaskRegistrationReceiver taskRegistrationReceiver = new TaskRegistrationReceiver();
+                    boolean performed = taskRegistrationReceiver.isPerformed(task_id, user_id);
+                    if (performed) {
+                        requestContent.setRequestAttribute("performed", "true");
+                    }
+                    requestContent.setRequestAttribute("task", task);
+                }
+            }
         }
         result.setPage(PageManager.getProperty("fullpath.page.task"));
         return result;

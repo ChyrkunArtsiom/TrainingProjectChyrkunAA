@@ -17,7 +17,7 @@
     <p>Login: <input type="text" name="login" value="${login}"/></p>
     <p>Password: <input type="password" name="password" value=""/></p>
     <p>${errorMessage}</p>
-    <p><input type="submit" value="Log in"/></p>
+    <input type="submit" value="Log in"/>
 </form>
 <c:import url="footer.jsp"/>
 </body>

@@ -21,17 +21,19 @@
 <c:if test="${not empty course}">
     <p>Name: ${course.name}</p>
     <p>Teacher: ${course.teacher.firstname} ${course.teacher.secondname}</p>
+    <c:if test="${sessionScope.role eq 'admin'}">
+        <form name="DeleteCourseForm" method="post" action="${pageContext.request.contextPath}/session">
+            <input type="hidden" name="command" value="delete_course"/>
+            <input type="hidden" name="course_id" value="${course.id}"/>
+            <input type="submit" value="Delete Course"/>
+        </form>
+    </c:if>
     <c:if test="${sessionScope.role eq 'teacher'}">
         <form name="CreateTaskForm" method="post" action="${pageContext.request.contextPath}/teacher/createtask">
             <input type="hidden" name="course_id" value="${course.id}"/>
             <input type="submit" value="Create task"/>
         </form>
         <br/>
-        <form name="DeleteCourseForm" method="post" action="${pageContext.request.contextPath}/session">
-            <input type="hidden" name="command" value="delete_course"/>
-            <input type="hidden" name="course_id" value="${course.id}"/>
-            <input type="submit" value="Delete Course"/>
-        </form>
     </c:if>
     <c:if test="${sessionScope.role eq 'student' and registered eq 'false'}">
         <form name="RegisterForm" method="post" action="${pageContext.request.contextPath}/session">
@@ -40,7 +42,7 @@
             <input type="submit" value="Register"/>
         </form>
     </c:if>
-    <c:if test="${not empty tasks}">
+    <c:if test="${not empty tasks and (sessionScope.role eq 'teacher' or (sessionScope.role eq 'student' and registered ne 'false'))}">
         Tasks:<br/>
         <table>
             <tr>

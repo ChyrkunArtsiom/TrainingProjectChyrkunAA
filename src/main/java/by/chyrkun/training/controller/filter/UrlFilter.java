@@ -8,52 +8,36 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebFilter(urlPatterns = {"/signup", "/session", "/login", "/userProfile", "/course", "/task"})
+@WebFilter(urlPatterns = {"/userProfile", "/course", "/task"})
 public class UrlFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         RequestDispatcher dispatcher;
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
-        switch(req.getRequestURI()) {
-            case "/training/signup": {
-                dispatcher = req.getRequestDispatcher("/jsp/createUser.jsp");
-                dispatcher.forward(req, resp);
-                break;
-            }
-            case "/training/login": {
-                dispatcher = req.getRequestDispatcher("/jsp/login.jsp");
-                dispatcher.forward(req, resp);
-                break;
-            }
-            case "/training/userProfile": {
-                dispatcher = req.getRequestDispatcher("/app");
-                dispatcher.forward(req, resp);
-                break;
-            }
-            case "/training/task": {
-                dispatcher = req.getRequestDispatcher("/app");
-                dispatcher.forward(req, resp);
-                break;
-            }
-            case "/training/session": {
-                if (req.getHeader("referer") == null) {
-                    resp.sendRedirect("/training" + PageManager.getProperty("shortpath.page.login"));
-                }
-                else {
+        if (((HttpServletRequest) request).getSession().getAttribute("user_id") != null) {
+            switch(req.getRequestURI()) {
+                case "/training/userProfile": {
                     dispatcher = req.getRequestDispatcher("/app");
                     dispatcher.forward(req, resp);
+                    break;
                 }
-                break;
+                case "/training/task": {
+                    dispatcher = req.getRequestDispatcher("/app");
+                    dispatcher.forward(req, resp);
+                    break;
+                }
+                case "/training/course": {
+                    dispatcher = req.getRequestDispatcher("/app");
+                    dispatcher.forward(req, resp);
+                    break;
+                }
+                default:{
+                    resp.sendError(404, "Page is not found");
+                }
             }
-            case "/training/course": {
-                dispatcher = req.getRequestDispatcher("/app");
-                dispatcher.forward(req, resp);
-                break;
-            }
-            default:{
-                resp.sendError(404, "Page is not found");
-            }
+        }else {
+            chain.doFilter(request, response);
         }
     }
 }

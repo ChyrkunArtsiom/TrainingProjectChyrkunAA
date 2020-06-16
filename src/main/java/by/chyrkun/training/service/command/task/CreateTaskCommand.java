@@ -78,12 +78,10 @@ public class CreateTaskCommand implements Command {
             requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("courseNotFound"));
             result.setPage(PageManager.getProperty("fullpath.page.createtask"));
         }
-        finally {
-            requestContent.setRequestAttribute(PARAM_NAME, name);
-            requestContent.setRequestAttribute(PARAM_COURSE_ID, course_id);
-            requestContent.setRequestAttribute(PARAM_STARTDATE, startdate);
-            requestContent.setRequestAttribute(PARAM_DEADLINE, deadline);
-            return result;
-        }
+        requestContent.setRequestAttribute(PARAM_NAME, name);
+        requestContent.setRequestAttribute(PARAM_COURSE_ID, course_id);
+        requestContent.setRequestAttribute(PARAM_STARTDATE, startdate);
+        requestContent.setRequestAttribute(PARAM_DEADLINE, deadline);
+        return result;
     }
 }

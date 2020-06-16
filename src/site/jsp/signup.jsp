@@ -9,10 +9,19 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Create user</title>
+    <c:choose>
+        <c:when test="${sessionScope.role eq 'admin'}">
+            <title>Create user</title>
+        </c:when>
+        <c:otherwise>
+            <title>Sign up</title>
+        </c:otherwise>
+    </c:choose>
 </head>
 <body>
-<c:import url="header.jsp"/>
+<c:if test="${sessionScope.role eq 'admin'}">
+    <c:import url="header.jsp"/>
+</c:if>
 <form name="CreateUserForm" method="post" action="${pageContext.request.contextPath}/session">
     <input type="hidden" name="command" value="create_user"/>
     <p>Login: <input type="text" name="login" value="${login}"/></p>

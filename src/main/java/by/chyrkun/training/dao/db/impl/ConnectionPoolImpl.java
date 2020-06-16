@@ -61,6 +61,10 @@ public enum ConnectionPoolImpl implements ConnectionPoolDAO {
 
     @Override
     public Connection$Proxy getConnection() {
+        if (connectionPool.size() < 1) {
+            LOGGER.log(Level.FATAL, "Connection pool is emopty");
+            throw new UncheckedDAOException("Connection pool is emopty");
+        }
         Connection$Proxy connection$Proxy = connectionPool.remove(connectionPool.size()-1);
         usedConnections.add(connection$Proxy);
         return connection$Proxy;

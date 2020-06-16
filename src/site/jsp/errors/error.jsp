@@ -17,5 +17,6 @@ Servlet name: ${pageContext.errorData.servletName} <br/>
 Status code: ${pageContext.errorData.statusCode} <br/>
 Message: ${requestScope['javax.servlet.error.message']}<br/>
 Exception: ${pageContext.exception} <br/>
+<a href="${pageContext.request.contextPath}/">On main page</a>
 </body>
 </html>

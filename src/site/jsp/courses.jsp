@@ -9,7 +9,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Course</title>
     <style>
         table, th, td {
             border: 1px solid black;
@@ -20,6 +19,7 @@
 <body>
 <c:import url="header.jsp"/>
 <c:if test="${not empty courses}">
+    Courses:<br/>
     <table>
         <tr>
             <th>Name</th>

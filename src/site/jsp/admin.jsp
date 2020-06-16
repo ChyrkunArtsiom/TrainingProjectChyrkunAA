@@ -12,7 +12,6 @@
     <title>Admin page</title>
 </head>
 <body>
-<h3>Admin page</h3>
 <p><a href="${pageContext.request.contextPath}/admin/createuser">Create user</a> </p>
 <p><a href="${pageContext.request.contextPath}/admin/deleteuser">Delete user</a> </p>
 <br/>

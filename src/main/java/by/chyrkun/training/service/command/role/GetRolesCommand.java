@@ -24,7 +24,7 @@ public class GetRolesCommand extends BaseCommand implements Command {
         }else {
             requestContent.setRequestAttribute(PARAM_NAME_ROLES, roles);
         }
-        result.setPage("/jsp/createUser.jsp");
+        result.setPage("/jsp/signup.jsp");
         return result;
     }
 }

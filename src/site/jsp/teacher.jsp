@@ -12,11 +12,7 @@
     <title>Teacher page</title>
 </head>
 <body>
-<h3>Teacher page</h3>
 <p><a href="${pageContext.request.contextPath}/teacher/courses">Show courses</a> </p>
 <br/>
-<p><a href="${pageContext.request.contextPath}/teacher/createtask">Create task</a> </p>
-<p><a href="${pageContext.request.contextPath}/teacher/deletetask">Delete task</a> </p>
-<p><a href="${pageContext.request.contextPath}/teacher/opentask">Open task</a> </p>
 </body>
 </html>

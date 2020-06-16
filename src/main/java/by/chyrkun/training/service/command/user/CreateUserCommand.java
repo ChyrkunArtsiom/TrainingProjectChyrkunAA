@@ -111,7 +111,7 @@ public class CreateUserCommand extends BaseCommand implements Command {
         return result;
     }
 
-    boolean isAdmin(RequestContent requestContent) {
+    private boolean isAdmin(RequestContent requestContent) {
         if ((requestContent.getSessionAttributes().get("role")!= null) &&
                 (requestContent.getSessionAttributes().get("role").equals("admin"))) {
             return true;

@@ -16,7 +16,6 @@
     <c:remove var="message" scope="session"/>
     <p>${errorMessage}</p>
     <p><input type="submit" value="Create task"/></p>
-    <a href="${pageContext.request.contextPath}/">On main page</a>
 </form>
 <c:import url="footer.jsp"/>
 </body>

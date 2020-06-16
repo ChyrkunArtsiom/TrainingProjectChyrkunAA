@@ -38,11 +38,6 @@ public class TeacherFilter implements Filter {
                 dispatcher.forward(req, resp);
                 break;
             }
-            case "/training/teacher/deletetask": {
-                dispatcher = req.getRequestDispatcher("/jsp/deleteTask.jsp");
-                dispatcher.forward(req, resp);
-                break;
-            }
             case "/training/teacher/opentask": {
                 dispatcher = req.getRequestDispatcher("/jsp/openTask.jsp");
                 dispatcher.forward(req, resp);

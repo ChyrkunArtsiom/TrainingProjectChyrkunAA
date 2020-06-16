@@ -29,6 +29,8 @@ public class TaskRegistrationDAO extends AbstractDAO<TaskRegistration> implement
     private final static String SQL_GET_TASK_REGISTRATION =
             "SELECT task_id, student_id, grade, review, task_registration_id " +
                     "FROM training_schema.task_registration WHERE task_registration_id = (?)";
+    private final static String SQL_GET_TASK_REGISTRATION_BY_TASK_STUDENT = "SELECT task_registration_id " +
+            "FROM training_schema.task_registration WHERE task_id = (?) AND student_id = (?)";
     private final static Logger LOGGER = LogManager.getLogger(RoleDAO.class);
 
     public TaskRegistrationDAO(){
@@ -124,6 +126,20 @@ public class TaskRegistrationDAO extends AbstractDAO<TaskRegistration> implement
         }catch (SQLException ex) {
             LOGGER.log(Level.FATAL, "Exception during task_registration reading");
             throw new UncheckedDAOException("Exception during task_registration reading", ex);
+        }
+    }
+
+    public boolean isPerformed(int task_id, int student_id) {
+        LOGGER.log(Level.INFO, "Selecting task_registration column by task, student...");
+        try (PreparedStatement preparedStatement =
+                     connection.prepareStatement(SQL_GET_TASK_REGISTRATION_BY_TASK_STUDENT)) {
+            preparedStatement.setInt(1, task_id);
+            preparedStatement.setInt(2, student_id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.isBeforeFirst();
+        }catch (SQLException ex) {
+            LOGGER.log(Level.FATAL, "Exception during task_registration reading by task, student");
+            throw new UncheckedDAOException("Exception during task_registration reading by task, student", ex);
         }
     }
 

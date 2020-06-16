@@ -15,8 +15,6 @@ import by.chyrkun.training.service.resource.MessageManager;
 import by.chyrkun.training.service.resource.PageManager;
 
 public class RegisterCourseCommand implements Command {
-    private static final String PARAM_COURSE_ID = "course_id";
-    private static final String PARAM_STUDENT_ID = "user_id";
     private static final String MESSAGE = "message";
     private CourseRegistrationReceiver receiver = new CourseRegistrationReceiver();
 
@@ -24,8 +22,8 @@ public class RegisterCourseCommand implements Command {
     public CommandResult execute(RequestContent requestContent) {
         MessageManager messages = MessageManager.EN;
         CommandResult result = new CommandResult();
-        String student_id = requestContent.getSessionAttributes().get(PARAM_STUDENT_ID).toString();
-        String course_id = requestContent.getRequestParameters().get(PARAM_COURSE_ID)[0];
+        String student_id = requestContent.getSessionAttributes().get("user_id").toString();
+        String course_id = requestContent.getRequestParameters().get("course_id")[0];
         UserReceiver userReceiver = new UserReceiver();
         CourseReceiver courseReceiver = new CourseReceiver();
         User student = userReceiver.getById(Integer.parseInt(student_id));
@@ -48,7 +46,7 @@ public class RegisterCourseCommand implements Command {
                 requestContent.setSessionAttribute(MESSAGE, messages.getMessage("courseNotFound"));
             }
         }
-        result.setPage(PageManager.getProperty("shortpath.page.studentpage"));
+        result.setPage(PageManager.getProperty("shortpath.page.main"));
         result.setResponseType(CommandResult.ResponseType.REDIRECT);
         return result;
     }
