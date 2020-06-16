@@ -13,12 +13,7 @@ public class RoleReceiver {
         RoleDAO roleDAO = new RoleDAO();
         try {
             role = roleDAO.getEntityById(id);
-            if (role.isPresent()) {
-                return role.get();
-            }
-            else {
-                return null;
-            }
+            return role.orElse(null);
         }finally {
             roleDAO.close();
         }
@@ -27,8 +22,7 @@ public class RoleReceiver {
     public List<Role> getAll() {
         RoleDAO roleDAO = new RoleDAO();
         try {
-            List<Role> roles = roleDAO.getAll();
-            return roles;
+            return roleDAO.getAll();
         }finally {
             roleDAO.close();
         }

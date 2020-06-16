@@ -9,8 +9,10 @@ import java.util.List;
 import java.util.Optional;
 
 public class TaskReceiver {
+    private TaskDAO taskDAO = new TaskDAO();
+
     public boolean create(Task task) throws EntityNotFoundServiceException {
-        TaskDAO taskDAO = new TaskDAO();
+        taskDAO = new TaskDAO();
         try {
             return taskDAO.create(task);
         }catch (EntityNotFoundDAOException ex) {
@@ -21,13 +23,10 @@ public class TaskReceiver {
     }
 
     public boolean delete(int id) {
-        TaskDAO taskDAO = new TaskDAO();
+        taskDAO = new TaskDAO();
         try {
             Optional<Task> task = taskDAO.getEntityById(id);
-            if (task.isPresent()) {
-                return taskDAO.delete(task.get());
-            }
-            return false;
+            return task.map(taskDAO::delete).orElse(false);
         }finally {
             taskDAO.close();
         }
@@ -35,15 +34,21 @@ public class TaskReceiver {
 
     public List<Task> getByCourse(int course_id) {
         List<Task> tasks;
-        TaskDAO taskDAO = new TaskDAO();
+        taskDAO = new TaskDAO();
         try {
             tasks = taskDAO.getByCourse(course_id);
-            if (tasks != null) {
-                return tasks;
-            }
-            else {
-                return null;
-            }
+            return tasks;
+        }finally {
+            taskDAO.close();
+        }
+    }
+
+    public Task getById(int task_id) {
+        Optional<Task> task;
+        taskDAO = new TaskDAO();
+        try {
+            task = taskDAO.getEntityById(task_id);
+            return task.orElse(null);
         }finally {
             taskDAO.close();
         }

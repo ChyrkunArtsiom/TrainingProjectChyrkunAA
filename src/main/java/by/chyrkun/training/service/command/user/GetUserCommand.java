@@ -8,21 +8,19 @@ import by.chyrkun.training.service.receiver.UserReceiver;
 import by.chyrkun.training.service.resource.PageManager;
 
 public class GetUserCommand implements Command {
-    private static final String PARAM_NAME_LOGIN = "login";
-    private static final String ERROR_MESSAGE = "errorMessage";
-    UserReceiver receiver = new UserReceiver();
+    private UserReceiver receiver = new UserReceiver();
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
         CommandResult result = new CommandResult();
-        User user;
-        String login = requestContent.getRequestParameters().get(PARAM_NAME_LOGIN)[0];
-        user = receiver.getByLogin(login);
+        String login = requestContent.getRequestParameters().get("login")[0];
+        User user = receiver.getByLogin(login);
         if (user == null) {
-            requestContent.setRequestAttribute(ERROR_MESSAGE, "User not found");
+            requestContent.setRequestAttribute("errorMessage", "User not found");
         }else {
             requestContent.setRequestAttribute("user", user);
         }
         result.setPage(PageManager.getProperty("fullpath.page.profile"));
-        return result;    }
+        return result;
+    }
 }

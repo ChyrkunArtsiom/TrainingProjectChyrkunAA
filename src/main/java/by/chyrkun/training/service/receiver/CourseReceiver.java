@@ -24,10 +24,7 @@ public class CourseReceiver {
         CourseDAO courseDAO = new CourseDAO();
         try {
             Optional<Course> user = courseDAO.getEntityById(id);
-            if (user.isPresent()) {
-                return courseDAO.delete(user.get());
-            }
-            return false;
+            return user.map(courseDAO::delete).orElse(false);
         }finally {
             courseDAO.close();
         }
@@ -38,12 +35,7 @@ public class CourseReceiver {
         CourseDAO courseDAO = new CourseDAO();
         try {
             course = courseDAO.getEntityById(id);
-            if (course.isPresent()) {
-                return course.get();
-            }
-            else {
-                return null;
-            }
+            return course.orElse(null);
         }finally {
             courseDAO.close();
         }
@@ -76,12 +68,7 @@ public class CourseReceiver {
         CourseDAO courseDAO = new CourseDAO();
         try {
             optional = courseDAO.update(course);
-            if (optional.isPresent()) {
-                return optional.get();
-            }
-            else {
-                return null;
-            }
+            return optional.orElse(null);
         }finally {
             courseDAO.close();
         }

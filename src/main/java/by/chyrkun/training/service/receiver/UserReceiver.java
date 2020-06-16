@@ -28,12 +28,7 @@ public class UserReceiver {
         UserDAO userDAO = new UserDAO();
         try {
             optional = userDAO.update(user);
-            if (optional.isPresent()) {
-                return optional.get();
-            }
-            else {
-                return null;
-            }
+            return optional.orElse(null);
         }finally {
             userDAO.close();
         }
@@ -43,10 +38,7 @@ public class UserReceiver {
         UserDAO userDAO = new UserDAO();
         try {
             Optional<User> user = userDAO.getEntityByLogin(login);
-            if (user.isPresent()) {
-                return userDAO.delete(user.get());
-            }
-            return false;
+            return user.map(userDAO::delete).orElse(false);
         }finally {
             userDAO.close();
         }
@@ -57,12 +49,7 @@ public class UserReceiver {
         UserDAO userDAO = new UserDAO();
         try {
             user = userDAO.getEntityById(id);
-            if (user.isPresent()) {
-                return user.get();
-            }
-            else {
-                return null;
-            }
+            return user.orElse(null);
         }finally {
             userDAO.close();
         }
@@ -73,19 +60,14 @@ public class UserReceiver {
         UserDAO userDAO = new UserDAO();
         try {
             user = userDAO.getEntityByLogin(login);
-            if (user.isPresent()) {
-                return user.get();
-            }
-            else {
-                return null;
-            }
+            return user.orElse(null);
         }finally {
             userDAO.close();
         }
     }
 
     public List<User> getTeachers() {
-        List<User> teachers = new ArrayList<>();
+        List<User> teachers;
         UserDAO userDAO = new UserDAO();
         try {
             teachers = userDAO.getTeachers();
