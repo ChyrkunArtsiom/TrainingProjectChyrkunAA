@@ -40,6 +40,7 @@
 <p>${sessionScope.message}</p>
 <c:remove var="message" scope="session"/>
 ${errorMessage}
+<br/>
 <c:import url="footer.jsp"/>
 </body>
 </html>

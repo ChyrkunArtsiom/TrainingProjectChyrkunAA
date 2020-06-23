@@ -22,6 +22,11 @@ public class TaskRegistration extends Entity {
         setReview(review);
     }
 
+    public TaskRegistration(Task task, User student) {
+        setTask(task);
+        setStudent(student);
+    }
+
     public TaskRegistration(TaskRegistration taskRegistration) {
         setId(taskRegistration.getId());
         setTask(taskRegistration.getTask());

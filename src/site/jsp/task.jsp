@@ -10,6 +10,11 @@
 <html>
 <head>
     <title>Task</title>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+        }
+    </style>
 </head>
 <body>
 <c:import url="header.jsp"/>
@@ -25,24 +30,53 @@
                 <input type="hidden" name="task_id" value="${task.id}"/>
                 <input type="submit" value="Delete this task"/>
             </form>
+
+            <c:if test="${not empty registrations}">
+                Completed by students tasks:<br/>
+                <table>
+                    <tr>
+                        <th>Student</th>
+                        <th>Grade</th>
+                    </tr>
+                    <c:forEach items="${registrations}" var="registration">
+                        <tr>
+                            <th><a href="${pageContext.request.contextPath}/exercise?command=exercise&exercise_id=${registration.id}">${registration.student.firstname} ${registration.student.secondname}</a></th>
+                            <th>
+                                <c:choose>
+                                    <c:when test="${registration.grade ne '0'}">${registration.grade}</c:when>
+                                    <c:otherwise>Not rated</c:otherwise>
+                                </c:choose>
+                            </th>
+                        </tr>
+                    </c:forEach>
+                </table>
+            </c:if>
         </c:if>
         <c:if test="${sessionScope.role eq 'student'}">
             <c:choose>
                 <c:when test="${performed eq 'true'}">
-                    <form name="CancelTaskForm" method="post" action="${pageContext.request.contextPath}/session">
-                        <input type="hidden" name="command" value="unregister_task"/>
-                        <input type="hidden" name="task_id" value="task_id"/>
-                        <input type="submit" value="Cancel registration"/>
-                    </form>
+                    <c:choose>
+                        <c:when test="${reviewed eq 'true'}">
+                            <p>Grade: ${exercise.grade}</p>
+                            <p>Review: ${exercise.review}</p>
+                        </c:when>
+                        <c:otherwise>
+                            <form name="CancelTaskForm" method="post" action="${pageContext.request.contextPath}/session">
+                                <input type="hidden" name="command" value="unregister_task"/>
+                                <input type="hidden" name="task_id" value="${task.id}"/>
+                                <input type="submit" value="Cancel registration"/>
+                            </form>
+                        </c:otherwise>
+                    </c:choose>
                 </c:when>
                 <c:otherwise>
                     <form name="RegisterTaskForm" method="post" action="${pageContext.request.contextPath}/session">
                         <input type="hidden" name="command" value="register_task"/>
+                        <input type="hidden" name="task_id" value="${task.id}"/>
                         <input type="submit" value="Register task"/>
                     </form>
                 </c:otherwise>
             </c:choose>
-
         </c:if>
     </c:when>
     <c:otherwise>

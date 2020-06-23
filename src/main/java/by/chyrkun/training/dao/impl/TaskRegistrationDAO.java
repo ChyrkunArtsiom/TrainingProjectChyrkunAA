@@ -1,12 +1,10 @@
 package by.chyrkun.training.dao.impl;
 
 import by.chyrkun.training.dao.db.impl.ConnectionPoolImpl;
-import by.chyrkun.training.dao.exception.DAOException;
+import by.chyrkun.training.dao.exception.*;
 import by.chyrkun.training.model.TaskRegistration;
 import by.chyrkun.training.dao.AbstractDAO;
 import by.chyrkun.training.dao.db.impl.Connection$Proxy;
-import by.chyrkun.training.dao.exception.EntityNotFoundDAOException;
-import by.chyrkun.training.dao.exception.UncheckedDAOException;
 import by.chyrkun.training.model.Task;
 import by.chyrkun.training.model.User;
 import org.apache.logging.log4j.Level;
@@ -17,6 +15,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class TaskRegistrationDAO extends AbstractDAO<TaskRegistration> implements StatementSetter<TaskRegistration>{
@@ -29,8 +29,12 @@ public class TaskRegistrationDAO extends AbstractDAO<TaskRegistration> implement
     private final static String SQL_GET_TASK_REGISTRATION =
             "SELECT task_id, student_id, grade, review, task_registration_id " +
                     "FROM training_schema.task_registration WHERE task_registration_id = (?)";
-    private final static String SQL_GET_TASK_REGISTRATION_BY_TASK_STUDENT = "SELECT task_registration_id " +
+    private final static String SQL_GET_TASK_REGISTRATION_BY_TASK_STUDENT =
+            "SELECT task_registration_id, task_id, student_id, grade, review " +
             "FROM training_schema.task_registration WHERE task_id = (?) AND student_id = (?)";
+    private final static String SQL_GET_TASK_REGISTRATIONS_BY_TASK =
+            "SELECT task_registration_id, task_id, student_id, grade, review " +
+                    "FROM training_schema.task_registration WHERE task_id = (?)";
     private final static Logger LOGGER = LogManager.getLogger(RoleDAO.class);
 
     public TaskRegistrationDAO(){
@@ -42,15 +46,15 @@ public class TaskRegistrationDAO extends AbstractDAO<TaskRegistration> implement
     }
 
     @Override
-    public boolean create(TaskRegistration taskRegistration) throws DAOException {
+    public boolean create(TaskRegistration taskRegistration) throws TaskNotFoundDAOException, UserNotFoundDAOException {
         LOGGER.log(Level.INFO, "Creating task_registration column...");
         AbstractDAO userDAO = new UserDAO(connection);
         AbstractDAO taskDAO = new TaskDAO(connection);
         if (userDAO.getEntityById(taskRegistration.getStudent().getId()).isEmpty()) {
-            throw new EntityNotFoundDAOException("Cannot create task_registration. User not found");
+            throw new UserNotFoundDAOException("Cannot create task_registration. User not found");
         }
         if (taskDAO.getEntityById(taskRegistration.getTask().getId()).isEmpty()) {
-            throw new EntityNotFoundDAOException("Cannot create task_registration. Task not found");
+            throw new TaskNotFoundDAOException("Cannot create task_registration. Task not found");
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_CREATE_TASK_REGISTRATION)) {
             set(preparedStatement, taskRegistration);
@@ -100,29 +104,17 @@ public class TaskRegistrationDAO extends AbstractDAO<TaskRegistration> implement
     @Override
     public Optional<TaskRegistration> getEntityById(int id) {
         LOGGER.log(Level.INFO, "Selecting task_registration column by id...");
-        int task_registration_id = 0;
-        int task_id = 0;
-        int student_id = 0;
-        int grade = 0;
-        String review = null;
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_TASK_REGISTRATION)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (!resultSet.isBeforeFirst()) {
                 return Optional.empty();
             }
-            while (resultSet.next()) {
-                task_registration_id = resultSet.getInt("task_registration_id");
-                task_id = resultSet.getInt("task_id");
-                student_id = resultSet.getInt("student_id");
-                grade = resultSet.getInt("grade");
-                review = resultSet.getString("review");
+            else {
+                resultSet.next();
+                TaskRegistration taskRegistration = insertValuesFromResult(resultSet);
+                return Optional.of(taskRegistration);
             }
-            AbstractDAO userDAO = new UserDAO(connection);
-            User student = (User) userDAO.getEntityById(student_id).get();
-            AbstractDAO taskDAO = new TaskDAO(connection);
-            Task task = (Task) taskDAO.getEntityById(task_id).get();
-            return Optional.of(new TaskRegistration(task_registration_id, task, student, grade, review));
         }catch (SQLException ex) {
             LOGGER.log(Level.FATAL, "Exception during task_registration reading");
             throw new UncheckedDAOException("Exception during task_registration reading", ex);
@@ -140,6 +132,49 @@ public class TaskRegistrationDAO extends AbstractDAO<TaskRegistration> implement
         }catch (SQLException ex) {
             LOGGER.log(Level.FATAL, "Exception during task_registration reading by task, student");
             throw new UncheckedDAOException("Exception during task_registration reading by task, student", ex);
+        }
+    }
+
+    public Optional<TaskRegistration> getTaskRegistrationByTaskStudent(int task_id, int student_id) {
+        LOGGER.log(Level.INFO, "Selecting task_registration column by task, student...");
+        try (PreparedStatement preparedStatement =
+                     connection.prepareStatement(SQL_GET_TASK_REGISTRATION_BY_TASK_STUDENT)) {
+            preparedStatement.setInt(1, task_id);
+            preparedStatement.setInt(2, student_id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (!resultSet.isBeforeFirst()) {
+                return Optional.empty();
+            }
+            else {
+                resultSet.next();
+                TaskRegistration taskRegistration = insertValuesFromResult(resultSet);
+                return Optional.of(taskRegistration);
+            }
+        }catch (SQLException ex) {
+            LOGGER.log(Level.FATAL, "Exception during task_registration reading by task, student");
+            throw new UncheckedDAOException("Exception during task_registration reading by task, student", ex);
+        }
+    }
+
+    public List<TaskRegistration> getAllByTask(int task_id) {
+        LOGGER.log(Level.INFO, "Selecting task_registrations task...");
+        List<TaskRegistration> registrations = new ArrayList<>();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_TASK_REGISTRATIONS_BY_TASK)) {
+            preparedStatement.setInt(1, task_id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (!resultSet.isBeforeFirst()) {
+                return null;
+            }
+            else {
+                while (resultSet.next()) {
+                    TaskRegistration taskRegistration = insertValuesFromResult(resultSet);
+                    registrations.add(taskRegistration);
+                }
+                return registrations;
+            }
+        }catch (SQLException ex) {
+            LOGGER.log(Level.FATAL, "Exception during task_registrations reading by task");
+            throw new UncheckedDAOException("Exception during task_registrations reading by task", ex);
         }
     }
 
@@ -162,5 +197,18 @@ public class TaskRegistrationDAO extends AbstractDAO<TaskRegistration> implement
         if (taskRegistration.getId() != 0) {
             preparedStatement.setInt(5, taskRegistration.getId());
         }
+    }
+
+    private TaskRegistration insertValuesFromResult(ResultSet result) throws SQLException{
+        int task_registration_id = result.getInt("task_registration_id");
+        int task_id = result.getInt("task_id");
+        int student_id = result.getInt("student_id");
+        int grade = result.getInt("grade");
+        String review = result.getString("review");
+        AbstractDAO userDAO = new UserDAO(connection);
+        User student = (User) userDAO.getEntityById(student_id).get();
+        AbstractDAO taskDAO = new TaskDAO(connection);
+        Task task = (Task) taskDAO.getEntityById(task_id).get();
+        return new TaskRegistration(task_registration_id, task, student, grade, review);
     }
 }

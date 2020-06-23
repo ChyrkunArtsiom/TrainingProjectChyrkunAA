@@ -11,7 +11,6 @@
     <title>Footer</title>
 </head>
 <body>
-<br/>
 -----------------------------------------------------------------
 <br/>
 <a href="${pageContext.request.contextPath}/">On main page</a>

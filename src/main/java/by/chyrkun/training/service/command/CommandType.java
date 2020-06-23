@@ -6,6 +6,10 @@ import by.chyrkun.training.service.command.role.GetRolesCommand;
 import by.chyrkun.training.service.command.task.CreateTaskCommand;
 import by.chyrkun.training.service.command.task.DeleteTaskCommand;
 import by.chyrkun.training.service.command.task.GetTaskCommand;
+import by.chyrkun.training.service.command.task_registration.DeleteTaskRegistrationCommand;
+import by.chyrkun.training.service.command.task_registration.GetTaskRegistrationCommand;
+import by.chyrkun.training.service.command.task_registration.RegisterTaskCommand;
+import by.chyrkun.training.service.command.task_registration.UpdateTaskRegistrationCommand;
 import by.chyrkun.training.service.command.user.*;
 
 public enum CommandType {
@@ -22,8 +26,12 @@ public enum CommandType {
     REGISTER_COURSE(new RegisterCourseCommand()),
     COURSE(new GetCourseCommand()),
     TASK(new GetTaskCommand()),
+    EXERCISE(new GetTaskRegistrationCommand()),
+    REVIEW_EXERCISE(new UpdateTaskRegistrationCommand()),
     CREATE_TASK(new CreateTaskCommand()),
     DELETE_TASK(new DeleteTaskCommand()),
+    REGISTER_TASK(new RegisterTaskCommand()),
+    UNREGISTER_TASK(new DeleteTaskRegistrationCommand()),
     LOGIN(new LogInCommand()),
     LOGOUT(new LogoutCommand()),
     PROFILE(new GetUserCommand());

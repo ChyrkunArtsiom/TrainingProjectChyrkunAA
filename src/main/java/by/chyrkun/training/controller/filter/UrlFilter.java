@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebFilter(urlPatterns = {"/userProfile", "/course", "/task"})
+@WebFilter(urlPatterns = {"/userProfile", "/course", "/task", "/exercise"})
 public class UrlFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -28,6 +28,11 @@ public class UrlFilter implements Filter {
                     break;
                 }
                 case "/training/course": {
+                    dispatcher = req.getRequestDispatcher("/app");
+                    dispatcher.forward(req, resp);
+                    break;
+                }
+                case "/training/exercise": {
                     dispatcher = req.getRequestDispatcher("/app");
                     dispatcher.forward(req, resp);
                     break;

@@ -14,8 +14,8 @@
 <body>
 <form name="LogInForm" method="post" action="${pageContext.request.contextPath}/session">
     <input type="hidden" name="command" value="login"/>
-    <p>Login: <input type="text" name="login" value="${login}"/></p>
-    <p>Password: <input type="password" name="password" value=""/></p>
+    <p>Login: <input type="text" name="login" required value="${login}"/></p>
+    <p>Password: <input type="password" name="password" required value=""/></p>
     <p>${errorMessage}</p>
     <input type="submit" value="Log in"/>
 </form>
