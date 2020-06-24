@@ -10,7 +10,9 @@ public class Course extends Entity {
     public Course(int id, String name, User teacher) {
         setId(id);
         setName(name);
-        setTeacher(teacher);
+        if (teacher != null) {
+            setTeacher(teacher);
+        }
     }
 
     public Course(String name, User teacher) {

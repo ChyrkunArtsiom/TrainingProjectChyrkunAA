@@ -9,10 +9,13 @@
 <html>
 <head>
     <title>Footer</title>
+    <style>
+        <%@include file="css/style.css" %>
+    </style>
 </head>
 <body>
------------------------------------------------------------------
-<br/>
-<a href="${pageContext.request.contextPath}/">On main page</a>
+<div class="footer_text">
+    <a href="${pageContext.request.contextPath}/">On main page</a>
+</div>
 </body>
 </html>

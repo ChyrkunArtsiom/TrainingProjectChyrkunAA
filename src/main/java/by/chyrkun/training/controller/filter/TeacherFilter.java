@@ -7,8 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebFilter(
-        urlPatterns = {"/teacher/*"}, initParams = {@WebInitParam(name = "INDEX_PATH", value = "/")})
+@WebFilter(urlPatterns = {"/teacher/*"}, initParams = {@WebInitParam(name = "INDEX_PATH", value = "/")})
 public class TeacherFilter implements Filter {
     private String indexPath;
 
@@ -28,28 +27,13 @@ public class TeacherFilter implements Filter {
             return;
         }
         switch(req.getRequestURI()){
-            case "/training/teacher": {
-                dispatcher = req.getRequestDispatcher("/jsp/teacher.jsp");
-                dispatcher.forward(req, resp);
-                break;
-            }
             case "/training/teacher/createtask": {
                 dispatcher = req.getRequestDispatcher("/jsp/createTask.jsp");
                 dispatcher.forward(req, resp);
                 break;
             }
-            case "/training/teacher/opentask": {
-                dispatcher = req.getRequestDispatcher("/jsp/openTask.jsp");
-                dispatcher.forward(req, resp);
-                break;
-            }
             case "/training/teacher/courses": {
                 req.setAttribute("command", "get_courses");
-                dispatcher = req.getRequestDispatcher("/app");
-                dispatcher.forward(req, resp);
-                break;
-            }
-            case "/training/teacher/session": {
                 dispatcher = req.getRequestDispatcher("/app");
                 dispatcher.forward(req, resp);
                 break;

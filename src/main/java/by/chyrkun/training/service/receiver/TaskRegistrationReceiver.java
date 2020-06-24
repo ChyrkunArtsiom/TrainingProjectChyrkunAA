@@ -55,7 +55,17 @@ public class TaskRegistrationReceiver {
         }
     }
 
-    public boolean delete(int task_id, int student_id) {
+    public boolean delete(int exercise_id) {
+        TaskRegistrationDAO taskRegistrationDAO = new TaskRegistrationDAO();
+        try {
+            Optional<TaskRegistration> task = taskRegistrationDAO.getEntityById(exercise_id);
+            return task.map(taskRegistrationDAO::delete).orElse(false);
+        }finally {
+            taskRegistrationDAO.close();
+        }
+    }
+
+    public boolean deleteByTaskStudent(int task_id, int student_id) {
         TaskRegistrationDAO taskRegistrationDAO = new TaskRegistrationDAO();
         try {
             Optional<TaskRegistration> task = taskRegistrationDAO.getTaskRegistrationByTaskStudent(task_id, student_id);

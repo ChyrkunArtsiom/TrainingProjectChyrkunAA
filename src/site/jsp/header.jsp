@@ -10,12 +10,14 @@
 <html>
 <head>
     <title>Header</title>
+    <style>
+        <%@include file="css/style.css" %>
+    </style>
 </head>
 <body>
 <c:choose>
     <c:when test="${empty sessionScope.userName}">
-        <p><a href="${pageContext.request.contextPath}/signup">Sign up</a></p>
-        <p><a href="${pageContext.request.contextPath}/login">Log in</a></p>
+        <a href="${pageContext.request.contextPath}/signup">Sign up</a>     |     <a href="${pageContext.request.contextPath}/login">Log in</a>
     </c:when>
     <c:otherwise>
         <p>Signed in as
@@ -28,7 +30,5 @@
         </form>
     </c:otherwise>
 </c:choose>
------------------------------------------------------------------
-<br/>
 </body>
 </html>

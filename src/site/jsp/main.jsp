@@ -10,9 +10,14 @@
 <html>
 <head>
     <title>Training</title>
+    <style>
+        <%@include file="css/style.css" %>
+    </style>
 </head>
 <body>
-<c:import url="header.jsp"/>
+<header>
+    <c:import url="header.jsp"/>
+</header>
 <c:if test="${sessionScope.role eq 'admin'}">
     <c:import url="admin.jsp"/>
 </c:if>
@@ -22,5 +27,7 @@
 <c:if test="${sessionScope.role eq 'student'}">
     <c:import url="student.jsp"/>
 </c:if>
+<footer>
+</footer>
 </body>
 </html>

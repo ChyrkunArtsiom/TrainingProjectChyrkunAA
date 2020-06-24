@@ -11,13 +11,13 @@
 <head>
     <title>Task</title>
     <style>
-        table, th, td {
-            border: 1px solid black;
-        }
+        <%@include file="css/style.css" %>
     </style>
 </head>
 <body>
-<c:import url="header.jsp"/>
+<header>
+    <c:import url="header.jsp"/>
+</header>
 <c:choose>
     <c:when test="${not empty task}">
         <p>Course: ${task.course.name}</p>
@@ -83,6 +83,8 @@
         Such task doesn't exist
     </c:otherwise>
 </c:choose>
-<c:import url="footer.jsp"/>
+<footer>
+    <c:import url="footer.jsp"/>
+</footer>
 </body>
 </html>

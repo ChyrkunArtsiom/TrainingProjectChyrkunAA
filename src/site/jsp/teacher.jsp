@@ -10,6 +10,9 @@
 <html>
 <head>
     <title>Teacher page</title>
+    <style>
+        <%@include file="css/style.css" %>
+    </style>
 </head>
 <body>
 <p><a href="${pageContext.request.contextPath}/teacher/courses">Show courses</a> </p>

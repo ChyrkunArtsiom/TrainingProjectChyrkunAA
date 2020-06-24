@@ -11,7 +11,7 @@ public class TaskValidator {
         if (startdate.isBefore(LocalDate.now())) {
             return false;
         }
-        if (deadline != null && (deadline.isBefore(LocalDate.now()) || deadline.isBefore(startdate))) {
+        if (deadline.isBefore(startdate)) {
             return false;
         }
         return true;

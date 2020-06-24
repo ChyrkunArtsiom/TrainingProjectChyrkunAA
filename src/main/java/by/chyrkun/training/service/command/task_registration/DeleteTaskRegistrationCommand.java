@@ -16,14 +16,14 @@ public class DeleteTaskRegistrationCommand implements Command {
         MessageManager messages = MessageManager.EN;
         CommandResult result = new CommandResult();
         String student_id = requestContent.getSessionAttributes().get("user_id").toString();
-        String task_id = requestContent.getRequestParameters().get("task_id")[0];
-        if (receiver.delete(Integer.parseInt(task_id), Integer.parseInt(student_id))) {
+        String exercise_id = requestContent.getRequestParameters().get("exercise_id")[0];
+        if (receiver.delete(Integer.parseInt(exercise_id))) {
             requestContent.setSessionAttribute(MESSAGE, messages.getMessage("taskRegistrationWasDeleted"));
         }
         else {
             requestContent.setSessionAttribute(MESSAGE, messages.getMessage("taskIsNotRegistered"));
         }
-        result.setPage(PageManager.getProperty("shortpath.page.task") + "?command=task&task_id=" + task_id);
+        result.setPage(PageManager.getProperty("shortpath.page.task") + "?command=task&task_id=" + exercise_id);
         result.setResponseType(CommandResult.ResponseType.REDIRECT);
         return result;
     }

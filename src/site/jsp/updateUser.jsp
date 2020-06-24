@@ -10,8 +10,14 @@
 <html>
 <head>
     <title>Title</title>
+    <style>
+        <%@include file="css/style.css" %>
+    </style>
 </head>
 <body>
+<header>
+    <c:import url="header.jsp"/>
+</header>
 <form name="UpdateForm" method="post" action="${pageContext.request.contextPath}/session">
     <input type="hidden" name="command" value="update_user"/>
     <p>Login: <input type="text" name="login" value="${login}"/></p>
@@ -25,5 +31,8 @@
     <p>${errorMessage}</p>
     <p><input type="submit" value="Update user"/></p>
 </form>
+<footer>
+    <c:import url="footer.jsp"/>
+</footer>
 </body>
 </html>

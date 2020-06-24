@@ -11,13 +11,13 @@
 <head>
     <title>Course</title>
     <style>
-        table, th, td {
-            border: 1px solid black;
-        }
+        <%@include file="css/style.css" %>
     </style>
 </head>
 <body>
-<c:import url="header.jsp"/>
+<header>
+    <c:import url="header.jsp"/>
+</header>
 <c:if test="${not empty course}">
     <p>Name: ${course.name}</p>
     <p>Teacher: ${course.teacher.firstname} ${course.teacher.secondname}</p>
@@ -61,6 +61,8 @@
     </c:if>
 </c:if>
 <p>${errorMessage}</p>
-<c:import url="footer.jsp"/>
 </body>
+<footer>
+    <c:import url="footer.jsp"/>
+</footer>
 </html>

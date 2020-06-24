@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: Tarakanio
@@ -11,12 +12,17 @@
     <title>Error Page</title>
 </head>
 <body>
+<header>
+    <c:import url="../header.jsp"/>
+</header>
 <h1>PAGE IS NOT FOUND</h1>
 Request from ${pageContext.errorData.requestURI} is failed <br/>
 Servlet name: ${pageContext.errorData.servletName} <br/>
 Status code: ${pageContext.errorData.statusCode} <br/>
 Message: ${requestScope['javax.servlet.error.message']}<br/>
 Exception: ${pageContext.exception} <br/>
-<a href="${pageContext.request.contextPath}/">On main page</a>
+<footer>
+    <c:import url="../footer.jsp"/>
+</footer>
 </body>
 </html>

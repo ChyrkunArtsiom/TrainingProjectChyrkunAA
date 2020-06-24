@@ -10,17 +10,24 @@
 <html>
 <head>
     <title>Delete user</title>
+    <style>
+        <%@include file="css/style.css" %>
+    </style>
 </head>
 <body>
-<c:import url="header.jsp"/>
+<header>
+    <c:import url="header.jsp"/>
+</header>
 <form name="DeleteUserForm" method="post" action="${pageContext.request.contextPath}/app">
     <input type="hidden" name="command" value="delete_user"/>
-    <p>User login to delete: <input type="text" name="login" value="${login}"/></p>
+    <p>User login to delete: <input type="text" name="login" required value="${login}"/></p>
     <p>${sessionScope.message}</p>
     <c:remove var="message" scope="session"/>
     <p>${errorMessage}</p>
     <p><input type="submit" value="Delete"/></p>
 </form>
-<c:import url="footer.jsp"/>
+<footer>
+    <c:import url="footer.jsp"/>
+</footer>
 </body>
 </html>

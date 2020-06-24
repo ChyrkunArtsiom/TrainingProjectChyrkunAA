@@ -10,13 +10,19 @@
 <html>
 <head>
     <title>Admin page</title>
+    <style>
+        <%@include file="css/style.css" %>
+    </style>
 </head>
 <body>
-<p><a href="${pageContext.request.contextPath}/admin/createuser">Create user</a> </p>
-<p><a href="${pageContext.request.contextPath}/admin/deleteuser">Delete user</a> </p>
-<br/>
-<p><a href="${pageContext.request.contextPath}/admin/createcourse">Create course</a> </p>
-<p><a href="${pageContext.request.contextPath}/admin/deletecourse">Delete course</a> </p>
-<p><a href="${pageContext.request.contextPath}/admin/updatecourse">Update course</a> </p>
+<nav class="menu">
+    <ul>
+        <li><a href="${pageContext.request.contextPath}/admin/createuser">Create user</a></li>
+        <li><a href="${pageContext.request.contextPath}/admin/deleteuser">Delete user</a></li>
+        <li><a href="${pageContext.request.contextPath}/admin/createcourse">Create course</a></li>
+    </ul>
+</nav>
+<!--<p><a href="${pageContext.request.contextPath}/admin/deletecourse">Delete course</a> </p>
+<p><a href="${pageContext.request.contextPath}/admin/updatecourse">Update course</a> </p>-->
 </body>
 </html>

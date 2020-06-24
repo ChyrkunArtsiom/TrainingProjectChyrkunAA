@@ -10,9 +10,14 @@
 <html>
 <head>
     <title>User profile</title>
+    <style>
+        <%@include file="css/style.css" %>
+    </style>
 </head>
 <body>
-<c:import url="header.jsp"/>
+<header>
+    <c:import url="header.jsp"/>
+</header>
     <c:if test="${not empty user}">
         <p>User: ${user.id}</p>
         <p>Login: ${user.login}</p>
@@ -21,6 +26,8 @@
         <p>Role: ${user.role.name}</p>
     </c:if>
     <p>${errorMessage}</p>
-<c:import url="footer.jsp"/>
+<footer>
+    <c:import url="footer.jsp"/>
+</footer>
 </body>
 </html>

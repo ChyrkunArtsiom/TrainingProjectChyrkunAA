@@ -53,7 +53,7 @@ public class CreateTaskCommand implements Command {
                     break first;
                 }
                 LocalDate start = LocalDate.parse(startdate);
-                LocalDate end = null;
+                LocalDate end = LocalDate.parse(deadline);
                 if (!deadline.isEmpty()) {
                     end = LocalDate.parse(deadline);
                 }
@@ -65,7 +65,7 @@ public class CreateTaskCommand implements Command {
                 Task task = new Task(name, start, end, course);
                 if (receiver.create(task)) {
                     requestContent.setSessionAttribute(MESSAGE, messages.getMessage("taskWasCreated"));
-                    result.setPage(PageManager.getProperty("shortpath.page.createtask"));
+                    result.setPage(PageManager.getProperty("shortpath.page.teacher.courses") + "?command=course&course_id=" + course_id);
                     result.setResponseType(CommandResult.ResponseType.REDIRECT);
                 }
             }

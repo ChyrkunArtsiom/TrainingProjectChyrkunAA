@@ -9,15 +9,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <style>
-        table, th, td {
-            border: 1px solid black;
-        }
-    </style>
     <title>Courses</title>
+    <style>
+        <%@include file="css/style.css" %>
+    </style>
 </head>
 <body>
-<c:import url="header.jsp"/>
+<header>
+    <c:import url="header.jsp"/>
+</header>
 <c:if test="${not empty courses}">
     Courses:<br/>
     <table>
@@ -41,6 +41,8 @@
 <c:remove var="message" scope="session"/>
 ${errorMessage}
 <br/>
-<c:import url="footer.jsp"/>
+<footer>
+    <c:import url="footer.jsp"/>
+</footer>
 </body>
 </html>

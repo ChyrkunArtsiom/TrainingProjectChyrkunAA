@@ -9,8 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @WebFilter(urlPatterns = {"/*"})
-public class ServletFilter implements Filter {
+public class LoginFilter implements Filter {
     private static final List<String> URIS = new ArrayList<>();
+
     @Override
     public void init(FilterConfig filterConfig) {
         URIS.add("login");
@@ -29,7 +30,6 @@ public class ServletFilter implements Filter {
         }else {
             chain.doFilter(request, response);
         }
-
     }
 
     private String getPage(HttpServletRequest request) {

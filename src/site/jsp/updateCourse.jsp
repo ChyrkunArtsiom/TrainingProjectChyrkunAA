@@ -10,8 +10,14 @@
 <html>
 <head>
     <title>Update course</title>
+    <style>
+        <%@include file="css/style.css" %>
+    </style>
 </head>
 <body>
+<header>
+    <c:import url="header.jsp"/>
+</header>
 <form name="UpdateCourseForm" method="post" action="${pageContext.request.contextPath}/session">
     <input type="hidden" name="command" value="update_course"/>
     <p>Course id: <input type="text" name="course_id" value="${course_id}"/></p>
@@ -23,5 +29,8 @@
     <p><input type="submit" value="Update course"/></p>
     <a href="${pageContext.request.contextPath}/">On main page</a>
 </form>
+<footer>
+    <c:import url="footer.jsp"/>
+</footer>
 </body>
 </html>

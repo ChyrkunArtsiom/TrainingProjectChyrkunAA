@@ -10,8 +10,14 @@
 <html>
 <head>
     <title>Exercise</title>
+    <style>
+        <%@include file="css/style.css" %>
+    </style>
 </head>
 <body>
+<header>
+    <c:import url="header.jsp"/>
+</header>
     <c:choose>
         <c:when test="${not empty exercise}">
             <p>Student: ${exercise.student.firstname} ${exercise.student.secondname}</p>
@@ -27,7 +33,7 @@
                 </c:choose>
                 <form name="CancelTaskForm" method="post" action="${pageContext.request.contextPath}/session">
                     <input type="hidden" name="command" value="unregister_task"/>
-                    <input type="hidden" name="task_id" value="${task.id}"/>
+                    <input type="hidden" name="exercise_id" value="${exercise.id}"/>
                     <input type="submit" value="Cancel registration"/>
                 </form>
             </p>
@@ -45,5 +51,8 @@
             Such exercise doesn't exist
         </c:otherwise>
     </c:choose>
+<footer>
+    <c:import url="footer.jsp"/>
+</footer>
 </body>
 </html>

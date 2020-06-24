@@ -10,12 +10,17 @@
 <html>
 <head>
     <title>Create course</title>
+    <style>
+        <%@include file="css/style.css" %>
+    </style>
 </head>
 <body>
-<c:import url="header.jsp"/>
+<header>
+    <c:import url="header.jsp"/>
+</header>
 <form name="CreateCourseForm" method="post" action="${pageContext.request.contextPath}/session">
     <input type="hidden" name="command" value="create_course"/>
-    <p>Name: <input type="text" name="name" value="${name}"/></p>
+    <p>Name: <input type="text" name="name" required max="45" value="${name}"/></p>
     <p>Teacher: <select id="teacher_id" name="teacher_id">
         <c:forEach items="${teachers}" var="teacher">
             <option value="${teacher.id}" selected>${teacher.firstname} ${teacher.secondname}</option>
@@ -24,8 +29,9 @@
     </p>
     <p>${errorMessage}</p>
     <p><input type="submit" value="Create course"/></p>
-    <a href="${pageContext.request.contextPath}/">On main page</a>
 </form>
-<c:import url="footer.jsp"/>
+<footer>
+    <c:import url="footer.jsp"/>
+</footer>
 </body>
 </html>

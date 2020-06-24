@@ -173,7 +173,13 @@ public class CourseDAO extends AbstractDAO<Course> {
                 course_id = resultSet.getInt("course_id");
                 name = resultSet.getString("name");
                 teacher_id = resultSet.getInt("teacher_id");
-                User teacher = (User) userDAO.getEntityById(teacher_id).get();
+                Optional<User> optionalUser = userDAO.getEntityById(teacher_id);
+                User teacher;
+                if (optionalUser.isPresent()) {
+                    teacher = optionalUser.get();
+                }else {
+                    teacher = null;
+                }
                 courses.add(new Course(course_id, name, teacher));
             }
             return courses;
