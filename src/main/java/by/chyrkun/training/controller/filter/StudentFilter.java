@@ -28,7 +28,7 @@ public class StudentFilter implements Filter {
         }
         switch(req.getRequestURI()) {
             case "/training/student": {
-                dispatcher = req.getRequestDispatcher("/jsp/student.jsp");
+                dispatcher = req.getRequestDispatcher("/WEB-INF/jsp/student.jsp");
                 dispatcher.forward(req, resp);
                 break;
             }

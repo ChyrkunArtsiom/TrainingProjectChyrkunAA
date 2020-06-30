@@ -10,9 +10,7 @@
 <html>
 <head>
     <title>Course</title>
-    <style>
-        <%@include file="css/style.css" %>
-    </style>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/bootstrap.min.css">
 </head>
 <body>
 <header>

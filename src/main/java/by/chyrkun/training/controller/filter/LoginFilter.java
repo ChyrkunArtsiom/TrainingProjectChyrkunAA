@@ -25,7 +25,7 @@ public class LoginFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) response;
         String page = getPage(req);
         if (URIS.contains(page)) {
-            dispatcher = req.getRequestDispatcher("/jsp/" + page + ".jsp");
+            dispatcher = req.getRequestDispatcher("/WEB-INF/jsp/" + page + ".jsp");
             dispatcher.forward(req, resp);
         }else {
             chain.doFilter(request, response);

@@ -6,6 +6,7 @@ import by.chyrkun.training.model.Role;
 import by.chyrkun.training.service.command.BaseCommand;
 import by.chyrkun.training.service.command.Command;
 import by.chyrkun.training.service.receiver.RoleReceiver;
+import by.chyrkun.training.service.resource.PageManager;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class GetRolesCommand extends BaseCommand implements Command {
         }else {
             requestContent.setRequestAttribute(PARAM_NAME_ROLES, roles);
         }
-        result.setPage("/jsp/signup.jsp");
+        result.setPage(PageManager.getProperty("fullpath.page.createuser"));
         return result;
     }
 }

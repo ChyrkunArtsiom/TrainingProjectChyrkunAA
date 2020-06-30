@@ -9,9 +9,7 @@
 <html>
 <head>
     <title>Footer</title>
-    <style>
-        <%@include file="css/style.css" %>
-    </style>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.css">
 </head>
 <body>
 <div class="footer_text">

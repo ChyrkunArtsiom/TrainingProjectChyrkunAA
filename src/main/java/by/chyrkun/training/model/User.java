@@ -10,6 +10,15 @@ public class User extends Entity {
     private String secondname;
     private Role role;
 
+    public User(int id, String login, String password, String firstname, String secondname, Role role) {
+        setId(id);
+        setLogin(login);
+        setPassword(password);
+        setFirstname(firstname);
+        setSecondname(secondname);
+        setRole(role);
+    }
+
     public User(String login, String password, String firstname, String secondname, Role role) {
         setLogin(login);
         setPassword(password);
@@ -18,13 +27,11 @@ public class User extends Entity {
         setRole(role);
     }
 
-    public User(int id, String login, String password, String firstname, String secondname, Role role) {
-        setId(id);
+    public User(String login, String password, String firstname, String secondname) {
         setLogin(login);
         setPassword(password);
         setFirstname(firstname);
         setSecondname(secondname);
-        setRole(role);
     }
 
     public User(int id, String firstname, String secondname) {

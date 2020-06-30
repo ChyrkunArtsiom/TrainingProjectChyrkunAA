@@ -28,7 +28,7 @@ public class TeacherFilter implements Filter {
         }
         switch(req.getRequestURI()){
             case "/training/teacher/createtask": {
-                dispatcher = req.getRequestDispatcher("/jsp/createTask.jsp");
+                dispatcher = req.getRequestDispatcher("/WEB-INF/jsp/createTask.jsp");
                 dispatcher.forward(req, resp);
                 break;
             }

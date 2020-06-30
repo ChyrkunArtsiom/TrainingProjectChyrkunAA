@@ -32,6 +32,7 @@ public enum CommandType {
     DELETE_TASK(new DeleteTaskCommand()),
     REGISTER_TASK(new RegisterTaskCommand()),
     UNREGISTER_TASK(new DeleteTaskRegistrationCommand()),
+    SIGNUP(new SignupCommand()),
     LOGIN(new LogInCommand()),
     LOGOUT(new LogoutCommand()),
     PROFILE(new GetUserCommand());

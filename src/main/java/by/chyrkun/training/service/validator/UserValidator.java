@@ -1,12 +1,25 @@
 package by.chyrkun.training.service.validator;
 
 import by.chyrkun.training.model.User;
+import by.chyrkun.training.service.resource.MessageManager;
 
 public class UserValidator {
 
-    public static boolean isUserValid(User user) {
-        return ((isLoginValid(user.getLogin())) && (isNameValid(user.getFirstname()))
-                && (isNameValid(user.getSecondname())) && (isPasswordValid(user.getPassword())));
+    public static boolean isUserValid(User user, StringBuffer message) {
+        MessageManager messages = MessageManager.EN;
+        if (!isLoginValid(user.getLogin())) {
+            message.append(messages.getMessage("usernameIsNotValid"));
+            return false;
+        }
+        if (!isNameValid(user.getFirstname()) || !isNameValid(user.getSecondname())) {
+            message.append(messages.getMessage("nameIsNotValid"));
+            return false;
+        }
+        if (isPasswordValid(user.getPassword())) {
+            message.append(messages.getMessage("passwordIsNotValid"));
+            return false;
+        }
+        return true;
     }
 
     public static boolean isLoginValid(String login){

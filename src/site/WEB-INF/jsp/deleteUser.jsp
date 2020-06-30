@@ -10,9 +10,7 @@
 <html>
 <head>
     <title>Delete user</title>
-    <style>
-        <%@include file="css/style.css" %>
-    </style>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.css">
 </head>
 <body>
 <header>

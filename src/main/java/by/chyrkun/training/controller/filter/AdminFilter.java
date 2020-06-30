@@ -28,7 +28,7 @@ public class AdminFilter implements Filter {
         }
         switch(req.getRequestURI()) {
             case "/training/admin": {
-                dispatcher = req.getRequestDispatcher("/jsp/admin.jsp");
+                dispatcher = req.getRequestDispatcher("/WEB-INF/jsp/admin.jsp");
                 dispatcher.forward(req, resp);
                 break;
             }
@@ -45,7 +45,7 @@ public class AdminFilter implements Filter {
                 break;
             }
             case "/training/admin/deleteuser": {
-                dispatcher = req.getRequestDispatcher("/jsp/deleteUser.jsp");
+                dispatcher = req.getRequestDispatcher("/WEB-INF/jsp/deleteUser.jsp");
                 dispatcher.forward(req, resp);
                 break;
             }
@@ -56,12 +56,12 @@ public class AdminFilter implements Filter {
                 break;
             }
             case "/training/admin/deletecourse": {
-                dispatcher = req.getRequestDispatcher("/jsp/deleteCourse.jsp");
+                dispatcher = req.getRequestDispatcher("/WEB-INF/jsp/deleteCourse.jsp");
                 dispatcher.forward(req, resp);
                 break;
             }
             case "/training/admin/updatecourse": {
-                dispatcher = req.getRequestDispatcher("/jsp/updateCourse.jsp");
+                dispatcher = req.getRequestDispatcher("/WEB-INF/jsp/updateCourse.jsp");
                 dispatcher.forward(req, resp);
                 break;
             }
