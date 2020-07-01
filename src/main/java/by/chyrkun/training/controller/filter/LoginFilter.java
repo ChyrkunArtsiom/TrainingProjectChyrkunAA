@@ -27,7 +27,11 @@ public class LoginFilter implements Filter {
         if (URIS.contains(page)) {
             dispatcher = req.getRequestDispatcher("/WEB-INF/jsp/" + page + ".jsp");
             dispatcher.forward(req, resp);
-        }else {
+        } else if (page.equals("logout")) {
+            req.setAttribute("command", "logout");
+            dispatcher = req.getRequestDispatcher("/app");
+            dispatcher.forward(req, resp);
+        } else {
             chain.doFilter(request, response);
         }
     }
