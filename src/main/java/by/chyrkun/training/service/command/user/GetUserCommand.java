@@ -5,6 +5,7 @@ import by.chyrkun.training.controller.RequestContent;
 import by.chyrkun.training.model.User;
 import by.chyrkun.training.service.command.Command;
 import by.chyrkun.training.service.receiver.UserReceiver;
+import by.chyrkun.training.service.resource.MessageManager;
 import by.chyrkun.training.service.resource.PageManager;
 
 public class GetUserCommand implements Command {
@@ -12,11 +13,12 @@ public class GetUserCommand implements Command {
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
+        MessageManager messages = MessageManager.valueOf(requestContent.getSessionAttributes().get("lang").toString());
         CommandResult result = new CommandResult();
-        String login = requestContent.getRequestParameters().get("login")[0];
-        User user = receiver.getByLogin(login);
+        int user_id = Integer.valueOf(requestContent.getRequestAttributes().get("id").toString());
+        User user = receiver.getById(user_id);
         if (user == null) {
-            requestContent.setRequestAttribute("errorMessage", "User not found");
+            requestContent.setRequestAttribute("errorMessage", messages.getMessage("userNotFound"));
         }else {
             requestContent.setRequestAttribute("user", user);
         }

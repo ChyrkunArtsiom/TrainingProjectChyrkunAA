@@ -25,7 +25,7 @@ public class SignupCommand implements Command {
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
-        MessageManager messages = MessageManager.EN;
+        MessageManager messages = MessageManager.valueOf(requestContent.getSessionAttributes().get("lang").toString());
         CommandResult result = new CommandResult();
         User user = getUserFromRequest(requestContent);
         first: try {

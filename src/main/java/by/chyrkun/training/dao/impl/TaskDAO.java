@@ -29,7 +29,7 @@ public class TaskDAO extends AbstractDAO<Task> implements StatementSetter<Task>,
     private final static String SQL_GET_ALL_TASKS = "SELECT task_id, name, course_id, startdate, deadline " +
             "FROM training_schema.tasks";
     private final static String SQL_GET_TASKS_BY_COURSE = "SELECT task_id, name, course_id, startdate, deadline " +
-            "FROM training_schema.tasks WHERE course_id = (?)";
+            "FROM training_schema.tasks WHERE course_id = (?) ORDER BY name";
     private final static Logger LOGGER = LogManager.getLogger(RoleDAO.class);
 
     public TaskDAO(){

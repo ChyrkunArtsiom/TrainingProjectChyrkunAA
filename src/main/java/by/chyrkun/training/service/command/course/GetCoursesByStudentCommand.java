@@ -5,6 +5,7 @@ import by.chyrkun.training.controller.RequestContent;
 import by.chyrkun.training.model.Course;
 import by.chyrkun.training.service.command.Command;
 import by.chyrkun.training.service.receiver.CourseReceiver;
+import by.chyrkun.training.service.resource.MessageManager;
 import by.chyrkun.training.service.resource.PageManager;
 
 import java.util.List;
@@ -17,13 +18,14 @@ public class GetCoursesByStudentCommand implements Command {
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
+        MessageManager messages = MessageManager.valueOf(requestContent.getSessionAttributes().get("lang").toString());
         CommandResult result = new CommandResult();
         List<Course> courses;
         boolean chosen = Boolean.parseBoolean(requestContent.getRequestAttributes().get("chosen").toString());
         int student_id = (Integer)requestContent.getSessionAttributes().get("user_id");
         courses = receiver.getByStudent(student_id, chosen);
         if (courses == null) {
-            requestContent.setRequestAttribute(ERROR_MESSAGE, "Courses not found");
+            requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("coursesNotFound"));
         }else {
             requestContent.setRequestAttribute(COURSES, courses);
         }

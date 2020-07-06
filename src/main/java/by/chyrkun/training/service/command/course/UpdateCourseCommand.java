@@ -22,7 +22,7 @@ public class UpdateCourseCommand implements Command {
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
-        MessageManager messages = MessageManager.EN;
+        MessageManager messages = MessageManager.valueOf(requestContent.getSessionAttributes().get("lang").toString());
         CommandResult result = new CommandResult();
         String id = requestContent.getRequestParameters().get(PARAM_ID)[0];
         String name = requestContent.getRequestParameters().get(PARAM_COURSE_NAME)[0];

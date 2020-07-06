@@ -24,7 +24,7 @@ public class CreateCourseCommand extends BaseCommand implements Command {
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
-        MessageManager messages = MessageManager.EN;
+        MessageManager messages = MessageManager.valueOf(requestContent.getSessionAttributes().get("lang").toString());
         CommandResult result = new CommandResult();
         String name = requestContent.getRequestParameters().get(PARAM_NAME)[0];
         String teacher_id = requestContent.getRequestParameters().get(PARAM_TEACHER_ID)[0];

@@ -19,7 +19,7 @@ public class LogInCommand implements Command {
     @Override
     public CommandResult execute(RequestContent requestContent) {
         CommandResult result = new CommandResult();
-        MessageManager messages = MessageManager.EN;
+        MessageManager messages = MessageManager.valueOf(requestContent.getSessionAttributes().get("lang").toString());
         String login = requestContent.getRequestParameters().get(PARAM_NAME_LOGIN)[0];
         String password = requestContent.getRequestParameters().get(PARAM_NAME_PASSWORD)[0];
         if (!ParamValidator.isPresent(login, password)) {

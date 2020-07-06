@@ -6,6 +6,7 @@ import by.chyrkun.training.model.User;
 import by.chyrkun.training.service.command.BaseCommand;
 import by.chyrkun.training.service.command.Command;
 import by.chyrkun.training.service.receiver.UserReceiver;
+import by.chyrkun.training.service.resource.MessageManager;
 import by.chyrkun.training.service.resource.PageManager;
 
 import java.util.List;
@@ -14,20 +15,16 @@ import java.util.List;
 public class GetTeachersCommand extends BaseCommand implements Command {
     private static final String TEACHERS = "teachers";
     private static final String ERROR_MESSAGE = "errorMessage";
-    public GetTeachersCommand() {}
-
-    public GetTeachersCommand(BaseCommand next) {
-        this.next = next;
-    }
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
+        MessageManager messages = MessageManager.valueOf(requestContent.getSessionAttributes().get("lang").toString());
         CommandResult result = new CommandResult();
         List<User> teachers;
         UserReceiver userReceiver = new UserReceiver();
         teachers = userReceiver.getTeachers();
         if (teachers == null) {
-            requestContent.setRequestAttribute(ERROR_MESSAGE, "Teachers not found");
+            requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("teachersNotFound"));
         }else {
             requestContent.setRequestAttribute(TEACHERS, teachers);
         }

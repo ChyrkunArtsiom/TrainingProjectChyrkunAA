@@ -14,13 +14,10 @@ public class DeleteCourseCommand implements Command {
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
-        MessageManager messages = MessageManager.EN;
+        MessageManager messages = MessageManager.valueOf(requestContent.getSessionAttributes().get("lang").toString());
         CommandResult result = new CommandResult();
         String course_id = requestContent.getRequestParameters().get(PARAM_COURSE_ID)[0];
-        if (receiver.delete(Integer.parseInt(course_id))) {
-            requestContent.setSessionAttribute(MESSAGE, messages.getMessage("courseWasDeleted"));
-        }
-        else {
+        if (!receiver.delete(Integer.parseInt(course_id))) {
             requestContent.setSessionAttribute(MESSAGE, messages.getMessage("courseNotFound"));
         }
         result.setPage(PageManager.getProperty("shortpath.page.teacher.courses"));

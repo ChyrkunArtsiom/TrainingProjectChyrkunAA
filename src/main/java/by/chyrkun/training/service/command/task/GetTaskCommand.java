@@ -18,7 +18,7 @@ public class GetTaskCommand implements Command {
     @Override
     public CommandResult execute(RequestContent requestContent) {
         CommandResult result = new CommandResult();
-        int task_id = Integer.parseInt(requestContent.getRequestParameters().get("task_id")[0]);
+        int task_id = Integer.valueOf(requestContent.getRequestAttributes().get("id").toString());
         int user_id = Integer.parseInt(requestContent.getSessionAttributes().get("user_id").toString());
         String role = requestContent.getSessionAttributes().get("role").toString();
         Task task = receiver.getById(task_id);

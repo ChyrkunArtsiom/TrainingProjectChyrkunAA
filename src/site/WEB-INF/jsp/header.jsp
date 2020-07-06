@@ -1,5 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="${sessionScope.lang}"/>
+<fmt:setBundle basename="text"/>
 <html>
 
 <head>
@@ -9,7 +12,7 @@
 
 <body>
 <nav class="navbar navbar-expand navbar-dark bg-dark">
-    <div class="collapse navbar-collapse" id="navbarsExample02">
+    <div class="collapse navbar-collapse">
         <ul class="navbar-nav mr-auto">
             <li>
                 <a class="navbar-brand" href="${pageContext.request.contextPath}/">Training</a>
@@ -17,24 +20,38 @@
             <c:choose>
                 <c:when test="${empty sessionScope.userName}">
                     <li class="nav-item active">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/signup">Sign up</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/signup"><fmt:message key="signup"/></a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/login">Log in</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/login"><fmt:message key="login"/></a>
                     </li>
                 </c:when>
                 <c:otherwise>
                     <li class="nav-item active">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/userProfile?command=profile&login=${sessionScope.userName}">${sessionScope.userName}</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/profile/${sessionScope.user_id}">${sessionScope.userName}</a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="${pageContext.request.contextPath}/logout">Log out</a>
+                        <a class="nav-link" href="${pageContext.request.contextPath}/logout"><fmt:message key="logout"/></a>
                     </li>
                 </c:otherwise>
             </c:choose>
         </ul>
     </div>
+    <div class="navbar-collapse collapse">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="?sessionLocale=en_US">EN</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="?sessionLocale=ru_RU">RU</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="?sessionLocale=by_BY">BY</a>
+            </li>
+        </ul>
+    </div>
 </nav>
+
 </body>
 
 </html>

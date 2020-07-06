@@ -45,7 +45,11 @@ public class AdminFilter implements Filter {
                 break;
             }
             case "/training/admin/deleteuser": {
-                dispatcher = req.getRequestDispatcher("/WEB-INF/jsp/deleteUser.jsp");
+                if (req.getParameter("command") != null) {
+                    dispatcher = req.getRequestDispatcher("/app");
+                } else {
+                    dispatcher = req.getRequestDispatcher("/WEB-INF/jsp/deleteUser.jsp");
+                }
                 dispatcher.forward(req, resp);
                 break;
             }

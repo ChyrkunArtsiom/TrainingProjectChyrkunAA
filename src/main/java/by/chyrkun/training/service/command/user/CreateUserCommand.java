@@ -12,11 +12,10 @@ import by.chyrkun.training.service.receiver.RoleReceiver;
 import by.chyrkun.training.service.receiver.UserReceiver;
 import by.chyrkun.training.service.resource.MessageManager;
 import by.chyrkun.training.service.resource.PageManager;
-import by.chyrkun.training.service.validator.ParamValidator;
 import by.chyrkun.training.service.validator.UserValidator;
 
 public class CreateUserCommand extends BaseCommand implements Command {
-    private static final String PARAM_NAME_LOGIN = "login";
+    private static final String PARAM_NAME_LOGIN = "username";
     private static final String PARAM_NAME_PASSWORD = "password";
     private static final String PARAM_NAME_FIRSTNAME = "firstname";
     private static final String PARAM_NAME_SECONDNAME = "secondname";
@@ -28,7 +27,7 @@ public class CreateUserCommand extends BaseCommand implements Command {
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
-        MessageManager messages = MessageManager.EN;
+        MessageManager messages = MessageManager.valueOf(requestContent.getSessionAttributes().get("lang").toString());
         CommandResult result = new CommandResult();
         User user = getUserFromRequest(requestContent);
         int role_id = Integer.parseInt(requestContent.getRequestParameters().get(PARAM_NAME_ROLE_ID)[0]);

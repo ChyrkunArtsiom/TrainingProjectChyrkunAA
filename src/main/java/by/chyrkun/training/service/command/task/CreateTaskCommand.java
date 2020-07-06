@@ -4,7 +4,9 @@ import by.chyrkun.training.controller.CommandResult;
 import by.chyrkun.training.controller.RequestContent;
 import by.chyrkun.training.model.Course;
 import by.chyrkun.training.model.Task;
+import by.chyrkun.training.service.command.BaseCommand;
 import by.chyrkun.training.service.command.Command;
+import by.chyrkun.training.service.command.course.GetCoursesCommand;
 import by.chyrkun.training.service.exception.EntityNotFoundServiceException;
 import by.chyrkun.training.service.receiver.CourseReceiver;
 import by.chyrkun.training.service.receiver.TaskReceiver;
@@ -16,7 +18,7 @@ import by.chyrkun.training.service.validator.TaskValidator;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
-public class CreateTaskCommand implements Command {
+public class CreateTaskCommand extends BaseCommand implements Command {
     private static final String PARAM_NAME = "name";
     private static final String PARAM_COURSE_ID = "course_id";
     private static final String PARAM_STARTDATE = "startdate";
@@ -27,7 +29,7 @@ public class CreateTaskCommand implements Command {
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
-        MessageManager messages = MessageManager.EN;
+        MessageManager messages = MessageManager.valueOf(requestContent.getSessionAttributes().get("lang").toString());
         CommandResult result = new CommandResult();
         String name = requestContent.getRequestParameters().get(PARAM_NAME)[0];
         String course_id = requestContent.getRequestParameters().get(PARAM_COURSE_ID)[0];
@@ -65,7 +67,7 @@ public class CreateTaskCommand implements Command {
                 Task task = new Task(name, start, end, course);
                 if (receiver.create(task)) {
                     requestContent.setSessionAttribute(MESSAGE, messages.getMessage("taskWasCreated"));
-                    result.setPage(PageManager.getProperty("shortpath.page.teacher.courses") + "?command=course&course_id=" + course_id);
+                    result.setPage(PageManager.getProperty("shortpath.page.createtask"));
                     result.setResponseType(CommandResult.ResponseType.REDIRECT);
                 }
             }
@@ -78,6 +80,9 @@ public class CreateTaskCommand implements Command {
             requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("courseNotFound"));
             result.setPage(PageManager.getProperty("fullpath.page.createtask"));
         }
+        setNext(new GetCoursesCommand());
+        requestContent.setRequestAttribute("select", "for_task");
+        next.execute(requestContent);
         requestContent.setRequestAttribute(PARAM_NAME, name);
         requestContent.setRequestAttribute(PARAM_COURSE_ID, course_id);
         requestContent.setRequestAttribute(PARAM_STARTDATE, startdate);

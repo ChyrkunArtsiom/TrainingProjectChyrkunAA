@@ -118,6 +118,6 @@ public class User extends Entity {
     @Override
     public String toString() {
         return "User id: " + this.id + ", login: " + this.login + ", firstname: " +
-                this.firstname + ", secondname: " + this.secondname + ", role: " + this.role.toString();
+                this.firstname + ", secondname: " + this.secondname + (this.role != null ? ", role: " + this.role.toString() : "");
     }
 }

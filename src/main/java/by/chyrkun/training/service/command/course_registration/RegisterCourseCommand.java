@@ -20,7 +20,7 @@ public class RegisterCourseCommand implements Command {
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
-        MessageManager messages = MessageManager.EN;
+        MessageManager messages = MessageManager.valueOf(requestContent.getSessionAttributes().get("lang").toString());
         CommandResult result = new CommandResult();
         String student_id = requestContent.getSessionAttributes().get("user_id").toString();
         String course_id = requestContent.getRequestParameters().get("course_id")[0];

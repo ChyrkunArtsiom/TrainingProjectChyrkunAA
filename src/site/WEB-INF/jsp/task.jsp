@@ -1,9 +1,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="${sessionScope.lang}"/>
+<fmt:setBundle basename="text"/>
 <html>
 
 <head>
-    <title>Task</title>
+    <title><fmt:message key="task"/></title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.css">
 </head>
 
@@ -16,34 +19,34 @@
         <div class="container">
             <div class="row col mt-3">
                 <div class="col">
-                    <p>Course: ${task.course.name}</p>
-                    <p>Name: ${task.name}</p>
-                    <p>Start date: ${task.startdate}</p>
-                    <p>Deadline: ${task.deadline}</p>
+                    <p><fmt:message key="coursename"/>: ${task.course.name}</p>
+                    <p><fmt:message key="taskName"/>: ${task.name}</p>
+                    <p><fmt:message key="startdate"/>: ${task.startdate}</p>
+                    <p><fmt:message key="deadline"/>: ${task.deadline}</p>
                     <c:if test="${sessionScope.role eq 'teacher'}">
                         <form name="DeleteTaskForm" method="post" action="${pageContext.request.contextPath}/session">
                             <input type="hidden" name="command" value="delete_task"/>
                             <input type="hidden" name="task_id" value="${task.id}"/>
-                            <input type="submit" class="btn btn-dark" value="Delete this task"/>
+                            <input type="submit" class="btn btn-dark" value="<fmt:message key="deleteTask"/>"/>
                         </form>
                         <div class="container">
                             <div class="col-md-8">
-                                <h1>Comepeted tasks</h1>
+                                <h1><fmt:message key="completedTasks"/></h1>
                                 <table class="table table-hover">
                                     <thead>
                                     <tr>
-                                        <th>Student</th>
-                                        <th>Grade</th>
+                                        <th><fmt:message key="student"/></th>
+                                        <th><fmt:message key="grade"/></th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <c:forEach items="${registrations}" var="registration">
-                                        <tr class='clickable-row' data-href='${pageContext.request.contextPath}/exercise?command=exercise&exercise_id=${registration.id}'>
+                                        <tr class='clickable-row' data-href='${pageContext.request.contextPath}/exercise/${registration.id}'>
                                             <td>${registration.student.firstname} ${registration.student.secondname}</td>
                                             <td>
                                                 <c:choose>
                                                     <c:when test="${registration.grade ne '0'}">${registration.grade}</c:when>
-                                                    <c:otherwise>Not rated</c:otherwise>
+                                                    <c:otherwise><fmt:message key="notReviewed"/></c:otherwise>
                                                 </c:choose>
                                             </td>
                                         </tr>
@@ -58,14 +61,15 @@
                             <c:when test="${performed eq 'true'}">
                                 <c:choose>
                                     <c:when test="${reviewed eq 'true'}">
-                                        <p>Grade: ${exercise.grade}</p>
-                                        <p>Review: ${exercise.review}</p>
+                                        <p><fmt:message key="grade"/>: ${exercise.grade}</p>
+                                        <p><fmt:message key="review"/>: ${exercise.review}</p>
                                     </c:when>
                                     <c:otherwise>
                                         <form name="CancelTaskForm" method="post" action="${pageContext.request.contextPath}/session">
                                             <input type="hidden" name="command" value="unregister_task"/>
                                             <input type="hidden" name="task_id" value="${task.id}"/>
-                                            <input type="submit" class="btn btn-dark" value="Cancel registration"/>
+                                            <fmt:message key="cancelRegistration" var="lang_cancelRegistration"/>
+                                            <input type="submit" class="btn btn-dark" value="${lang_cancelRegistration}"/>
                                         </form>
                                     </c:otherwise>
                                 </c:choose>
@@ -74,7 +78,8 @@
                                 <form name="RegisterTaskForm" method="post" action="${pageContext.request.contextPath}/session">
                                     <input type="hidden" name="command" value="register_task"/>
                                     <input type="hidden" name="task_id" value="${task.id}"/>
-                                    <input type="submit" class="btn btn-dark" value="Register task"/>
+                                    <fmt:message key="submitResult" var="lang_submitResult"/>
+                                    <input type="submit" class="btn btn-dark" value="${lang_submitResult}"/>
                                 </form>
                             </c:otherwise>
                         </c:choose>

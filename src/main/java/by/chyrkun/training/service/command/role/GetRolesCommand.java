@@ -6,6 +6,7 @@ import by.chyrkun.training.model.Role;
 import by.chyrkun.training.service.command.BaseCommand;
 import by.chyrkun.training.service.command.Command;
 import by.chyrkun.training.service.receiver.RoleReceiver;
+import by.chyrkun.training.service.resource.MessageManager;
 import by.chyrkun.training.service.resource.PageManager;
 
 import java.util.List;
@@ -18,10 +19,11 @@ public class GetRolesCommand extends BaseCommand implements Command {
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
+        MessageManager messages = MessageManager.valueOf(requestContent.getSessionAttributes().get("lang").toString());
         List<Role> roles;
         roles = roleReceiver.getAll();
         if (roles == null) {
-            requestContent.setRequestAttribute(ERROR_MESSAGE, "Roles not found");
+            requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("rolesNotFound"));
         }else {
             requestContent.setRequestAttribute(PARAM_NAME_ROLES, roles);
         }

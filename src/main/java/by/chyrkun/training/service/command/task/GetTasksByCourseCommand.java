@@ -11,14 +11,13 @@ import java.util.List;
 
 public class GetTasksByCourseCommand extends BaseCommand implements Command {
     private static final String TASKS = "tasks";
-    private static final String ERROR_MESSAGE = "errorMessage";
     private TaskReceiver receiver = new TaskReceiver();
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
         CommandResult result = new CommandResult();
         List<Task> tasks;
-        int course_id = Integer.parseInt(requestContent.getRequestParameters().get("course_id")[0]);
+        int course_id = Integer.valueOf(requestContent.getRequestAttributes().get("id").toString());
         tasks = receiver.getByCourse(course_id);
         if (tasks != null) {
             requestContent.setRequestAttribute(TASKS, tasks);

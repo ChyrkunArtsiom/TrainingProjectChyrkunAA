@@ -1,9 +1,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="${sessionScope.lang}"/>
+<fmt:setBundle basename="text"/>
 <html>
 
 <head>
-    <title>Courses</title>
+    <title><fmt:message key="courses"/></title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.css">
 </head>
 
@@ -14,20 +17,20 @@
 
 <div class="container">
     <div class="col-md-8">
-        <h1>Courses</h1>
+        <h1><fmt:message key="courses"/></h1>
         <c:if test="${not empty courses}">
             <table class="table table-hover">
                 <thead>
                 <tr>
-                    <th scope="col">Name</th>
+                    <th scope="col"><fmt:message key="coursename"/></th>
                     <c:if test="${sessionScope.role eq 'student'}">
-                        <th scope="col">Teacher</th>
+                        <th scope="col"><fmt:message key="teacher"/></th>
                     </c:if>
                 </tr>
                 </thead>
                 <tbody>
                 <c:forEach items="${courses}" var="course">
-                    <tr class='clickable-row' data-href='${pageContext.request.contextPath}/course?command=course&course_id=${course.id}'>
+                    <tr class='clickable-row' data-href='${pageContext.request.contextPath}/course/${course.id}'>
                         <td>${course.name}</td>
                         <c:if test="${sessionScope.role eq 'student'}">
                             <td>${course.teacher.firstname} ${course.teacher.secondname}</td>

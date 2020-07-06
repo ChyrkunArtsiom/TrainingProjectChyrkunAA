@@ -6,7 +6,7 @@ import by.chyrkun.training.service.resource.MessageManager;
 public class UserValidator {
 
     public static boolean isUserValid(User user, StringBuffer message) {
-        MessageManager messages = MessageManager.EN;
+        MessageManager messages = MessageManager.en_US;
         if (!isLoginValid(user.getLogin())) {
             message.append(messages.getMessage("usernameIsNotValid"));
             return false;
@@ -15,7 +15,7 @@ public class UserValidator {
             message.append(messages.getMessage("nameIsNotValid"));
             return false;
         }
-        if (isPasswordValid(user.getPassword())) {
+        if (!isPasswordValid(user.getPassword())) {
             message.append(messages.getMessage("passwordIsNotValid"));
             return false;
         }

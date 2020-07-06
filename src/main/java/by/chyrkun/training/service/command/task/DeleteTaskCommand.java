@@ -7,7 +7,6 @@ import by.chyrkun.training.service.command.Command;
 import by.chyrkun.training.service.receiver.TaskReceiver;
 import by.chyrkun.training.service.resource.PageManager;
 import by.chyrkun.training.service.resource.MessageManager;
-import by.chyrkun.training.service.validator.ParamValidator;
 
 public class DeleteTaskCommand implements Command {
     private static final String MESSAGE = "message";
@@ -15,17 +14,14 @@ public class DeleteTaskCommand implements Command {
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
-        MessageManager messages = MessageManager.EN;
+        MessageManager messages = MessageManager.valueOf(requestContent.getSessionAttributes().get("lang").toString());
         CommandResult result = new CommandResult();
         String task_id = requestContent.getRequestParameters().get("task_id")[0];
         Task task = receiver.getById(Integer.parseInt(task_id));
-        if (task != null && receiver.delete(Integer.parseInt(task_id))) {
-            requestContent.setSessionAttribute(MESSAGE, messages.getMessage("taskWasDeleted"));
-        }
-        else {
+        if (task == null && !receiver.delete(Integer.parseInt(task_id))) {
             requestContent.setRequestAttribute("errorMessage", messages.getMessage("taskNotFound"));
         }
-        result.setPage(PageManager.getProperty("shortpath.page.teacher.courses") + "?command=course&course_id=" + task.getCourse().getId());
+        result.setPage(PageManager.getProperty("shortpath.page.course") + "/" + task.getCourse().getId());
         result.setResponseType(CommandResult.ResponseType.REDIRECT);
         return result;
     }

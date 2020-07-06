@@ -15,7 +15,7 @@ public class UpdateTaskRegistrationCommand implements Command {
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
-        MessageManager messages = MessageManager.EN;
+        MessageManager messages = MessageManager.valueOf(requestContent.getSessionAttributes().get("lang").toString());
         CommandResult result = new CommandResult();
         String exercise_id = requestContent.getRequestParameters().get("exercise_id")[0];
         String grade = requestContent.getRequestParameters().get("grade")[0];
@@ -31,8 +31,7 @@ public class UpdateTaskRegistrationCommand implements Command {
                 requestContent.setSessionAttribute(MESSAGE, messages.getMessage("taskRegistrationWasNotUpdated"));
                 result.setPage(PageManager.getProperty("shortpath.page.teacher.courses"));
             }else {
-                result.setPage(PageManager.getProperty("shortpath.page.exercise")
-                        + "?command=exercise&exercise_id=" + exercise_id);
+                result.setPage(PageManager.getProperty("shortpath.page.exercise") + "/" + exercise_id);
             }
             result.setResponseType(CommandResult.ResponseType.REDIRECT);
         }

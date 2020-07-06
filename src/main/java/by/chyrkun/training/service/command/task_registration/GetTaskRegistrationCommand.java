@@ -13,7 +13,7 @@ public class GetTaskRegistrationCommand implements Command {
     @Override
     public CommandResult execute(RequestContent requestContent) {
         CommandResult result = new CommandResult();
-        int exercise_id = Integer.parseInt(requestContent.getRequestParameters().get("exercise_id")[0]);
+        int exercise_id = Integer.valueOf(requestContent.getRequestAttributes().get("id").toString());
         int user_id = Integer.parseInt(requestContent.getSessionAttributes().get("user_id").toString());
         String role = requestContent.getSessionAttributes().get("role").toString();
         TaskRegistration exercise = receiver.getById(exercise_id);

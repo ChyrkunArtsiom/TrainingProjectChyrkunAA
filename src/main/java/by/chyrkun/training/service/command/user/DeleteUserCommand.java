@@ -16,11 +16,10 @@ public class DeleteUserCommand implements Command {
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
-        MessageManager messages = MessageManager.EN;
+        MessageManager messages = MessageManager.valueOf(requestContent.getSessionAttributes().get("lang").toString());
         String login = requestContent.getRequestParameters().get(PARAM_NAME_USER_LOGIN)[0];
         if (login != null) {
             if (receiver.delete(login)) {
-                requestContent.setRequestAttribute(MESSAGE, messages.getMessage("userWasDeleted"));
                 result.setPage(PageManager.getProperty("shortpath.page.admin.deleteuser"));
                 result.setResponseType(CommandResult.ResponseType.REDIRECT);
             }

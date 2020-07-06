@@ -8,6 +8,7 @@ import by.chyrkun.training.service.command.Command;
 import by.chyrkun.training.service.command.task.GetTasksByCourseCommand;
 import by.chyrkun.training.service.receiver.CourseReceiver;
 import by.chyrkun.training.service.receiver.CourseRegistrationReceiver;
+import by.chyrkun.training.service.resource.MessageManager;
 import by.chyrkun.training.service.resource.PageManager;
 
 public class GetCourseCommand extends BaseCommand implements Command {
@@ -15,20 +16,24 @@ public class GetCourseCommand extends BaseCommand implements Command {
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
-        int course_id = Integer.parseInt(requestContent.getRequestParameters().get("course_id")[0]);
+        MessageManager messages = MessageManager.valueOf(requestContent.getSessionAttributes().get("lang").toString());
+        int course_id = Integer.valueOf(requestContent.getRequestAttributes().get("id").toString());
         int user_id = Integer.parseInt(requestContent.getSessionAttributes().get("user_id").toString());
         String role = requestContent.getSessionAttributes().get("role").toString();
         CommandResult result = new CommandResult();
         Course course = receiver.getById(course_id);
         if (course == null) {
-            requestContent.setRequestAttribute("errorMessage", "Course not found");
+            requestContent.setRequestAttribute("errorMessage", messages.getMessage("courseNotFound"));
         }else if (role.equals("teacher") && course.getTeacher().getId() != user_id) {
-            requestContent.setRequestAttribute("errorMessage", "Course not found");
+            requestContent.setRequestAttribute("errorMessage", messages.getMessage("courseNotFound"));
         }
         else {
-            CourseRegistrationReceiver courseRegistrationReceiver = new CourseRegistrationReceiver();
-            boolean registered = courseRegistrationReceiver.isCourseRegistered(course_id, user_id);
-            requestContent.setRequestAttribute("registered", registered);
+            if (role.equals("student")) {
+                CourseRegistrationReceiver courseRegistrationReceiver = new CourseRegistrationReceiver();
+                boolean registered = courseRegistrationReceiver.isCourseRegistered(course_id, user_id);
+                requestContent.setRequestAttribute("registered", registered);
+            }
+
             requestContent.setRequestAttribute("course", course);
             setNext(new GetTasksByCourseCommand());
             next.execute(requestContent);

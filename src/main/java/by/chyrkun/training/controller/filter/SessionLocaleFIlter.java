@@ -6,20 +6,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebFilter(urlPatterns = {"/session"})
-public class SessionFilter implements Filter {
-
+@WebFilter(filterName = "sessionLocaleFilter", urlPatterns = {"/*"})
+public class SessionLocaleFIlter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         RequestDispatcher dispatcher;
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
-        if (req.getHeader("referer") == null) {
-            resp.sendError(404, "Page is not found");
+        if (req.getParameter("sessionLocale") != null) {
+            req.getSession().setAttribute("lang", req.getParameter("sessionLocale"));
+        } else if (req.getSession().getAttribute("lang") == null) {
+            req.getSession().setAttribute("lang", "en_US");
         }
-        else {
-            dispatcher = req.getRequestDispatcher("/app");
-            dispatcher.forward(req, resp);
-        }
+        chain.doFilter(request, response);
     }
 }

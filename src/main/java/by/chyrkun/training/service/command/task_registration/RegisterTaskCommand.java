@@ -20,7 +20,7 @@ public class RegisterTaskCommand implements Command {
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
-        MessageManager messages = MessageManager.EN;
+        MessageManager messages = MessageManager.valueOf(requestContent.getSessionAttributes().get("lang").toString());
         CommandResult result = new CommandResult();
         String student_id = requestContent.getSessionAttributes().get("user_id").toString();
         String task_id = requestContent.getRequestParameters().get("task_id")[0];
@@ -46,7 +46,7 @@ public class RegisterTaskCommand implements Command {
                 requestContent.setSessionAttribute(MESSAGE, messages.getMessage("taskNotFound"));
             }
         }
-        result.setPage(PageManager.getProperty("shortpath.page.task") + "?command=task&task_id=" + task_id);
+        result.setPage(PageManager.getProperty("shortpath.page.task") + "/" + task_id);
         result.setResponseType(CommandResult.ResponseType.REDIRECT);
         return result;
     }
