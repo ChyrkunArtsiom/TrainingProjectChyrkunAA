@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@taglib prefix="ctg" uri="customtags" %>
 <fmt:setLocale value="${sessionScope.lang}"/>
 <fmt:setBundle basename="text"/>
 <html>
@@ -46,7 +47,12 @@
                 <a class="nav-link" href="?sessionLocale=ru_RU">RU</a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="?sessionLocale=by_BY">BY</a>
+                <a class="nav-link" href="?sessionLocale=be_BY">BY</a>
+            </li>
+            <li class="nav-item active">
+                <div class="nav-link">
+                    <ctg:info-date/>
+                </div>
             </li>
         </ul>
     </div>

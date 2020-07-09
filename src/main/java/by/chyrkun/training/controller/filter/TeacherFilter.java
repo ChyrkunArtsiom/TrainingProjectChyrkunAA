@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebFilter(urlPatterns = {"/teacher/*"}, initParams = {@WebInitParam(name = "INDEX_PATH", value = "/")})
+@WebFilter(filterName = "teacherFilter", urlPatterns = {"/teacher/*"}, initParams = {@WebInitParam(name = "INDEX_PATH", value = "/")})
 public class TeacherFilter implements Filter {
     private String indexPath;
 
@@ -26,23 +26,31 @@ public class TeacherFilter implements Filter {
             resp.sendRedirect(req.getContextPath() + indexPath);
             return;
         }
-        switch(req.getRequestURI()){
-            case "/training/teacher/createtask": {
-                req.setAttribute("command", "get_courses");
-                req.setAttribute("select", "for_task");
-                dispatcher = req.getRequestDispatcher("/app");
-                dispatcher.forward(req, resp);
-                break;
+        try {
+            String command = getCommand(req);
+            switch(command){
+                case "createtask": {
+                    req.setAttribute("command", "get_courses");
+                    req.setAttribute("select", "for_task");
+                    dispatcher = req.getRequestDispatcher("/app");
+                    dispatcher.forward(req, resp);
+                    break;
+                }
+                case "courses": {
+                    chain.doFilter(req, resp);
+                    break;
+                }
+                default: {
+                    resp.sendError(404, "Page is not found");
+                }
             }
-            case "/training/teacher/courses": {
-                req.setAttribute("command", "get_courses");
-                dispatcher = req.getRequestDispatcher("/app");
-                dispatcher.forward(req, resp);
-                break;
-            }
-            default: {
-                resp.sendError(404, "Page is not found");
-            }
+        }catch (StringIndexOutOfBoundsException ex) {
+            resp.sendError(404, "Page is not found");
         }
+    }
+
+    private String getCommand(HttpServletRequest request) {
+        return request.getServletPath().
+                substring(request.getServletPath().indexOf("/teacher/") + "/teacher/".length(), request.getServletPath().lastIndexOf("/"));
     }
 }

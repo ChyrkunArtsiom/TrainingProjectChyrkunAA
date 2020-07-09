@@ -12,7 +12,7 @@
 
 <body>
 <header>
-    <c:import url="../header.jsp"/>
+    <c:import url="../fragments/header.jsp"/>
 </header>
 <h1>PAGE IS NOT FOUND</h1>
 Request from ${pageContext.errorData.requestURI} is failed <br/>

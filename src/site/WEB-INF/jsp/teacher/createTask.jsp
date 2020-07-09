@@ -12,7 +12,7 @@
 
 <body>
 <header>
-    <c:import url="header.jsp"/>
+    <c:import url="../fragments/header.jsp"/>
 </header>
 <form name="CreateTaskForm" method="post" action="${pageContext.request.contextPath}/teacher/createtask">
     <input type="hidden" name="command" value="create_task"/>

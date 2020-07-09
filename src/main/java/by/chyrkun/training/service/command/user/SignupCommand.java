@@ -17,7 +17,6 @@ public class SignupCommand implements Command {
     private static final String PARAM_NAME_PASSWORD = "password";
     private static final String PARAM_NAME_FIRSTNAME = "firstname";
     private static final String PARAM_NAME_SECONDNAME = "secondname";
-    private static final String PARAM_NAME_ROLE_ID = "role_id";
     private static final String ERROR_MESSAGE = "errorMessage";
     private static final String SIGN_UP_PAGE = PageManager.getProperty("fullpath.page.signup");
     private static final int student_id = 3;
@@ -71,7 +70,6 @@ public class SignupCommand implements Command {
         String password = requestContent.getRequestParameters().get(PARAM_NAME_PASSWORD)[0];
         String firstname = requestContent.getRequestParameters().get(PARAM_NAME_FIRSTNAME)[0];
         String secondname = requestContent.getRequestParameters().get(PARAM_NAME_SECONDNAME)[0];
-        String role_id_string = requestContent.getRequestParameters().get(PARAM_NAME_ROLE_ID)[0];
         return new User(login, password, firstname, secondname);
     }
 }

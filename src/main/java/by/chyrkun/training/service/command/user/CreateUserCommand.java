@@ -78,6 +78,7 @@ public class CreateUserCommand extends BaseCommand implements Command {
         String secondname = requestContent.getRequestParameters().get(PARAM_NAME_SECONDNAME)[0];
         return new User(login, password, firstname, secondname);
     }
+
 }
 
 

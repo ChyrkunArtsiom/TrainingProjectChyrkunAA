@@ -12,6 +12,7 @@ import by.chyrkun.training.service.receiver.CourseReceiver;
 import by.chyrkun.training.service.receiver.UserReceiver;
 import by.chyrkun.training.service.resource.PageManager;
 import by.chyrkun.training.service.resource.MessageManager;
+import by.chyrkun.training.service.util.InputSanitizer;
 import by.chyrkun.training.service.validator.CourseValidator;
 import by.chyrkun.training.service.validator.ParamValidator;
 import by.chyrkun.training.service.validator.UserValidator;
@@ -36,6 +37,7 @@ public class CreateCourseCommand extends BaseCommand implements Command {
                 break first;
             }
             else {
+                name = InputSanitizer.sanitize(name);
                 UserReceiver userReceiver = new UserReceiver();
                 User teacher = userReceiver.getById(Integer.parseInt(teacher_id));
                 if (teacher == null) {

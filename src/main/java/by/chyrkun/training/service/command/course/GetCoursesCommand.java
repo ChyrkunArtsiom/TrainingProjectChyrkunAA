@@ -22,11 +22,17 @@ public class GetCoursesCommand extends BaseCommand implements Command {
         CommandResult result = new CommandResult();
         List<Course> courses = null;
         int id = (Integer)requestContent.getSessionAttributes().get("user_id");
+        int page;
         Object select = requestContent.getRequestAttributes().get("select");
         String role = requestContent.getSessionAttributes().get("role").toString();
+        try {
+            page = Integer.parseInt(requestContent.getRequestAttributes().get("page").toString());
+        }catch (NumberFormatException ex) {
+            page = 1;
+        }
         switch (role) {
             case "teacher": {
-                courses = receiver.getByTeacher(id);
+                courses = receiver.getByTeacher(id, page);
                 break;
             }
             case "student": {

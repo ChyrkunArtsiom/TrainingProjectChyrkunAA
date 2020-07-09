@@ -33,7 +33,6 @@ public class GetCourseCommand extends BaseCommand implements Command {
                 boolean registered = courseRegistrationReceiver.isCourseRegistered(course_id, user_id);
                 requestContent.setRequestAttribute("registered", registered);
             }
-
             requestContent.setRequestAttribute("course", course);
             setNext(new GetTasksByCourseCommand());
             next.execute(requestContent);

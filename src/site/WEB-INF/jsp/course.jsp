@@ -11,7 +11,7 @@
 </head>
 <body>
 <header>
-    <c:import url="header.jsp"/>
+    <c:import url="fragments/header.jsp"/>
 </header>
 <c:if test="${not empty course}">
     <div class="container">

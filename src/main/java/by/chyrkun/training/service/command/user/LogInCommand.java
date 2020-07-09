@@ -7,6 +7,7 @@ import by.chyrkun.training.service.command.Command;
 import by.chyrkun.training.service.receiver.UserReceiver;
 import by.chyrkun.training.service.resource.PageManager;
 import by.chyrkun.training.service.resource.MessageManager;
+import by.chyrkun.training.service.util.InputSanitizer;
 import by.chyrkun.training.service.validator.ParamValidator;
 
 public class LogInCommand implements Command {
@@ -27,6 +28,7 @@ public class LogInCommand implements Command {
             result.setPage(PageManager.getProperty("fullpath.page.login"));
         }
         else {
+            login = InputSanitizer.sanitize(login);
             User user = receiver.getByLogin(login);
             if ((receiver.getByLogin(login) == null) || (!user.getPassword().equals(password))) {
                 requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("loginDataIsNotValid"));

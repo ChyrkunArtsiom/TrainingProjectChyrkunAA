@@ -14,7 +14,7 @@
 </head>
 <body>
 <header>
-    <c:import url="header.jsp"/>
+    <c:import url="fragments/header.jsp"/>
 </header>
 <form name="UpdateForm" method="post" action="${pageContext.request.contextPath}/session">
     <input type="hidden" name="command" value="update_user"/>
@@ -30,7 +30,7 @@
     <p><input type="submit" value="Update user"/></p>
 </form>
 <footer>
-    <c:import url="footer.jsp"/>
+    <c:import url="fragments/footer.jsp"/>
 </footer>
 </body>
 </html>

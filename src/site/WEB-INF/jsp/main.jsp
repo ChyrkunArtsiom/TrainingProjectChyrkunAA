@@ -12,16 +12,16 @@
 
 <body>
 <header>
-    <c:import url="header.jsp"/>
+    <c:import url="fragments/header.jsp"/>
 </header>
 <c:if test="${sessionScope.role eq 'admin'}">
-    <c:import url="admin.jsp"/>
+    <c:import url="admin/admin.jsp"/>
 </c:if>
 <c:if test="${sessionScope.role eq 'teacher'}">
-    <c:import url="teacher.jsp"/>
+    <c:import url="teacher/teacher.jsp"/>
 </c:if>
 <c:if test="${sessionScope.role eq 'student'}">
-    <c:import url="student.jsp"/>
+    <c:import url="student/student.jsp"/>
 </c:if>
 <script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>

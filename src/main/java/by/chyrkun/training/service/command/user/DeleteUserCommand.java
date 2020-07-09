@@ -6,6 +6,7 @@ import by.chyrkun.training.service.command.Command;
 import by.chyrkun.training.service.receiver.UserReceiver;
 import by.chyrkun.training.service.resource.PageManager;
 import by.chyrkun.training.service.resource.MessageManager;
+import by.chyrkun.training.service.util.InputSanitizer;
 
 public class DeleteUserCommand implements Command {
     private static final String PARAM_NAME_USER_LOGIN = "login";
@@ -19,6 +20,7 @@ public class DeleteUserCommand implements Command {
         MessageManager messages = MessageManager.valueOf(requestContent.getSessionAttributes().get("lang").toString());
         String login = requestContent.getRequestParameters().get(PARAM_NAME_USER_LOGIN)[0];
         if (login != null) {
+            login = InputSanitizer.sanitize(login);
             if (receiver.delete(login)) {
                 result.setPage(PageManager.getProperty("shortpath.page.admin.deleteuser"));
                 result.setResponseType(CommandResult.ResponseType.REDIRECT);

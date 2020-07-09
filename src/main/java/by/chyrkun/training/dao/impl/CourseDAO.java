@@ -27,7 +27,7 @@ public class CourseDAO extends AbstractDAO<Course> {
     private final static String SQL_GET_COURSE = "SELECT course_id, name, teacher_id " +
             "FROM training_schema.courses WHERE course_id = (?)";
     private final static String SQL_GET_COURSES_BY_TEACHER = "SELECT course_id, name, teacher_id " +
-            "FROM training_schema.courses WHERE teacher_id = (?)";
+            "FROM training_schema.courses WHERE teacher_id = (?) ORDER BY course_id OFFSET (?) LIMIT (?)";
     private final static Logger LOGGER = LogManager.getLogger(RoleDAO.class);
     private final static String SQL_GET_UNCHOSEN_COURSES = "SELECT course_id, name, teacher_id " +
             "FROM training_schema.courses " +
@@ -37,6 +37,7 @@ public class CourseDAO extends AbstractDAO<Course> {
     private final static String SQL_GET_CHOSEN_COURSES = "SELECT courses.course_id, name, teacher_id " +
             "FROM training_schema.courses LEFT JOIN training_schema.course_registration " +
             "ON courses.course_id = course_registration.course_id WHERE student_id = (?)";
+    private final static int ROWS_PER_PAGE = 3;
 
     public CourseDAO(){
         setConnection(ConnectionPoolImpl.getInstance().getConnection());
@@ -127,13 +128,15 @@ public class CourseDAO extends AbstractDAO<Course> {
         }
     }
 
-    public List<Course> getByTeacher(int teacher_id) {
+    public List<Course> getByTeacher(int teacher_id, int page) {
         LOGGER.log(Level.INFO, "Selecting courses by teacher...");
         List<Course> courses = new ArrayList<>();
         String name;
         int course_id;
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_COURSES_BY_TEACHER)) {
             preparedStatement.setInt(1, teacher_id);
+            preparedStatement.setInt(2, (page - 1) * ROWS_PER_PAGE);
+            preparedStatement.setInt(3, ROWS_PER_PAGE);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (!resultSet.isBeforeFirst()) {
                 return null;

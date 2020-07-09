@@ -12,7 +12,7 @@
 
 <body>
 <header>
-    <c:import url="header.jsp"/>
+    <c:import url="../fragments/header.jsp"/>
 </header>
 <form name="DeleteUserForm" method="post" action="${pageContext.request.contextPath}/admin/deleteuser">
     <input type="hidden" name="command" value="delete_user"/>

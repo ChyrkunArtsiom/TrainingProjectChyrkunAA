@@ -7,7 +7,7 @@ public enum MessageManager {
     en_US(ResourceBundle.getBundle("messages", new Locale("en", "US"),
             ResourceBundle.Control.getNoFallbackControl(ResourceBundle.Control.FORMAT_PROPERTIES))),
     ru_RU(ResourceBundle.getBundle("messages", new Locale("ru", "RU"))),
-    by_BY(ResourceBundle.getBundle("messages", new Locale("by", "BY")));
+    be_BY(ResourceBundle.getBundle("messages", new Locale("be", "BY")));
     private ResourceBundle bundle;
 
     MessageManager(ResourceBundle bundle){

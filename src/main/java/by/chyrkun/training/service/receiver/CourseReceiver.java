@@ -41,11 +41,11 @@ public class CourseReceiver {
         }
     }
 
-    public List<Course> getByTeacher(int teacher_id) {
+    public List<Course> getByTeacher(int teacher_id, int page) {
         List<Course> courses;
         CourseDAO courseDAO = new CourseDAO();
         try {
-            courses = courseDAO.getByTeacher(teacher_id);
+            courses = courseDAO.getByTeacher(teacher_id, page);
             return courses;
         }finally {
             courseDAO.close();

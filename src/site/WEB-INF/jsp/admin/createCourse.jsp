@@ -12,7 +12,7 @@
 
 <body>
 <header>
-    <c:import url="header.jsp"/>
+    <c:import url="../fragments/header.jsp"/>
 </header>
 <form name="CreateCourseForm" method="post" action="${pageContext.request.contextPath}/admin/createcourse">
     <input type="hidden" name="command" value="create_course"/>

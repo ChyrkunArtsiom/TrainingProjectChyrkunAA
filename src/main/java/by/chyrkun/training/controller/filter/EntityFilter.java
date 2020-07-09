@@ -15,15 +15,19 @@ public class EntityFilter implements Filter {
         RequestDispatcher dispatcher;
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
-        String command = getCommand(req);
-        String id = getId(req);
-        if (((HttpServletRequest) request).getSession().getAttribute("user_id") != null) {
-            req.setAttribute("id", id);
-            req.setAttribute("command", command);
-            dispatcher = req.getRequestDispatcher("/app");
-            dispatcher.forward(req, resp);
-        } else {
-            chain.doFilter(request, response);
+        try {
+            String command = getCommand(req);
+            String id = getId(req);
+            if (((HttpServletRequest) request).getSession().getAttribute("user_id") != null) {
+                req.setAttribute("id", id);
+                req.setAttribute("command", command);
+                dispatcher = req.getRequestDispatcher("/app");
+                dispatcher.forward(req, resp);
+            } else {
+                chain.doFilter(request, response);
+            }
+        }catch (StringIndexOutOfBoundsException ex) {
+            resp.sendError(404, "Page is not found");
         }
     }
 

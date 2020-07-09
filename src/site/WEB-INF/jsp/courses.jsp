@@ -12,7 +12,7 @@
 
 <body>
 <header>
-    <c:import url="header.jsp"/>
+    <c:import url="fragments/header.jsp"/>
 </header>
 
 <div class="container">
@@ -39,6 +39,22 @@
                 </c:forEach>
                 </tbody>
             </table>
+            <nav>
+                <ul class="pagination">
+                    <c:choose>
+                        <c:when test="${page eq '1'}">
+                            <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/teacher/courses/${page}">Previous</a></li>
+                        </c:when>
+                        <c:otherwise>
+                            <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/teacher/courses/${page-1}">Previous</a></li>
+                        </c:otherwise>
+                    </c:choose>
+                    <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/teacher/courses/${page}">${page}</a></li>
+                    <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/teacher/courses/${page+1}">${page+1}</a></li>
+                    <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/teacher/courses/${page+2}">${page+2}</a></li>
+                    <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/teacher/courses/${page+1}">Next</a></li>
+                </ul>
+            </nav>
         </c:if>
         <p>${sessionScope.message}</p>
         <c:remove var="message" scope="session"/>

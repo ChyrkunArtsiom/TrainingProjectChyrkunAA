@@ -12,7 +12,7 @@
 
 <body>
 <header>
-    <c:import url="header.jsp"/>
+    <c:import url="fragments/header.jsp"/>
 </header>
     <c:choose>
         <c:when test="${not empty exercise}">
@@ -58,7 +58,7 @@
                                     </div>
                                 </div>
                                 <fmt:message key="estimate" var="lang_estimate"/>
-                                <input type="submit" class="btn btn-dark" value="${lang_estimate}"/>
+                                <input type="submit" id="estimate" class="btn btn-dark" value="${lang_estimate}"/>
                             </form>
                         </c:if>
                     </div>
@@ -69,6 +69,13 @@
             <fmt:message key="exerciseNotFound"/>
         </c:otherwise>
     </c:choose>
+<script>
+    $("ReviewExerciseForm").submit(function(){
+        var message = $("#inputcomment").val();
+        var encodedMsg = $('<div />').text(message).html();
+        document.getElementById("inputcomment").value = encodedMsg;
+    });
+</script>
 </body>
 
 </html>

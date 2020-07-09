@@ -14,7 +14,7 @@
 </head>
 <body>
 <header>
-    <c:import url="header.jsp"/>
+    <c:import url="fragments/header.jsp"/>
 </header>
 <form name="UpdateCourseForm" method="post" action="${pageContext.request.contextPath}/session">
     <input type="hidden" name="command" value="update_course"/>
@@ -28,7 +28,7 @@
     <a href="${pageContext.request.contextPath}/">On main page</a>
 </form>
 <footer>
-    <c:import url="footer.jsp"/>
+    <c:import url="fragments/footer.jsp"/>
 </footer>
 </body>
 </html>

@@ -7,6 +7,7 @@ import by.chyrkun.training.service.command.Command;
 import by.chyrkun.training.service.receiver.TaskRegistrationReceiver;
 import by.chyrkun.training.service.resource.MessageManager;
 import by.chyrkun.training.service.resource.PageManager;
+import by.chyrkun.training.service.util.InputSanitizer;
 import by.chyrkun.training.service.validator.ParamValidator;
 
 public class UpdateTaskRegistrationCommand implements Command {
@@ -24,6 +25,7 @@ public class UpdateTaskRegistrationCommand implements Command {
             requestContent.setRequestAttribute(MESSAGE, messages.getMessage("lineIsEmpty"));
             result.setPage(PageManager.getProperty("fullpath.page.createcourse"));
         }else {
+            review = InputSanitizer.sanitize(review);
             TaskRegistration taskRegistration = receiver.getById(Integer.parseInt(exercise_id));
             taskRegistration.setGrade(Integer.parseInt(grade));
             taskRegistration.setReview(review);

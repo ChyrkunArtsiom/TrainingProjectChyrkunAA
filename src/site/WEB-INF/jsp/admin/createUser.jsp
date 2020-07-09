@@ -12,7 +12,7 @@
 
 <body>
 <header>
-    <c:import url="header.jsp"/>
+    <c:import url="../fragments/header.jsp"/>
 </header>
 <fmt:message key="createUser" var="lang_createUser"/>
 <form name="CreateUserForm" method="post" action="${pageContext.request.contextPath}/admin/createuser">

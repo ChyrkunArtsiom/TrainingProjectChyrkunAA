@@ -12,6 +12,7 @@ import by.chyrkun.training.service.receiver.CourseReceiver;
 import by.chyrkun.training.service.receiver.TaskReceiver;
 import by.chyrkun.training.service.resource.PageManager;
 import by.chyrkun.training.service.resource.MessageManager;
+import by.chyrkun.training.service.util.InputSanitizer;
 import by.chyrkun.training.service.validator.ParamValidator;
 import by.chyrkun.training.service.validator.TaskValidator;
 
@@ -54,6 +55,7 @@ public class CreateTaskCommand extends BaseCommand implements Command {
                     result.setPage(PageManager.getProperty("fullpath.page.createtask"));
                     break first;
                 }
+                name = InputSanitizer.sanitize(name);
                 LocalDate start = LocalDate.parse(startdate);
                 LocalDate end = LocalDate.parse(deadline);
                 if (!deadline.isEmpty()) {

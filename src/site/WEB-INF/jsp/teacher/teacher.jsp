@@ -12,7 +12,7 @@
 
 <body>
 <div class="list-group">
-    <a href="${pageContext.request.contextPath}/teacher/courses" class="list-group-item list-group-item-action"><fmt:message key="courses"/></a>
+    <a href="${pageContext.request.contextPath}/teacher/courses/1" class="list-group-item list-group-item-action"><fmt:message key="courses"/></a>
     <a href="${pageContext.request.contextPath}/teacher/createtask" class="list-group-item list-group-item-action"><fmt:message key="createTask"/></a>
 </div>
 </body>
