@@ -5,18 +5,17 @@ import by.chyrkun.training.service.resource.MessageManager;
 
 public class UserValidator {
 
-    public static boolean isUserValid(User user, StringBuffer message) {
-        MessageManager messages = MessageManager.en_US;
+    public static boolean isUserValid(User user, StringBuffer message, MessageManager manager) {
         if (!isLoginValid(user.getLogin())) {
-            message.append(messages.getMessage("usernameIsNotValid"));
+            message.append(manager.getMessage("usernameIsNotValid"));
             return false;
         }
         if (!isNameValid(user.getFirstname()) || !isNameValid(user.getSecondname())) {
-            message.append(messages.getMessage("nameIsNotValid"));
+            message.append(manager.getMessage("nameIsNotValid"));
             return false;
         }
         if (!isPasswordValid(user.getPassword())) {
-            message.append(messages.getMessage("passwordIsNotValid"));
+            message.append(manager.getMessage("passwordIsNotValid"));
             return false;
         }
         return true;

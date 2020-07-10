@@ -27,7 +27,7 @@ public class CreateUserCommand extends BaseCommand implements Command {
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
-        MessageManager messages = MessageManager.valueOf(requestContent.getSessionAttributes().get("lang").toString());
+        MessageManager messages = setLang(requestContent);
         CommandResult result = new CommandResult();
         User user = getUserFromRequest(requestContent);
         int role_id = Integer.parseInt(requestContent.getRequestParameters().get(PARAM_NAME_ROLE_ID)[0]);
@@ -43,7 +43,7 @@ public class CreateUserCommand extends BaseCommand implements Command {
                 user.setRole(role);
             }
             StringBuffer message = new StringBuffer();
-            if (!UserValidator.isUserValid(user, message)) {
+            if (!UserValidator.isUserValid(user, message, messages)) {
                 requestContent.setRequestAttribute(ERROR_MESSAGE, message);
                 result.setPage(CREATE_USER_PAGE);
                 break first;

@@ -24,7 +24,7 @@ public class SignupCommand implements Command {
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
-        MessageManager messages = MessageManager.valueOf(requestContent.getSessionAttributes().get("lang").toString());
+        MessageManager messages = setLang(requestContent);
         CommandResult result = new CommandResult();
         User user = getUserFromRequest(requestContent);
         first: try {
@@ -39,7 +39,7 @@ public class SignupCommand implements Command {
                 user.setRole(role);
             }
             StringBuffer message = new StringBuffer();
-            if (!UserValidator.isUserValid(user, message)) {
+            if (!UserValidator.isUserValid(user, message, messages)) {
                 requestContent.setRequestAttribute(ERROR_MESSAGE, message);
                 result.setPage(SIGN_UP_PAGE);
                 break first;

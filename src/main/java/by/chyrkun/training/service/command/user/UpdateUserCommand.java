@@ -22,7 +22,7 @@ public class UpdateUserCommand implements Command {
     private UserReceiver receiver = new UserReceiver();
     @Override
     public CommandResult execute(RequestContent requestContent) {
-        MessageManager messages = MessageManager.valueOf(requestContent.getSessionAttributes().get("lang").toString());
+        MessageManager messages = setLang(requestContent);
         CommandResult result = new CommandResult();
         String login;
         String password = requestContent.getRequestParameters().get(PARAM_NAME_PASSWORD)[0];

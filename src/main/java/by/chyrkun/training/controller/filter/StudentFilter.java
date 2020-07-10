@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebFilter(urlPatterns = {"/student/*"}, initParams = {@WebInitParam(name = "INDEX_PATH", value = "/")})
+@WebFilter(filterName = "studentFilter", urlPatterns = {"/student/*"}, initParams = {@WebInitParam(name = "INDEX_PATH", value = "/")})
 public class StudentFilter implements Filter {
     private String indexPath;
 
@@ -26,9 +26,21 @@ public class StudentFilter implements Filter {
             resp.sendRedirect(req.getContextPath() + indexPath);
             return;
         }
+        String path = req.getServletPath();
+        if (path.contains("courses")) {
+            req.setAttribute("chosen", "false");
+            chain.doFilter(req, resp);
+        } else if (path.contains("registered")) {
+            req.setAttribute("chosen", "true");
+            chain.doFilter(req, resp);
+        } else {
+            resp.sendError(404, "Page is not found");
+        }
+
+        /*
         switch(req.getRequestURI()) {
             case "/training/student": {
-                dispatcher = req.getRequestDispatcher("/WEB-INF/jsp/student.jsp");
+                dispatcher = req.getRequestDispatcher("/WEB-INF/jsp/main.jsp");
                 dispatcher.forward(req, resp);
                 break;
             }
@@ -49,6 +61,11 @@ public class StudentFilter implements Filter {
             default: {
                 resp.sendError(404, "Page is not found");
             }
-        }
+        }*/
+    }
+
+    private String getCommand(HttpServletRequest request) {
+        return request.getServletPath().
+                substring(request.getServletPath().indexOf("/teacher/") + "/teacher/".length(), request.getServletPath().lastIndexOf("/"));
     }
 }

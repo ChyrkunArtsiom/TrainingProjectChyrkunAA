@@ -12,7 +12,6 @@ import by.chyrkun.training.service.validator.ParamValidator;
 
 public class LogInCommand implements Command {
     private static final String PARAM_NAME_LOGIN = "login";
-    private static final String PARAM_NAME_PASSWORD = "password";
     private static final String ERROR_MESSAGE = "errorMessage";
     private UserReceiver receiver = new UserReceiver();
 
@@ -20,9 +19,9 @@ public class LogInCommand implements Command {
     @Override
     public CommandResult execute(RequestContent requestContent) {
         CommandResult result = new CommandResult();
-        MessageManager messages = MessageManager.valueOf(requestContent.getSessionAttributes().get("lang").toString());
+        MessageManager messages = setLang(requestContent);
         String login = requestContent.getRequestParameters().get(PARAM_NAME_LOGIN)[0];
-        String password = requestContent.getRequestParameters().get(PARAM_NAME_PASSWORD)[0];
+        String password = requestContent.getRequestParameters().get("password")[0];
         if (!ParamValidator.isPresent(login, password)) {
             requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("lineIsEmpty"));
             result.setPage(PageManager.getProperty("fullpath.page.login"));

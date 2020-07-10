@@ -37,8 +37,8 @@ public class GetTaskCommand implements Command {
                     boolean performed = taskRegistrationReceiver.isPerformed(task_id, user_id);
                     if (performed) {
                         TaskRegistration exercise = taskRegistrationReceiver.getByTaskStudent(task_id, user_id);
+                        requestContent.setSessionAttribute("exercise", exercise);
                         if (exercise != null && exercise.getGrade() != 0) {
-                            requestContent.setSessionAttribute("exercise", exercise);
                             requestContent.setRequestAttribute("reviewed", "true");
                         }
                         requestContent.setRequestAttribute("performed", "true");

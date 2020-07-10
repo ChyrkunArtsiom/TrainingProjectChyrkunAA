@@ -16,7 +16,7 @@ public class GetCourseCommand extends BaseCommand implements Command {
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
-        MessageManager messages = MessageManager.valueOf(requestContent.getSessionAttributes().get("lang").toString());
+        MessageManager messages = setLang(requestContent);
         int course_id = Integer.valueOf(requestContent.getRequestAttributes().get("id").toString());
         int user_id = Integer.parseInt(requestContent.getSessionAttributes().get("user_id").toString());
         String role = requestContent.getSessionAttributes().get("role").toString();

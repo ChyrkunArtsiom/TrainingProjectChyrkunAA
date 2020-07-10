@@ -20,7 +20,7 @@ public class RegisterCourseCommand implements Command {
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
-        MessageManager messages = MessageManager.valueOf(requestContent.getSessionAttributes().get("lang").toString());
+        MessageManager messages = setLang(requestContent);
         CommandResult result = new CommandResult();
         String student_id = requestContent.getSessionAttributes().get("user_id").toString();
         String course_id = requestContent.getRequestParameters().get("course_id")[0];
@@ -37,16 +37,18 @@ public class RegisterCourseCommand implements Command {
         else {
             CourseRegistration courseRegistration = new CourseRegistration(course, student);
             try {
+                receiver.create(courseRegistration);
+                /*
                 if (receiver.create(courseRegistration)) {
                     requestContent.setSessionAttribute(MESSAGE, messages.getMessage("courseRegistrationWasCreated"));
-                }
+                }*/
             }catch (UserNotFoundServiceException ex) {
                 requestContent.setSessionAttribute(MESSAGE, messages.getMessage("userNotFound"));
             }catch (CourseNotFoundServiceException ex){
                 requestContent.setSessionAttribute(MESSAGE, messages.getMessage("courseNotFound"));
             }
         }
-        result.setPage(PageManager.getProperty("shortpath.page.main"));
+        result.setPage(PageManager.getProperty("shortpath.page.course") + "/" + course_id);
         result.setResponseType(CommandResult.ResponseType.REDIRECT);
         return result;
     }

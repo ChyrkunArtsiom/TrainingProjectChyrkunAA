@@ -47,7 +47,7 @@
                 <a class="nav-link" href="?sessionLocale=ru_RU">RU</a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="?sessionLocale=be_BY">BY</a>
+                <a class="nav-link" href="?sessionLocale=be_BY">BE</a>
             </li>
             <li class="nav-item active">
                 <div class="nav-link">

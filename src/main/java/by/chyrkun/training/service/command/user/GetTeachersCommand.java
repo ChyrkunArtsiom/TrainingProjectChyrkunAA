@@ -18,7 +18,7 @@ public class GetTeachersCommand extends BaseCommand implements Command {
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
-        MessageManager messages = MessageManager.valueOf(requestContent.getSessionAttributes().get("lang").toString());
+        MessageManager messages = setLang(requestContent);
         CommandResult result = new CommandResult();
         List<User> teachers;
         UserReceiver userReceiver = new UserReceiver();

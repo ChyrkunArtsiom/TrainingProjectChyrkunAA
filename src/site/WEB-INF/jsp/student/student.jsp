@@ -12,8 +12,8 @@
 
 <body>
 <div class="list-group">
-    <a href="${pageContext.request.contextPath}/student/courses" class="list-group-item list-group-item-action"><fmt:message key="courses"/></a>
-    <a href="${pageContext.request.contextPath}/student/registered" class="list-group-item list-group-item-action"><fmt:message key="registeredCourses"/></a>
+    <a href="${pageContext.request.contextPath}/student/courses/1" class="list-group-item list-group-item-action"><fmt:message key="courses"/></a>
+    <a href="${pageContext.request.contextPath}/student/registered/1" class="list-group-item list-group-item-action"><fmt:message key="registeredCourses"/></a>
 </div>
 <div class="container">
     <div class="row mt-1">

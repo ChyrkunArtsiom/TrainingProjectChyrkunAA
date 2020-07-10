@@ -67,6 +67,7 @@
                                     <c:otherwise>
                                         <form name="CancelTaskForm" method="post" action="${pageContext.request.contextPath}/session">
                                             <input type="hidden" name="command" value="unregister_task"/>
+                                            <input type="hidden" name="exercise_id" value="${exercise.id}"/>
                                             <input type="hidden" name="task_id" value="${task.id}"/>
                                             <fmt:message key="cancelRegistration" var="lang_cancelRegistration"/>
                                             <input type="submit" class="btn btn-dark" value="${lang_cancelRegistration}"/>

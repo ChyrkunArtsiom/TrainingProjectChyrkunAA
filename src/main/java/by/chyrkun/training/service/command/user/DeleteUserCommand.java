@@ -17,7 +17,7 @@ public class DeleteUserCommand implements Command {
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
-        MessageManager messages = MessageManager.valueOf(requestContent.getSessionAttributes().get("lang").toString());
+        MessageManager messages = setLang(requestContent);
         String login = requestContent.getRequestParameters().get(PARAM_NAME_USER_LOGIN)[0];
         if (login != null) {
             login = InputSanitizer.sanitize(login);

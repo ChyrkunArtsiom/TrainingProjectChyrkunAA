@@ -13,7 +13,7 @@ public class DeleteTaskRegistrationCommand implements Command {
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
-        MessageManager messages = MessageManager.valueOf(requestContent.getSessionAttributes().get("lang").toString());
+        MessageManager messages = setLang(requestContent);
         CommandResult result = new CommandResult();
         String exercise_id = requestContent.getRequestParameters().get("exercise_id")[0];
         String task_id = requestContent.getRequestParameters().get("task_id")[0];

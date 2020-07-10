@@ -19,7 +19,7 @@ public class GetRolesCommand extends BaseCommand implements Command {
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
-        MessageManager messages = MessageManager.valueOf(requestContent.getSessionAttributes().get("lang").toString());
+        MessageManager messages = setLang(requestContent);
         List<Role> roles;
         roles = roleReceiver.getAll();
         if (roles == null) {

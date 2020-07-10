@@ -14,7 +14,7 @@ public class DeleteCourseCommand implements Command {
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
-        MessageManager messages = MessageManager.valueOf(requestContent.getSessionAttributes().get("lang").toString());
+        MessageManager messages = setLang(requestContent);
         CommandResult result = new CommandResult();
         String course_id = requestContent.getRequestParameters().get(PARAM_COURSE_ID)[0];
         if (!receiver.delete(Integer.parseInt(course_id))) {

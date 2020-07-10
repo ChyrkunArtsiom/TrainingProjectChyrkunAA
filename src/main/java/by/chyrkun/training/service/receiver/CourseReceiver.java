@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class CourseReceiver {
+    private final static int ROWS_PER_PAGE = 3;
+
     public boolean create(Course course) throws EntityNotFoundServiceException {
         CourseDAO courseDAO = new CourseDAO();
         try {
@@ -52,11 +54,11 @@ public class CourseReceiver {
         }
     }
 
-    public List<Course> getByStudent(int student_id, boolean chosen) {
+    public List<Course> getByStudent(int student_id, boolean chosen, int page) {
         List<Course> courses;
         CourseDAO courseDAO = new CourseDAO();
         try {
-            courses = courseDAO.getCoursesByStudent(student_id, chosen);
+            courses = courseDAO.getCoursesByStudent(student_id, chosen, page);
             return courses;
         }finally {
             courseDAO.close();
@@ -69,6 +71,24 @@ public class CourseReceiver {
         try {
             optional = courseDAO.update(course);
             return optional.orElse(null);
+        }finally {
+            courseDAO.close();
+        }
+    }
+
+    public int getPagesForTeacher(int teacher_id) {
+        CourseDAO courseDAO = new CourseDAO();
+        try {
+            return (int)Math.ceil((double)courseDAO.getCountByTeacher(teacher_id)/ROWS_PER_PAGE);
+        }finally {
+            courseDAO.close();
+        }
+    }
+
+    public int getPagesForStudent(int student_id, boolean chosen) {
+        CourseDAO courseDAO = new CourseDAO();
+        try {
+            return (int)Math.ceil((double)courseDAO.getCountByStudent(student_id, chosen)/ROWS_PER_PAGE);
         }finally {
             courseDAO.close();
         }

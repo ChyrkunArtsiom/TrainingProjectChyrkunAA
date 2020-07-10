@@ -13,7 +13,7 @@ public class GetUserCommand implements Command {
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
-        MessageManager messages = MessageManager.valueOf(requestContent.getSessionAttributes().get("lang").toString());
+        MessageManager messages = setLang(requestContent);
         CommandResult result = new CommandResult();
         int user_id = Integer.valueOf(requestContent.getRequestAttributes().get("id").toString());
         User user = receiver.getById(user_id);

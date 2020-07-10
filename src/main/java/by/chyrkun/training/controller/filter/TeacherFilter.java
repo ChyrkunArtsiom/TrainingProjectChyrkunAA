@@ -26,6 +26,19 @@ public class TeacherFilter implements Filter {
             resp.sendRedirect(req.getContextPath() + indexPath);
             return;
         }
+        String path = req.getServletPath();
+        if (path.contains("teacher/courses")) {
+            chain.doFilter(req, resp);
+        } else if (path.contains("teacher/createtask")) {
+            req.setAttribute("command", "get_courses");
+            req.setAttribute("select", "for_task");
+            dispatcher = req.getRequestDispatcher("/app");
+            dispatcher.forward(req, resp);
+        } else {
+            resp.sendError(404, "Page is not found");
+        }
+
+       /*
         try {
             String command = getCommand(req);
             switch(command){
@@ -46,7 +59,7 @@ public class TeacherFilter implements Filter {
             }
         }catch (StringIndexOutOfBoundsException ex) {
             resp.sendError(404, "Page is not found");
-        }
+        }*/
     }
 
     private String getCommand(HttpServletRequest request) {

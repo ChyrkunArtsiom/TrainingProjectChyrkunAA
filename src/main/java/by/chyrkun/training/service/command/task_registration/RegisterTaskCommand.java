@@ -20,7 +20,7 @@ public class RegisterTaskCommand implements Command {
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
-        MessageManager messages = MessageManager.valueOf(requestContent.getSessionAttributes().get("lang").toString());
+        MessageManager messages = setLang(requestContent);
         CommandResult result = new CommandResult();
         String student_id = requestContent.getSessionAttributes().get("user_id").toString();
         String task_id = requestContent.getRequestParameters().get("task_id")[0];
@@ -37,9 +37,11 @@ public class RegisterTaskCommand implements Command {
         else {
             TaskRegistration taskRegistration = new TaskRegistration(task, student);
             try {
+                receiver.create(taskRegistration);
+                /*
                 if (receiver.create(taskRegistration)) {
                     requestContent.setSessionAttribute(MESSAGE, messages.getMessage("taskRegistrationWasCreated"));
-                }
+                }*/
             }catch (UserNotFoundServiceException ex) {
                 requestContent.setSessionAttribute(MESSAGE, messages.getMessage("userNotFound"));
             }catch (TaskNotFoundServiceException ex){

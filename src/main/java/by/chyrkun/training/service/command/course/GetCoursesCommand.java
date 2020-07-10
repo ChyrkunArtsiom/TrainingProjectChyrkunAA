@@ -18,26 +18,33 @@ public class GetCoursesCommand extends BaseCommand implements Command {
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
-        MessageManager messages = MessageManager.valueOf(requestContent.getSessionAttributes().get("lang").toString());
+        MessageManager messages = setLang(requestContent);
         CommandResult result = new CommandResult();
         List<Course> courses = null;
         int id = (Integer)requestContent.getSessionAttributes().get("user_id");
         int page;
+        int max_pages = 0;
         Object select = requestContent.getRequestAttributes().get("select");
         String role = requestContent.getSessionAttributes().get("role").toString();
         try {
-            page = Integer.parseInt(requestContent.getRequestAttributes().get("page").toString());
+            if (requestContent.getRequestAttributes().get("page") == null) {
+                page = 0;
+            }else {
+                page = Integer.parseInt(requestContent.getRequestAttributes().get("page").toString());
+            }
         }catch (NumberFormatException ex) {
             page = 1;
         }
         switch (role) {
             case "teacher": {
                 courses = receiver.getByTeacher(id, page);
+                max_pages = receiver.getPagesForTeacher(id);
                 break;
             }
             case "student": {
                 boolean chosen = Boolean.parseBoolean(requestContent.getRequestAttributes().get("chosen").toString());
-                courses = receiver.getByStudent(id, chosen);
+                courses = receiver.getByStudent(id, chosen, page);
+                max_pages = receiver.getPagesForStudent(id, chosen);
                 break;
             }
         }
@@ -45,6 +52,7 @@ public class GetCoursesCommand extends BaseCommand implements Command {
             requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("coursesNotFound"));
         }else {
             requestContent.setRequestAttribute(COURSES, courses);
+            requestContent.setRequestAttribute("max_pages", max_pages);
         }
         if (select != null && select.equals("for_task")) {
             result.setPage(PageManager.getProperty("fullpath.page.createtask"));

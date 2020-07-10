@@ -19,9 +19,14 @@
         <url-pattern>/teacher/*</url-pattern>
     </filter-mapping>
     <filter-mapping>
+        <filter-name>studentFilter</filter-name>
+        <url-pattern>/student/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
         <filter-name>coursesFilter</filter-name>
         <url-pattern>/teacher/courses/*</url-pattern>
         <url-pattern>/student/courses/*</url-pattern>
+        <url-pattern>/student/registered/*</url-pattern>
     </filter-mapping>
     <jsp-config>
         <taglib>

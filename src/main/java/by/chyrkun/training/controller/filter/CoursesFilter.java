@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebFilter(filterName = "coursesFilter", urlPatterns = {"/teacher/courses/*"})
+@WebFilter(filterName = "coursesFilter", urlPatterns = {"/teacher/courses/*", "/student/courses/*", "/student/registered/*"})
 public class CoursesFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -21,7 +21,7 @@ public class CoursesFilter implements Filter {
     }
 
     private int getPageNumber(HttpServletRequest request) {
-        StringBuffer URL = request.getRequestURL();
+        String URL = request.getServletPath();
         if (URL.lastIndexOf("courses/") != -1) {
             try {
                 return Integer.parseInt(URL.substring(URL.lastIndexOf("courses/") + "courses/".length()));
