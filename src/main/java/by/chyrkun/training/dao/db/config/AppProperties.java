@@ -13,7 +13,6 @@ public enum AppProperties {
     private String user;
     private String password;
     private int initialPoolSize = 10;
-    private final Logger LOGGER = LogManager.getLogger(AppProperties.class);
     private final ResourceBundle resourceBundle;
 
     AppProperties() {

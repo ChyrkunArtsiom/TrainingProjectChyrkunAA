@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class RoleDAO extends AbstractDAO<Role> implements ResultMapper<List<Role>> {
+    private final static String SQL_CREATE_ROLE_FULL = "INSERT INTO training_schema.roles (role_id, name) VALUES (?,?)";
     private final static String SQL_CREATE_ROLE = "INSERT INTO training_schema.roles (name) VALUES (?)";
     private final static String SQL_UPDATE_ROLE = "UPDATE training_schema.roles SET name = (?) WHERE role_id = (?)";
     private final static String SQL_DELETE_ROLE = "DELETE FROM training_schema.roles WHERE role_id = (?)";
@@ -34,11 +35,22 @@ public class RoleDAO extends AbstractDAO<Role> implements ResultMapper<List<Role
     @Override
     public boolean create(Role role) {
         LOGGER.log(Level.INFO, "Creating role column...");
+        String query;
+        if (role.getId() != 0) {
+            query = SQL_CREATE_ROLE_FULL;
+        }else {
+            query = SQL_CREATE_ROLE;
+        }
         if (getEntityByName(role).isPresent()){
             return false;
         }
-        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_CREATE_ROLE)) {
-            preparedStatement.setString(1, role.getName());
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            if (role.getId() != 0) {
+                preparedStatement.setInt(1, role.getId());
+                preparedStatement.setString(2, role.getName());
+            }else {
+                preparedStatement.setString(1, role.getName());
+            }
             if (preparedStatement.executeUpdate() > 0) {
                 return true;
             }

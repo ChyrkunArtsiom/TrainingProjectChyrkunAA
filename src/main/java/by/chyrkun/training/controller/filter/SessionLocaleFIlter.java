@@ -15,18 +15,10 @@ public class SessionLocaleFIlter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) response;
 
         if (req.getParameter("sessionLocale") != null) {
-            if (req.getSession().getAttribute("lang") != null) {
-                if (req.getParameter("sessionLocale").matches("[\\w]{2}_[\\w]{2}")) {
-                    req.getSession().setAttribute("lang", req.getParameter("sessionLocale"));
-                }else {
-                    req.getSession().setAttribute("lang", "en_US");
-                }
+            if (req.getParameter("sessionLocale").matches("[\\w]{2}_[\\w]{2}")) {
+                req.getSession().setAttribute("lang", req.getParameter("sessionLocale"));
             }else {
-                if (req.getParameter("sessionLocale").matches("[\\w]{2}_[\\w]{2}")) {
-                    req.getSession().setAttribute("lang", req.getParameter("sessionLocale"));
-                }else {
-                    req.getSession().setAttribute("lang", "en_US");
-                }
+                req.getSession().setAttribute("lang", "en_US");
             }
         }else {
             if (req.getSession().getAttribute("lang") == null) {

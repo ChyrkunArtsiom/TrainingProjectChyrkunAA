@@ -32,7 +32,7 @@ public enum ConnectionPoolImpl implements ConnectionPoolDAO {
         initConnectionPool();
     }
 
-    private void initConnectionPool() {
+    public void initConnectionPool() {
         createConnections(DB_PROPERTIES.getInitialPoolSize());
     }
 
@@ -61,6 +61,9 @@ public enum ConnectionPoolImpl implements ConnectionPoolDAO {
 
     @Override
     public Connection$Proxy getConnection() {
+        if (connectionPool.size() < 1 && usedConnections.size() == 0) {
+            initConnectionPool();
+        }
         if (connectionPool.size() < 1) {
             LOGGER.log(Level.FATAL, "Connection pool is emopty");
             throw new UncheckedDAOException("Connection pool is emopty");

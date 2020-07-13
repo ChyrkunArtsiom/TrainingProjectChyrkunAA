@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class UserDAO extends AbstractDAO<User> {
+    private final static String SQL_CREATE_USER_FULL =
+            "INSERT INTO training_schema.users (user_id, login, password, firstname, secondname, role_id) VALUES (?,?,?,?,?,?)";
     private final static String SQL_CREATE_USER =
             "INSERT INTO training_schema.users (login, password, firstname, secondname, role_id) VALUES (?,?,?,?,?)";
     private final static String SQL_UPDATE_USER = "UPDATE training_schema.users SET " +
