@@ -1,6 +1,9 @@
 package by.chyrkun.training.dao.exception;
 
 public class EntityExistsDAOException extends DAOException {
+    public EntityExistsDAOException(){
+        super();
+    }
     public EntityExistsDAOException(String message){
         super(message);
     }

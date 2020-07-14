@@ -1,6 +1,10 @@
 package by.chyrkun.training.dao.exception;
 
 public class UncheckedDAOException extends RuntimeException {
+    public UncheckedDAOException(){
+        super();
+    }
+
     public UncheckedDAOException(String message){
         super(message);
     }

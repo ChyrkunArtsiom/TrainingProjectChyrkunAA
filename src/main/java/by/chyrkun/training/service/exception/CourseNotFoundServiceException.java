@@ -1,6 +1,10 @@
 package by.chyrkun.training.service.exception;
 
 public class CourseNotFoundServiceException extends EntityNotFoundServiceException {
+    public CourseNotFoundServiceException(){
+        super();
+    }
+
     public CourseNotFoundServiceException(String message){
         super(message);
     }

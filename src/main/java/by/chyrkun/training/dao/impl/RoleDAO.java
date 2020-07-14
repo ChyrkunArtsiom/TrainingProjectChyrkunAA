@@ -41,7 +41,7 @@ public class RoleDAO extends AbstractDAO<Role> implements ResultMapper<List<Role
         }else {
             query = SQL_CREATE_ROLE;
         }
-        if (getEntityByName(role).isPresent()){
+        if (getEntityByName(role.getName()).isPresent()){
             return false;
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -112,10 +112,10 @@ public class RoleDAO extends AbstractDAO<Role> implements ResultMapper<List<Role
         }
     }
 
-    public Optional<Role> getEntityByName(Role role) {
+    public Optional<Role> getEntityByName(String name) {
         LOGGER.log(Level.INFO, "Selecting role column by fields...");
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_ROLE_BY_NAME)) {
-            preparedStatement.setString(1, role.getName());
+            preparedStatement.setString(1, name);
             ResultSet  resultSet = preparedStatement.executeQuery();
             if (!resultSet.isBeforeFirst()) {
                 return Optional.empty();

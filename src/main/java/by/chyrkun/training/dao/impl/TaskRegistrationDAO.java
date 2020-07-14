@@ -19,7 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class TaskRegistrationDAO extends AbstractDAO<TaskRegistration> implements StatementSetter<TaskRegistration>{
+public class TaskRegistrationDAO extends AbstractDAO<TaskRegistration>
+        implements StatementSetter<TaskRegistration>, ResultMapper<TaskRegistration>{
     private final static String SQL_CREATE_TASK_REGISTRATION =
             "INSERT INTO training_schema.task_registration (task_id, student_id, grade, review) VALUES (?,?,?,?)";
     private final static String SQL_UPDATE_TASK_REGISTRATION = "UPDATE training_schema.task_registration SET " +
@@ -29,6 +30,8 @@ public class TaskRegistrationDAO extends AbstractDAO<TaskRegistration> implement
     private final static String SQL_GET_TASK_REGISTRATION =
             "SELECT task_id, student_id, grade, review, task_registration_id " +
                     "FROM training_schema.task_registration WHERE task_registration_id = (?)";
+    private final static String SQL_GET_TASK_REGISTRATIONS =
+            "SELECT task_id, student_id, grade, review, task_registration_id FROM training_schema.task_registration";
     private final static String SQL_GET_TASK_REGISTRATION_BY_TASK_STUDENT =
             "SELECT task_registration_id, task_id, student_id, grade, review " +
             "FROM training_schema.task_registration WHERE task_id = (?) AND student_id = (?)";
@@ -112,7 +115,7 @@ public class TaskRegistrationDAO extends AbstractDAO<TaskRegistration> implement
             }
             else {
                 resultSet.next();
-                TaskRegistration taskRegistration = insertValuesFromResult(resultSet);
+                TaskRegistration taskRegistration = convert(resultSet);
                 return Optional.of(taskRegistration);
             }
         }catch (SQLException ex) {
@@ -147,7 +150,7 @@ public class TaskRegistrationDAO extends AbstractDAO<TaskRegistration> implement
             }
             else {
                 resultSet.next();
-                TaskRegistration taskRegistration = insertValuesFromResult(resultSet);
+                TaskRegistration taskRegistration = convert(resultSet);
                 return Optional.of(taskRegistration);
             }
         }catch (SQLException ex) {
@@ -167,7 +170,7 @@ public class TaskRegistrationDAO extends AbstractDAO<TaskRegistration> implement
             }
             else {
                 while (resultSet.next()) {
-                    TaskRegistration taskRegistration = insertValuesFromResult(resultSet);
+                    TaskRegistration taskRegistration = convert(resultSet);
                     registrations.add(taskRegistration);
                 }
                 return registrations;
@@ -176,6 +179,33 @@ public class TaskRegistrationDAO extends AbstractDAO<TaskRegistration> implement
             LOGGER.log(Level.FATAL, "Exception during task_registrations reading by task");
             throw new UncheckedDAOException("Exception during task_registrations reading by task", ex);
         }
+    }
+
+    public List<TaskRegistration> getAll() {
+        LOGGER.log(Level.INFO, "Selecting all task registrations...");
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_TASK_REGISTRATIONS)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (!resultSet.isBeforeFirst()) {
+                return null;
+            }else {
+                List<TaskRegistration> taskRegistrations;
+                taskRegistrations = convertToList(resultSet);
+                return taskRegistrations;
+            }
+        }catch (SQLException ex) {
+            LOGGER.log(Level.FATAL, "Exception during getting task registrations");
+            throw new UncheckedDAOException("Exception during getting task registrations", ex);
+        }
+    }
+
+    private List<TaskRegistration> convertToList(ResultSet resultSet) throws SQLException{
+        List<TaskRegistration> taskRegistrations = new ArrayList<>();
+        TaskRegistration taskRegistration;
+        while (resultSet.next()) {
+            taskRegistration = convert(resultSet);
+            taskRegistrations.add(taskRegistration);
+        }
+        return taskRegistrations;
     }
 
     @Override
@@ -199,12 +229,13 @@ public class TaskRegistrationDAO extends AbstractDAO<TaskRegistration> implement
         }
     }
 
-    private TaskRegistration insertValuesFromResult(ResultSet result) throws SQLException{
-        int task_registration_id = result.getInt("task_registration_id");
-        int task_id = result.getInt("task_id");
-        int student_id = result.getInt("student_id");
-        int grade = result.getInt("grade");
-        String review = result.getString("review");
+    @Override
+    public TaskRegistration convert(ResultSet resultSet) throws SQLException {
+        int task_registration_id = resultSet.getInt("task_registration_id");
+        int task_id = resultSet.getInt("task_id");
+        int student_id = resultSet.getInt("student_id");
+        int grade = resultSet.getInt("grade");
+        String review = resultSet.getString("review");
         AbstractDAO userDAO = new UserDAO(connection);
         User student = (User) userDAO.getEntityById(student_id).get();
         AbstractDAO taskDAO = new TaskDAO(connection);

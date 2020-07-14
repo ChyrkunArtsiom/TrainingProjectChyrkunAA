@@ -1,6 +1,10 @@
 package by.chyrkun.training.service.exception;
 
 public class TaskNotFoundServiceException extends EntityNotFoundServiceException {
+    public TaskNotFoundServiceException(){
+        super();
+    }
+
     public TaskNotFoundServiceException(String message){
         super(message);
     }

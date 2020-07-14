@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CourseDAO extends AbstractDAO<Course> {
+public class CourseDAO extends AbstractDAO<Course> implements ResultMapper<List<Course>> {
     private final static String SQL_CREATE_COURSE =
             "INSERT INTO training_schema.courses (name, teacher_id) VALUES (?,?)";
     private final static String SQL_UPDATE_COURSE = "UPDATE training_schema.courses SET " +
@@ -26,6 +26,8 @@ public class CourseDAO extends AbstractDAO<Course> {
     private final static String SQL_DELETE_COURSE = "DELETE FROM training_schema.courses WHERE course_id = (?)";
     private final static String SQL_GET_COURSE = "SELECT course_id, name, teacher_id " +
             "FROM training_schema.courses WHERE course_id = (?)";
+    private final static String SQL_GET_COURSES = "SELECT course_id, name, teacher_id " +
+            "FROM training_schema.courses";
     private final static String SQL_GET_COURSES_BY_TEACHER_PAGE = "SELECT course_id, name, teacher_id " +
             "FROM training_schema.courses WHERE teacher_id = (?) ORDER BY course_id OFFSET (?) LIMIT (?)";
     private final static String SQL_GET_COURSES_BY_TEACHER = "SELECT course_id, name, teacher_id " +
@@ -233,6 +235,20 @@ public class CourseDAO extends AbstractDAO<Course> {
         }
     }
 
+    public List<Course> getAll() {
+        LOGGER.log(Level.INFO, "Selecting all courses...");
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_COURSES)) {
+            ResultSet  resultSet = preparedStatement.executeQuery();
+            if (!resultSet.isBeforeFirst()) {
+                return null;
+            }
+            return convert(resultSet);
+        }catch (SQLException ex) {
+            LOGGER.log(Level.FATAL, "Exception during getting courses");
+            throw new UncheckedDAOException("Exception during getting courses", ex);
+        }
+    }
+
     private int getCountUsingQuery(int id, String query) throws SQLException{
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setInt(1, id);
@@ -244,6 +260,24 @@ public class CourseDAO extends AbstractDAO<Course> {
                 return resultSet.getInt("count");
             }
         }
+    }
+
+    @Override
+    public List<Course> convert(ResultSet resultSet) throws SQLException {
+        UserDAO userDAO = new UserDAO(connection);
+        List<Course> courses = new ArrayList<>();
+        int course_id, teacher_id;
+        String name;
+        Course course;
+        while (resultSet.next()) {
+            course_id = resultSet.getInt("course_id");
+            name = resultSet.getString("name");
+            teacher_id = resultSet.getInt("teacher_id");
+            User user = userDAO.getEntityById(teacher_id).get();
+            course = new Course(course_id, name, user);
+            courses.add(course);
+        }
+        return courses;
     }
 
     private void set(PreparedStatement preparedStatement, int id, int page) throws SQLException {

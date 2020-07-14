@@ -1,6 +1,10 @@
 package by.chyrkun.training.dao.exception;
 
 public class TaskNotFoundDAOException extends EntityNotFoundDAOException {
+    public TaskNotFoundDAOException(){
+        super();
+    }
+
     public TaskNotFoundDAOException(String message){
         super(message);
     }

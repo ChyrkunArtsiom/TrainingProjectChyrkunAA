@@ -1,6 +1,10 @@
 package by.chyrkun.training.dao.exception;
 
 public class UserNotFoundDAOException extends EntityNotFoundDAOException {
+    public UserNotFoundDAOException(){
+        super();
+    }
+
     public UserNotFoundDAOException(String message){
         super(message);
     }

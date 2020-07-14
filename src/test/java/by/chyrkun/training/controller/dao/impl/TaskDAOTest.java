@@ -4,9 +4,11 @@ import by.chyrkun.training.dao.db.impl.ConnectionPoolImpl;
 import by.chyrkun.training.dao.exception.DAOException;
 import by.chyrkun.training.dao.impl.CourseDAO;
 import by.chyrkun.training.dao.impl.RoleDAO;
+import by.chyrkun.training.dao.impl.TaskDAO;
 import by.chyrkun.training.dao.impl.UserDAO;
 import by.chyrkun.training.model.Course;
 import by.chyrkun.training.model.Role;
+import by.chyrkun.training.model.Task;
 import by.chyrkun.training.model.User;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -15,20 +17,22 @@ import org.junit.jupiter.api.*;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class CourseDAOTest {
+public class TaskDAOTest {
     private static ConnectionPoolImpl connectionPool;
     private RoleDAO roleDAO;
     private UserDAO userDAO;
     private CourseDAO courseDAO;
+    private TaskDAO taskDAO;
 
     @BeforeAll
     static void setUp() throws SQLException {
         Logger logger = LogManager.getLogger(CourseDAOTest.class);
-        logger.log(Level.INFO, "Starting test for courseDAO");
+        logger.log(Level.INFO, "Starting test for taskDAO");
         DriverManager.registerDriver(new org.h2.Driver());
         connectionPool = ConnectionPoolImpl.getInstance();
     }
@@ -38,19 +42,21 @@ class CourseDAOTest {
         roleDAO = new RoleDAO();
         userDAO = new UserDAO();
         courseDAO = new CourseDAO();
+        taskDAO = new TaskDAO();
     }
 
     @AfterEach
     void close() {
-        courseDAO.close();
-        userDAO.close();
         roleDAO.close();
+        userDAO.close();
+        courseDAO.close();
+        taskDAO.close();
     }
 
     @AfterAll
     static void tearDown() {
         Logger logger = LogManager.getLogger(CourseDAOTest.class);
-        logger.log(Level.INFO, "Finishing test for courseDAO");
+        logger.log(Level.INFO, "Finishing test for taskDAO");
         connectionPool.shutdown();
     }
 
@@ -63,10 +69,15 @@ class CourseDAOTest {
         assertTrue(userDAO.create(user));
         assertNotNull(user = userDAO.getEntityByLogin(user.getLogin()).orElse(null));
 
-        Course course = new Course("Course name", user);
+        Course course = new Course("Course_test", user);
         assertTrue(courseDAO.create(course));
-        course = courseDAO.getAll().get(0);
+        assertNotNull(course = courseDAO.getAll().get(0));
 
+        Task task = new Task("task_test", LocalDate.now(), LocalDate.now().plusDays(1), course);
+        assertTrue(taskDAO.create(task));
+        assertNotNull(task = taskDAO.getAll().get(0));
+
+        assertTrue(taskDAO.delete(task));
         assertTrue(courseDAO.delete(course));
         assertTrue(userDAO.delete(user));
         assertTrue(roleDAO.delete(role));

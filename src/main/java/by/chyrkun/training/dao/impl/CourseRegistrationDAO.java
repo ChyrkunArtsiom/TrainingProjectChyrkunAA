@@ -14,10 +14,12 @@ import org.apache.logging.log4j.Logger;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class CourseRegistrationDAO extends AbstractDAO<CourseRegistration>
-        implements StatementSetter<CourseRegistration>{
+        implements StatementSetter<CourseRegistration>, ResultMapper<List<CourseRegistration>>{
     private final static String SQL_CREATE_COURSE_REGISTRATION =
             "INSERT INTO training_schema.course_registration (student_id, course_id) VALUES (?,?)";
     private final static String SQL_UPDATE_COURSE_REGISTRATION = "UPDATE training_schema.course_registration SET " +
@@ -27,6 +29,8 @@ public class CourseRegistrationDAO extends AbstractDAO<CourseRegistration>
     private final static String SQL_GET_COURSE_REGISTRATION =
             "SELECT student_id, course_id, course_registration_id " +
                     "FROM training_schema.course_registration WHERE course_registration_id = (?)";
+    private final static String SQL_GET_COURSE_REGISTRATIONS =
+            "SELECT student_id, course_id, course_registration_id FROM training_schema.course_registration";
     private final static String SQL_GET_COURSE_REGISTRATION_BY_COURSE_STUDENT = "SELECT course_registration_id " +
             "FROM training_schema.course_registration WHERE course_id = (?) AND student_id = (?)";
     private final static Logger LOGGER = LogManager.getLogger(RoleDAO.class);
@@ -137,6 +141,23 @@ public class CourseRegistrationDAO extends AbstractDAO<CourseRegistration>
         }
     }
 
+    public List<CourseRegistration> getAll() {
+        LOGGER.log(Level.INFO, "Selecting all course registrations...");
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_COURSE_REGISTRATIONS)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (!resultSet.isBeforeFirst()) {
+                return null;
+            }else {
+                List<CourseRegistration> courseRegistrations;
+                courseRegistrations = convert(resultSet);
+                return courseRegistrations;
+            }
+        }catch (SQLException ex) {
+            LOGGER.log(Level.FATAL, "Exception during getting course registrations");
+            throw new UncheckedDAOException("Exception during getting course registrations", ex);
+        }
+    }
+
     @Override
     public void set(PreparedStatement preparedStatement, CourseRegistration courseRegistration) throws SQLException {
         preparedStatement.setInt(1, courseRegistration.getStudent().getId());
@@ -144,5 +165,23 @@ public class CourseRegistrationDAO extends AbstractDAO<CourseRegistration>
         if (courseRegistration.getId() != 0){
             preparedStatement.setInt(3, courseRegistration.getId());
         }
+    }
+
+    @Override
+    public List<CourseRegistration> convert(ResultSet resultSet) throws SQLException {
+        List<CourseRegistration> courseRegistrations = new ArrayList<>();
+        int student_id, course_id, course_registration_id;
+        while (resultSet.next()) {
+            student_id = resultSet.getInt("student_id");
+            course_id = resultSet.getInt("course_id");
+            course_registration_id = resultSet.getInt("course_registration_id");
+            CourseDAO courseDAO = new CourseDAO(connection);
+            UserDAO userDAO = new UserDAO(connection);
+            User student = userDAO.getEntityById(student_id).get();
+            Course course = courseDAO.getEntityById(course_id).get();
+            CourseRegistration courseRegistration = new CourseRegistration(course_registration_id, course, student);
+            courseRegistrations.add(courseRegistration);
+        }
+        return courseRegistrations;
     }
 }
