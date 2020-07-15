@@ -21,7 +21,7 @@ import java.sql.SQLException;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class CourseRegistrationDAOTest {
+class CourseRegistrationDAOTest {
     private static ConnectionPoolImpl connectionPool;
     private RoleDAO roleDAO;
     private UserDAO userDAO;
@@ -60,7 +60,7 @@ public class CourseRegistrationDAOTest {
     }
 
     @Test
-    void testConnection() throws DAOException {
+    void testCourseRegistrationDAO() throws DAOException {
         Role role = new Role(1, "teacher");
         assertTrue(roleDAO.create(role));
 

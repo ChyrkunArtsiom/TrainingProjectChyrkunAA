@@ -22,7 +22,7 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TaskDAOTest {
+class TaskDAOTest {
     private static ConnectionPoolImpl connectionPool;
     private RoleDAO roleDAO;
     private UserDAO userDAO;
@@ -61,7 +61,7 @@ public class TaskDAOTest {
     }
 
     @Test
-    void testConnection() throws DAOException {
+    void testTaskDAO() throws DAOException {
         Role role = new Role(1, "teacher");
         assertTrue(roleDAO.create(role));
 

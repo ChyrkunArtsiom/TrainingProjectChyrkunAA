@@ -33,7 +33,7 @@ public class UserValidator {
         return  ((name == null) || (name.matches("^[а-яёА-Яa-zA-Z]{1,45}$")));
     }
 
-    public static boolean isTecaher(User user) {
+    public static boolean isTeacher(User user) {
         return user.getRole().getName().equals("teacher");
     }
 

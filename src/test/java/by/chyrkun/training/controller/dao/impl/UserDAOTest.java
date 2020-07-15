@@ -17,7 +17,7 @@ import java.sql.SQLException;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class UserDAOTest {
+class UserDAOTest {
     private static ConnectionPoolImpl connectionPool;
     private RoleDAO roleDAO;
     private UserDAO userDAO;
@@ -51,7 +51,7 @@ public class UserDAOTest {
     }
 
     @Test
-    void testConnection() throws EntityNotFoundDAOException {
+    void testUserDAO() throws EntityNotFoundDAOException {
         role = new Role("test_role");
         assertTrue(roleDAO.create(role));
         role = roleDAO.getEntityByName(role.getName()).orElseThrow(EntityNotFoundDAOException::new);

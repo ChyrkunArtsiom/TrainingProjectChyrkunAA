@@ -45,7 +45,7 @@ public class CreateCourseCommand extends BaseCommand implements Command {
                     result.setPage(PageManager.getProperty("fullpath.page.createcourse"));
                     break first;
                 }
-                else if (!UserValidator.isTecaher(teacher)) {
+                else if (!UserValidator.isTeacher(teacher)) {
                     requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("userIsNotTeacher"));
                     result.setPage(PageManager.getProperty("fullpath.page.createcourse"));
                     break first;

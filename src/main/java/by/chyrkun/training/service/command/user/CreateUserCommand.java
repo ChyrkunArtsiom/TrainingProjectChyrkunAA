@@ -23,7 +23,14 @@ public class CreateUserCommand extends BaseCommand implements Command {
     private static final String ERROR_MESSAGE = "errorMessage";
     private static final String MESSAGE = "message";
     private static final String CREATE_USER_PAGE = PageManager.getProperty("fullpath.page.createuser");
-    private UserReceiver receiver = new UserReceiver();
+    private UserReceiver userReceiver;
+    private RoleReceiver roleReceiver;
+
+    public CreateUserCommand() {
+        userReceiver = new UserReceiver();
+        roleReceiver = new RoleReceiver();
+        next = new GetRolesCommand();
+    }
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
@@ -32,7 +39,6 @@ public class CreateUserCommand extends BaseCommand implements Command {
         User user = getUserFromRequest(requestContent);
         int role_id = Integer.parseInt(requestContent.getRequestParameters().get(PARAM_NAME_ROLE_ID)[0]);
         first: try {
-            RoleReceiver roleReceiver = new RoleReceiver();
             Role role = roleReceiver.getById(role_id);
             if (role == null) {
                 requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("roleNotFound"));
@@ -49,7 +55,7 @@ public class CreateUserCommand extends BaseCommand implements Command {
                 break first;
             }
             else {
-                if (receiver.create(user)) {
+                if (userReceiver.create(user)) {
                     requestContent.setSessionAttribute(MESSAGE, messages.getMessage("userWasCreated"));
                     result.setPage(PageManager.getProperty("shortpath.page.admin.createuser"));
                     result.setResponseType(CommandResult.ResponseType.REDIRECT);
@@ -63,7 +69,6 @@ public class CreateUserCommand extends BaseCommand implements Command {
             requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("roleNotFound"));
             result.setPage(CREATE_USER_PAGE);
         }
-        setNext(new GetRolesCommand());
         next.execute(requestContent);
         requestContent.setRequestAttribute(PARAM_NAME_LOGIN, user.getLogin());
         requestContent.setRequestAttribute(PARAM_NAME_FIRSTNAME, user.getFirstname());

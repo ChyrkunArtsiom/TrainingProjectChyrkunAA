@@ -55,7 +55,7 @@ class CourseDAOTest {
     }
 
     @Test
-    void testConnection() throws DAOException {
+    void testCourseDAO() throws DAOException {
         Role role = new Role(1, "teacher");
         assertTrue(roleDAO.create(role));
 

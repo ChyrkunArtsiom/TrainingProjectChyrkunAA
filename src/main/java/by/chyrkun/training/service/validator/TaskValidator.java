@@ -10,10 +10,8 @@ public class TaskValidator {
     public static boolean isDateValid(LocalDate startdate, LocalDate deadline) {
         if (startdate.isBefore(LocalDate.now())) {
             return false;
+        }else {
+            return !deadline.isBefore(startdate);
         }
-        if (deadline.isBefore(startdate)) {
-            return false;
-        }
-        return true;
     }
 }

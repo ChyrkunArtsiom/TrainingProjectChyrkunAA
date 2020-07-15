@@ -45,7 +45,7 @@ class RoleDAOTest {
     }
 
     @Test
-    void testConnection() {
+    void testRoleDAO() {
         assertTrue(roleDAO.create(role));
         assertTrue(roleDAO.delete(role));
     }
