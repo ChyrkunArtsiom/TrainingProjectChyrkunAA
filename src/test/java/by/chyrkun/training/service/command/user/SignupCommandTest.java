@@ -19,18 +19,19 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 @RunWith(JUnitPlatform.class)
-class CreateUserCommandTest {
+class SignupCommandTest {
     private RequestContent requestContent;
 
-    @Mock private RoleReceiver roleReceiver;
+    @Mock
+    private RoleReceiver roleReceiver;
     @Mock private UserReceiver userReceiver;
-    @Mock private GetRolesCommand nextCommand;
 
-    @InjectMocks private CreateUserCommand command;
+    @InjectMocks
+    private SignupCommand command;
 
     @BeforeEach
     void setUp() {
@@ -54,11 +55,8 @@ class CreateUserCommandTest {
         Mockito.lenient().when(roleReceiver.getById(Mockito.anyInt())).thenReturn(new Role(1, "student"));
         Mockito.lenient().when(userReceiver.create(Mockito.any(User.class))).thenReturn(true);
         CommandResult result = command.execute(requestContent);
-        Mockito.verify(nextCommand, Mockito.times(1)).execute(Mockito.any(RequestContent.class));
-        assertEquals(requestContent.getRequestParameters().get("username")[0], requestContent.getRequestAttributes().get("username").toString());
-        assertEquals(PageManager.getProperty("shortpath.page.admin.createuser"), result.getPage());
+        assertEquals("Login", requestContent.getSessionAttributes().get("userName"));
         assertEquals(CommandResult.ResponseType.REDIRECT, result.getResponseType());
-
-
+        assertEquals(PageManager.getProperty("shortpath.page.main"), result.getPage());
     }
 }

@@ -12,11 +12,11 @@ import by.chyrkun.training.service.receiver.RoleReceiver;
 import by.chyrkun.training.service.receiver.UserReceiver;
 import by.chyrkun.training.service.resource.MessageManager;
 import by.chyrkun.training.service.resource.PageManager;
+import by.chyrkun.training.service.util.GetterFromRequestContent;
 import by.chyrkun.training.service.validator.UserValidator;
 
 public class CreateUserCommand extends BaseCommand implements Command {
     private static final String PARAM_NAME_LOGIN = "username";
-    private static final String PARAM_NAME_PASSWORD = "password";
     private static final String PARAM_NAME_FIRSTNAME = "firstname";
     private static final String PARAM_NAME_SECONDNAME = "secondname";
     private static final String PARAM_NAME_ROLE_ID = "role_id";
@@ -25,18 +25,19 @@ public class CreateUserCommand extends BaseCommand implements Command {
     private static final String CREATE_USER_PAGE = PageManager.getProperty("fullpath.page.createuser");
     private UserReceiver userReceiver;
     private RoleReceiver roleReceiver;
+    private CommandResult result;
 
     public CreateUserCommand() {
         userReceiver = new UserReceiver();
         roleReceiver = new RoleReceiver();
         next = new GetRolesCommand();
+        result = new CommandResult();
     }
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
         MessageManager messages = setLang(requestContent);
-        CommandResult result = new CommandResult();
-        User user = getUserFromRequest(requestContent);
+        User user = GetterFromRequestContent.getUserFromRequest(requestContent);
         int role_id = Integer.parseInt(requestContent.getRequestParameters().get(PARAM_NAME_ROLE_ID)[0]);
         first: try {
             Role role = roleReceiver.getById(role_id);
@@ -75,15 +76,6 @@ public class CreateUserCommand extends BaseCommand implements Command {
         requestContent.setRequestAttribute(PARAM_NAME_SECONDNAME, user.getSecondname());
         return result;
     }
-
-    private User getUserFromRequest(RequestContent requestContent) {
-        String login = requestContent.getRequestParameters().get(PARAM_NAME_LOGIN)[0];
-        String password = requestContent.getRequestParameters().get(PARAM_NAME_PASSWORD)[0];
-        String firstname = requestContent.getRequestParameters().get(PARAM_NAME_FIRSTNAME)[0];
-        String secondname = requestContent.getRequestParameters().get(PARAM_NAME_SECONDNAME)[0];
-        return new User(login, password, firstname, secondname);
-    }
-
 }
 
 

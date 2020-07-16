@@ -26,12 +26,20 @@ public class CreateTaskCommand extends BaseCommand implements Command {
     private static final String PARAM_DEADLINE = "deadline";
     private static final String ERROR_MESSAGE = "errorMessage";
     private static final String MESSAGE = "message";
-    private TaskReceiver receiver = new TaskReceiver();
+    private TaskReceiver taskReceiver;
+    private CourseReceiver courseReceiver;
+    private CommandResult result;
+
+    public CreateTaskCommand() {
+        taskReceiver = new TaskReceiver();
+        courseReceiver = new CourseReceiver();
+        result = new CommandResult();
+        next = new GetCoursesCommand();
+    }
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
         MessageManager messages = setLang(requestContent);
-        CommandResult result = new CommandResult();
         String name = requestContent.getRequestParameters().get(PARAM_NAME)[0];
         String course_id = requestContent.getRequestParameters().get(PARAM_COURSE_ID)[0];
         String startdate = requestContent.getRequestParameters().get(PARAM_STARTDATE)[0];
@@ -43,7 +51,6 @@ public class CreateTaskCommand extends BaseCommand implements Command {
                 break first;
             }
             else {
-                CourseReceiver courseReceiver = new CourseReceiver();
                 Course course = courseReceiver.getById(Integer.parseInt(course_id));
                 if (course == null) {
                     requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("courseNotFound"));
@@ -67,7 +74,7 @@ public class CreateTaskCommand extends BaseCommand implements Command {
                     break first;
                 }
                 Task task = new Task(name, start, end, course);
-                if (receiver.create(task)) {
+                if (taskReceiver.create(task)) {
                     requestContent.setSessionAttribute(MESSAGE, messages.getMessage("taskWasCreated"));
                     result.setPage(PageManager.getProperty("shortpath.page.createtask"));
                     result.setResponseType(CommandResult.ResponseType.REDIRECT);
@@ -82,7 +89,6 @@ public class CreateTaskCommand extends BaseCommand implements Command {
             requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("courseNotFound"));
             result.setPage(PageManager.getProperty("fullpath.page.createtask"));
         }
-        setNext(new GetCoursesCommand());
         requestContent.setRequestAttribute("select", "for_task");
         next.execute(requestContent);
         requestContent.setRequestAttribute(PARAM_NAME, name);

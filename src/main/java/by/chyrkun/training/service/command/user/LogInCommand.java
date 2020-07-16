@@ -13,12 +13,16 @@ import by.chyrkun.training.service.validator.ParamValidator;
 public class LogInCommand implements Command {
     private static final String PARAM_NAME_LOGIN = "login";
     private static final String ERROR_MESSAGE = "errorMessage";
-    private UserReceiver receiver = new UserReceiver();
+    private UserReceiver receiver;
+    private CommandResult result;
 
+    public LogInCommand() {
+        receiver = new UserReceiver();
+        result = new CommandResult();
+    }
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
-        CommandResult result = new CommandResult();
         MessageManager messages = setLang(requestContent);
         String login = requestContent.getRequestParameters().get(PARAM_NAME_LOGIN)[0];
         String password = requestContent.getRequestParameters().get("password")[0];

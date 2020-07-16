@@ -3,9 +3,6 @@ package by.chyrkun.training.controller.dao.impl;
 import by.chyrkun.training.dao.db.impl.ConnectionPoolImpl;
 import by.chyrkun.training.dao.impl.RoleDAO;
 import by.chyrkun.training.model.Role;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.*;
 
 import java.sql.DriverManager;
@@ -20,8 +17,6 @@ class RoleDAOTest {
 
     @BeforeAll
     static void setUp() throws SQLException {
-        Logger logger = LogManager.getLogger(CourseDAOTest.class);
-        logger.log(Level.INFO, "Starting test for roleDAO");
         DriverManager.registerDriver(new org.h2.Driver());
         connectionPool = ConnectionPoolImpl.getInstance();
     }
@@ -39,8 +34,6 @@ class RoleDAOTest {
 
     @AfterAll
     static void tearDown() {
-        Logger logger = LogManager.getLogger(CourseDAOTest.class);
-        logger.log(Level.INFO, "Finishing test for roleDAO");
         connectionPool.shutdown();
     }
 

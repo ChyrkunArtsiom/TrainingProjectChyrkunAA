@@ -12,7 +12,14 @@ import by.chyrkun.training.service.resource.MessageManager;
 import by.chyrkun.training.service.resource.PageManager;
 
 public class GetCourseCommand extends BaseCommand implements Command {
-    private CourseReceiver receiver = new CourseReceiver();
+    private CourseReceiver receiver;
+    private CommandResult result;
+
+    public GetCourseCommand() {
+        receiver = new CourseReceiver();
+        result = new CommandResult();
+        next = new GetTasksByCourseCommand();
+    }
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
@@ -20,7 +27,6 @@ public class GetCourseCommand extends BaseCommand implements Command {
         int course_id = Integer.valueOf(requestContent.getRequestAttributes().get("id").toString());
         int user_id = Integer.parseInt(requestContent.getSessionAttributes().get("user_id").toString());
         String role = requestContent.getSessionAttributes().get("role").toString();
-        CommandResult result = new CommandResult();
         Course course = receiver.getById(course_id);
         if (course == null) {
             requestContent.setRequestAttribute("errorMessage", messages.getMessage("courseNotFound"));
@@ -34,7 +40,6 @@ public class GetCourseCommand extends BaseCommand implements Command {
                 requestContent.setRequestAttribute("registered", registered);
             }
             requestContent.setRequestAttribute("course", course);
-            setNext(new GetTasksByCourseCommand());
             next.execute(requestContent);
         }
         result.setPage(PageManager.getProperty("fullpath.page.course"));

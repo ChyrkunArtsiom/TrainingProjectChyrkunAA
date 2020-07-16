@@ -14,8 +14,13 @@ import java.util.List;
 public class GetRolesCommand extends BaseCommand implements Command {
     private static final String PARAM_NAME_ROLES = "roles";
     private static final String ERROR_MESSAGE = "errorMessage";
-    private CommandResult result = new CommandResult();
-    private  RoleReceiver roleReceiver = new RoleReceiver();
+    private CommandResult result;
+    private  RoleReceiver roleReceiver;
+
+    public GetRolesCommand() {
+        roleReceiver = new RoleReceiver();
+        result = new CommandResult();
+    }
 
     @Override
     public CommandResult execute(RequestContent requestContent) {

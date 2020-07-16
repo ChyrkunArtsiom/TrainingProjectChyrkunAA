@@ -9,12 +9,17 @@ import by.chyrkun.training.service.resource.MessageManager;
 import by.chyrkun.training.service.resource.PageManager;
 
 public class GetUserCommand implements Command {
-    private UserReceiver receiver = new UserReceiver();
+    private UserReceiver receiver;
+    private CommandResult result;
+
+    public GetUserCommand() {
+        receiver = new UserReceiver();
+        result = new CommandResult();
+    }
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
         MessageManager messages = setLang(requestContent);
-        CommandResult result = new CommandResult();
         int user_id = Integer.valueOf(requestContent.getRequestAttributes().get("id").toString());
         User user = receiver.getById(user_id);
         if (user == null) {

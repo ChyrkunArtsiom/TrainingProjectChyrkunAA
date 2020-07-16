@@ -15,13 +15,18 @@ import java.util.List;
 public class GetTeachersCommand extends BaseCommand implements Command {
     private static final String TEACHERS = "teachers";
     private static final String ERROR_MESSAGE = "errorMessage";
+    private UserReceiver userReceiver;
+    private CommandResult result;
+
+    public GetTeachersCommand() {
+        userReceiver = new UserReceiver();
+        result = new CommandResult();
+    }
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
         MessageManager messages = setLang(requestContent);
-        CommandResult result = new CommandResult();
         List<User> teachers;
-        UserReceiver userReceiver = new UserReceiver();
         teachers = userReceiver.getTeachers();
         if (teachers == null) {
             requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("teachersNotFound"));

@@ -14,12 +14,17 @@ import java.util.List;
 public class GetCoursesCommand extends BaseCommand implements Command {
     private static final String COURSES = "courses";
     private static final String ERROR_MESSAGE = "errorMessage";
-    private CourseReceiver receiver = new CourseReceiver();
+    private CourseReceiver receiver;
+    private CommandResult result;
+
+    public GetCoursesCommand() {
+        receiver = new CourseReceiver();
+        result = new CommandResult();
+    }
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
         MessageManager messages = setLang(requestContent);
-        CommandResult result = new CommandResult();
         List<Course> courses = null;
         int id = (Integer)requestContent.getSessionAttributes().get("user_id");
         int page;

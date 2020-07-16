@@ -11,9 +11,13 @@ import by.chyrkun.training.service.util.InputSanitizer;
 public class DeleteUserCommand implements Command {
     private static final String PARAM_NAME_USER_LOGIN = "login";
     private static final String ERROR_MESSAGE = "errorMessage";
-    private static final String MESSAGE = "message";
-    private UserReceiver receiver = new UserReceiver();
-    private CommandResult result = new CommandResult();
+    private UserReceiver receiver;
+    private CommandResult result;
+
+    public DeleteUserCommand() {
+        receiver = new UserReceiver();
+        result = new CommandResult();
+    }
 
     @Override
     public CommandResult execute(RequestContent requestContent) {

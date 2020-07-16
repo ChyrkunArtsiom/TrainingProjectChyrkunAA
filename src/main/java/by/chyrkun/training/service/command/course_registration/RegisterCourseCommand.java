@@ -16,16 +16,23 @@ import by.chyrkun.training.service.resource.PageManager;
 
 public class RegisterCourseCommand implements Command {
     private static final String MESSAGE = "message";
-    private CourseRegistrationReceiver receiver = new CourseRegistrationReceiver();
+    private CourseRegistrationReceiver receiver;
+    private UserReceiver userReceiver;
+    private CourseReceiver courseReceiver;
+    private CommandResult result;
+
+    public RegisterCourseCommand() {
+        receiver = new CourseRegistrationReceiver();
+        userReceiver = new UserReceiver();
+        courseReceiver = new CourseReceiver();
+        result = new CommandResult();
+    }
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
         MessageManager messages = setLang(requestContent);
-        CommandResult result = new CommandResult();
         String student_id = requestContent.getSessionAttributes().get("user_id").toString();
         String course_id = requestContent.getRequestParameters().get("course_id")[0];
-        UserReceiver userReceiver = new UserReceiver();
-        CourseReceiver courseReceiver = new CourseReceiver();
         User student = userReceiver.getById(Integer.parseInt(student_id));
         Course course = courseReceiver.getById(Integer.parseInt(course_id));
         if (student == null) {

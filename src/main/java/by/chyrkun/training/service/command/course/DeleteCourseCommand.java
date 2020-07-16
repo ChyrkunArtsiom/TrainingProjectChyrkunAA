@@ -10,12 +10,17 @@ import by.chyrkun.training.service.resource.MessageManager;
 public class DeleteCourseCommand implements Command {
     private static final String PARAM_COURSE_ID = "course_id";
     private static final String MESSAGE = "message";
-    private CourseReceiver receiver = new CourseReceiver();
+    private CourseReceiver receiver;
+    private CommandResult result;
+
+    public DeleteCourseCommand() {
+        receiver = new CourseReceiver();
+        result = new CommandResult();
+    }
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
         MessageManager messages = setLang(requestContent);
-        CommandResult result = new CommandResult();
         String course_id = requestContent.getRequestParameters().get(PARAM_COURSE_ID)[0];
         if (!receiver.delete(Integer.parseInt(course_id))) {
             requestContent.setSessionAttribute(MESSAGE, messages.getMessage("courseNotFound"));

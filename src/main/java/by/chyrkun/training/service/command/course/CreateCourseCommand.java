@@ -21,12 +21,20 @@ public class CreateCourseCommand extends BaseCommand implements Command {
     private static final String PARAM_NAME = "name";
     private static final String PARAM_TEACHER_ID = "teacher_id";
     private static final String ERROR_MESSAGE = "errorMessage";
-    private CourseReceiver receiver = new CourseReceiver();
+    private CourseReceiver courseReceiver;
+    private UserReceiver userReceiver;
+
+    private CommandResult result;
+
+    public CreateCourseCommand() {
+        courseReceiver = new CourseReceiver();
+        userReceiver = new UserReceiver();
+        result = new CommandResult();
+    }
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
         MessageManager messages = setLang(requestContent);
-        CommandResult result = new CommandResult();
         String name = requestContent.getRequestParameters().get(PARAM_NAME)[0];
         String teacher_id = requestContent.getRequestParameters().get(PARAM_TEACHER_ID)[0];
         boolean showTeachers = true;
@@ -38,7 +46,6 @@ public class CreateCourseCommand extends BaseCommand implements Command {
             }
             else {
                 name = InputSanitizer.sanitize(name);
-                UserReceiver userReceiver = new UserReceiver();
                 User teacher = userReceiver.getById(Integer.parseInt(teacher_id));
                 if (teacher == null) {
                     requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("userNotFound"));
@@ -56,7 +63,7 @@ public class CreateCourseCommand extends BaseCommand implements Command {
                     break first;
                 }
                 Course course = new Course(name, teacher);
-                if (receiver.create(course)) {
+                if (courseReceiver.create(course)) {
                     showTeachers = false;
                     result.setPage(PageManager.getProperty("shortpath.page.createcourse"));
                     result.setResponseType(CommandResult.ResponseType.REDIRECT);

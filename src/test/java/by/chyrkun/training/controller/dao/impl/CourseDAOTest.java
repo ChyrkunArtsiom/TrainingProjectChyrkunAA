@@ -8,9 +8,6 @@ import by.chyrkun.training.dao.impl.UserDAO;
 import by.chyrkun.training.model.Course;
 import by.chyrkun.training.model.Role;
 import by.chyrkun.training.model.User;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.*;
 
 import java.sql.DriverManager;
@@ -27,8 +24,6 @@ class CourseDAOTest {
 
     @BeforeAll
     static void setUp() throws SQLException {
-        Logger logger = LogManager.getLogger(CourseDAOTest.class);
-        logger.log(Level.INFO, "Starting test for courseDAO");
         DriverManager.registerDriver(new org.h2.Driver());
         connectionPool = ConnectionPoolImpl.getInstance();
     }
@@ -49,8 +44,6 @@ class CourseDAOTest {
 
     @AfterAll
     static void tearDown() {
-        Logger logger = LogManager.getLogger(CourseDAOTest.class);
-        logger.log(Level.INFO, "Finishing test for courseDAO");
         connectionPool.shutdown();
     }
 
