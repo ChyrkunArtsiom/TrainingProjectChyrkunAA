@@ -7,8 +7,8 @@ import by.chyrkun.training.model.User;
 import by.chyrkun.training.service.command.Command;
 import by.chyrkun.training.service.receiver.RoleReceiver;
 import by.chyrkun.training.service.receiver.UserReceiver;
-import by.chyrkun.training.service.resource.PageManager;
 import by.chyrkun.training.service.resource.MessageManager;
+import by.chyrkun.training.service.resource.PageManager;
 import by.chyrkun.training.service.validator.ParamValidator;
 import by.chyrkun.training.service.validator.UserValidator;
 

@@ -7,6 +7,7 @@ import by.chyrkun.training.model.Role;
 import by.chyrkun.training.model.Task;
 import by.chyrkun.training.model.User;
 import by.chyrkun.training.service.receiver.TaskReceiver;
+import by.chyrkun.training.service.receiver.TaskRegistrationReceiver;
 import by.chyrkun.training.service.resource.PageManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,35 +25,37 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 @RunWith(JUnitPlatform.class)
-class DeleteTaskCommandTest {
+class GetTaskCommandTest {
     private RequestContent requestContent;
 
     @Mock
-    private TaskReceiver receiver;
+    private TaskReceiver taskReceiver;
+    @Mock
+    private TaskRegistrationReceiver taskRegistrationReceiver;
 
     @InjectMocks
-    private DeleteTaskCommand command;
+    private GetTaskCommand command;
 
     @BeforeEach
     void setUp() {
-        String[] task_id = {"1"};
-
         requestContent = new RequestContent();
         requestContent.setSessionAttribute("lang", "en_US");
-        requestContent.setRequestParameter("task_id", task_id);
+        requestContent.setSessionAttribute("user_id", 1);
+        requestContent.setSessionAttribute("role", "teacher");
+        requestContent.setRequestAttribute("id", 1);
     }
 
     @Test
-    void execute() {
+    void testExecute() {
         Role role = new Role(1, "teacher");
         User teacher = new User(1, "Login", "Password",
                 "Firstname", "Surname", role);
-        Course course = new Course(1, "Course", teacher);
+        Course course = new Course("Course", teacher);
         Task task = new Task(1, "Task", LocalDate.now(), LocalDate.now().plusDays(1), course);
-        Mockito.lenient().when(receiver.getById(Mockito.anyInt())).thenReturn(task);
-        Mockito.lenient().when(receiver.delete(Mockito.anyInt())).thenReturn(true);
+        Mockito.lenient().when(taskReceiver.getById(Mockito.anyInt())).thenReturn(task);
+        Mockito.lenient().when(taskRegistrationReceiver.getAllByTask(Mockito.anyInt())).thenReturn(null);
         CommandResult result = command.execute(requestContent);
-        assertEquals(PageManager.getProperty("shortpath.page.course") + "/" + task.getCourse().getId(), result.getPage());
-        assertEquals(CommandResult.ResponseType.REDIRECT, result.getResponseType());
+        assertEquals(task, requestContent.getRequestAttributes().get("task"));
+        assertEquals(PageManager.getProperty("fullpath.page.task"), result.getPage());
     }
 }

@@ -5,15 +5,10 @@ import by.chyrkun.training.model.Course;
 import by.chyrkun.training.model.Role;
 import by.chyrkun.training.model.Task;
 import by.chyrkun.training.model.User;
-import by.chyrkun.training.service.command.course.CreateCourseCommand;
 import by.chyrkun.training.service.command.course.GetCoursesCommand;
-import by.chyrkun.training.service.command.role.GetRolesCommand;
-import by.chyrkun.training.service.command.user.CreateUserCommand;
 import by.chyrkun.training.service.exception.EntityNotFoundServiceException;
 import by.chyrkun.training.service.receiver.CourseReceiver;
-import by.chyrkun.training.service.receiver.RoleReceiver;
 import by.chyrkun.training.service.receiver.TaskReceiver;
-import by.chyrkun.training.service.receiver.UserReceiver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,7 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 @RunWith(JUnitPlatform.class)

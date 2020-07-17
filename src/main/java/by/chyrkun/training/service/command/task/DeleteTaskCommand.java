@@ -5,8 +5,8 @@ import by.chyrkun.training.controller.RequestContent;
 import by.chyrkun.training.model.Task;
 import by.chyrkun.training.service.command.Command;
 import by.chyrkun.training.service.receiver.TaskReceiver;
-import by.chyrkun.training.service.resource.PageManager;
 import by.chyrkun.training.service.resource.MessageManager;
+import by.chyrkun.training.service.resource.PageManager;
 
 public class DeleteTaskCommand implements Command {
     private static final String MESSAGE = "message";

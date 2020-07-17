@@ -63,6 +63,13 @@ public class CourseRegistration extends Entity {
     }
 
     @Override
+    public String toString() {
+        return "Course registration №" + id +
+                " by student " + student.getFirstname() + " " + student.getSecondname() +
+                " for  course " + course.getName();
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(id, course, student);
     }

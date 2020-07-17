@@ -8,11 +8,16 @@ import by.chyrkun.training.service.receiver.TaskRegistrationReceiver;
 import by.chyrkun.training.service.resource.PageManager;
 
 public class GetTaskRegistrationCommand implements Command {
-    private TaskRegistrationReceiver receiver = new TaskRegistrationReceiver();
+    private TaskRegistrationReceiver receiver;
+    private CommandResult result;
+
+    public GetTaskRegistrationCommand() {
+        receiver = new TaskRegistrationReceiver();
+        result = new CommandResult();
+    }
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
-        CommandResult result = new CommandResult();
         int exercise_id = Integer.valueOf(requestContent.getRequestAttributes().get("id").toString());
         int user_id = Integer.parseInt(requestContent.getSessionAttributes().get("user_id").toString());
         String role = requestContent.getSessionAttributes().get("role").toString();

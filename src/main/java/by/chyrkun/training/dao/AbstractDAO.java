@@ -1,9 +1,9 @@
 package by.chyrkun.training.dao;
 
+import by.chyrkun.training.dao.db.impl.Connection$Proxy;
 import by.chyrkun.training.dao.db.impl.ConnectionPoolImpl;
 import by.chyrkun.training.dao.exception.DAOException;
 import by.chyrkun.training.model.Entity;
-import by.chyrkun.training.dao.db.impl.Connection$Proxy;
 
 import java.util.Optional;
 

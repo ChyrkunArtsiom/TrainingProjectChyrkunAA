@@ -4,8 +4,8 @@ import by.chyrkun.training.controller.CommandResult;
 import by.chyrkun.training.controller.RequestContent;
 import by.chyrkun.training.service.command.Command;
 import by.chyrkun.training.service.receiver.CourseReceiver;
-import by.chyrkun.training.service.resource.PageManager;
 import by.chyrkun.training.service.resource.MessageManager;
+import by.chyrkun.training.service.resource.PageManager;
 
 public class DeleteCourseCommand implements Command {
     private static final String PARAM_COURSE_ID = "course_id";

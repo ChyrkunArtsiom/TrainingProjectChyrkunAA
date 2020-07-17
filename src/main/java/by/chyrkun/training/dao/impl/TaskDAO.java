@@ -1,11 +1,11 @@
 package by.chyrkun.training.dao.impl;
 
-import by.chyrkun.training.model.Course;
 import by.chyrkun.training.dao.AbstractDAO;
 import by.chyrkun.training.dao.db.impl.Connection$Proxy;
 import by.chyrkun.training.dao.db.impl.ConnectionPoolImpl;
 import by.chyrkun.training.dao.exception.EntityNotFoundDAOException;
 import by.chyrkun.training.dao.exception.UncheckedDAOException;
+import by.chyrkun.training.model.Course;
 import by.chyrkun.training.model.Task;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;

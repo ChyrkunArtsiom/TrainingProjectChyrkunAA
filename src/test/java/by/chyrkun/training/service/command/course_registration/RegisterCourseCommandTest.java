@@ -6,8 +6,7 @@ import by.chyrkun.training.model.Course;
 import by.chyrkun.training.model.CourseRegistration;
 import by.chyrkun.training.model.Role;
 import by.chyrkun.training.model.User;
-import by.chyrkun.training.service.exception.CourseNotFoundServiceException;
-import by.chyrkun.training.service.exception.UserNotFoundServiceException;
+import by.chyrkun.training.service.exception.EntityNotFoundServiceException;
 import by.chyrkun.training.service.receiver.CourseReceiver;
 import by.chyrkun.training.service.receiver.CourseRegistrationReceiver;
 import by.chyrkun.training.service.receiver.UserReceiver;
@@ -22,7 +21,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 @RunWith(JUnitPlatform.class)
@@ -46,7 +45,7 @@ class RegisterCourseCommandTest {
     }
 
     @Test
-    void testExecute() throws UserNotFoundServiceException, CourseNotFoundServiceException {
+    void testExecute() throws EntityNotFoundServiceException {
         Role role = new Role(1, "student");
         User student = new User(1, "Login", "Password", "Firstname", "Surname", role);
         Course course = new Course(1, "Course1", student);

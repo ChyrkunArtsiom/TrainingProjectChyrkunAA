@@ -51,8 +51,7 @@ public class Role extends Entity {
 
     @Override
     public int hashCode() {
-        return 993;
-        //return Objects.hash(id, name);
+        return Objects.hash(id, name);
     }
 
     @Override

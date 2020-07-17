@@ -1,11 +1,10 @@
 package by.chyrkun.training.service.receiver;
 
 import by.chyrkun.training.dao.exception.EntityNotFoundDAOException;
-import by.chyrkun.training.model.User;
 import by.chyrkun.training.dao.impl.UserDAO;
+import by.chyrkun.training.model.User;
 import by.chyrkun.training.service.exception.EntityNotFoundServiceException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

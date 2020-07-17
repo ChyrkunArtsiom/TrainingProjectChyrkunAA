@@ -1,5 +1,7 @@
 package by.chyrkun.training.model;
 
+import java.util.Objects;
+
 public class TaskRegistration extends Entity {
     private int id;
     private Task task;
@@ -73,5 +75,32 @@ public class TaskRegistration extends Entity {
 
     public void setReview(String review) {
         this.review = review;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, task, student, grade , review);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()){
+            return false;
+        }
+        TaskRegistration that = (TaskRegistration) obj;
+        return id == that.id &&
+                task.equals(that.task) &&
+                student.equals(that.student) &&
+                grade == that.grade &&
+                review.equals(that.review);
+    }
+
+    @Override
+    public String toString() {
+        return "Exercise №" + id + " of task №" + task.getId() +
+                " done by " + student.getFirstname() + " " + student.getSecondname();
     }
 }

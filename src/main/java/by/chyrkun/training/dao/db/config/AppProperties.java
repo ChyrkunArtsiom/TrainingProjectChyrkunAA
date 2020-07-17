@@ -1,8 +1,5 @@
 package by.chyrkun.training.dao.db.config;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.util.ResourceBundle;
 
 public enum AppProperties {

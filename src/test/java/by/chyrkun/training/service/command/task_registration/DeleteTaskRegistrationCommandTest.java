@@ -1,8 +1,8 @@
-package by.chyrkun.training.service.command.user;
+package by.chyrkun.training.service.command.task_registration;
 
 import by.chyrkun.training.controller.CommandResult;
 import by.chyrkun.training.controller.RequestContent;
-import by.chyrkun.training.service.receiver.UserReceiver;
+import by.chyrkun.training.service.receiver.TaskRegistrationReceiver;
 import by.chyrkun.training.service.resource.PageManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,29 +18,31 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 @RunWith(JUnitPlatform.class)
-class DeleteUserCommandTest {
+class DeleteTaskRegistrationCommandTest {
     private RequestContent requestContent;
 
     @Mock
-    private UserReceiver userReceiver;
+    private TaskRegistrationReceiver receiver;
 
     @InjectMocks
-    private DeleteUserCommand command;
+    private DeleteTaskRegistrationCommand command;
 
     @BeforeEach
     void setUp() {
-        String[] username = {"Login"};
+        String[] exercise_id = {"1"};
+        String[] task_id = {"1"};
 
         requestContent = new RequestContent();
         requestContent.setSessionAttribute("lang", "en_US");
-        requestContent.setRequestParameter("login", username);
+        requestContent.setRequestParameter("exercise_id", exercise_id);
+        requestContent.setRequestParameter("task_id", task_id);
     }
 
     @Test
     void testExecute() {
-        Mockito.lenient().when(userReceiver.delete(Mockito.anyString())).thenReturn(true);
+        Mockito.lenient().when(receiver.delete(Mockito.anyInt())).thenReturn(true);
         CommandResult result = command.execute(requestContent);
-        assertEquals(PageManager.getProperty("shortpath.page.admin.deleteuser"), result.getPage());
+        assertEquals(PageManager.getProperty("shortpath.page.task") + "/" + "1", result.getPage());
         assertEquals(CommandResult.ResponseType.REDIRECT, result.getResponseType());
     }
 }

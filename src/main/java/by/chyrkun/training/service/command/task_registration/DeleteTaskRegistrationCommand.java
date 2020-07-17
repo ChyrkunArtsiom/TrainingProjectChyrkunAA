@@ -9,12 +9,17 @@ import by.chyrkun.training.service.resource.PageManager;
 
 public class DeleteTaskRegistrationCommand implements Command {
     private static final String MESSAGE = "message";
-    private TaskRegistrationReceiver receiver = new TaskRegistrationReceiver();
+    private TaskRegistrationReceiver receiver;
+    private CommandResult result;
+
+    public DeleteTaskRegistrationCommand() {
+        receiver = new TaskRegistrationReceiver();
+        result = new CommandResult();
+    }
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
         MessageManager messages = setLang(requestContent);
-        CommandResult result = new CommandResult();
         String exercise_id = requestContent.getRequestParameters().get("exercise_id")[0];
         String task_id = requestContent.getRequestParameters().get("task_id")[0];
         if (!receiver.delete(Integer.parseInt(exercise_id))) {

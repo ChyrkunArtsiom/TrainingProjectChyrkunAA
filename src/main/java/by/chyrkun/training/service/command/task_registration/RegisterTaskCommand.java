@@ -16,16 +16,23 @@ import by.chyrkun.training.service.resource.PageManager;
 
 public class RegisterTaskCommand implements Command {
     private static final String MESSAGE = "message";
-    private TaskRegistrationReceiver receiver = new TaskRegistrationReceiver();
+    private TaskRegistrationReceiver taskRegistrationReceiver;
+    private UserReceiver userReceiver;
+    private TaskReceiver taskReceiver;
+    private CommandResult result;
+
+    public RegisterTaskCommand() {
+        taskRegistrationReceiver = new TaskRegistrationReceiver();
+        userReceiver = new UserReceiver();
+        taskReceiver = new TaskReceiver();
+        result = new CommandResult();
+    }
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
         MessageManager messages = setLang(requestContent);
-        CommandResult result = new CommandResult();
         String student_id = requestContent.getSessionAttributes().get("user_id").toString();
         String task_id = requestContent.getRequestParameters().get("task_id")[0];
-        UserReceiver userReceiver = new UserReceiver();
-        TaskReceiver taskReceiver = new TaskReceiver();
         User student = userReceiver.getById(Integer.parseInt(student_id));
         Task task = taskReceiver.getById(Integer.parseInt(task_id));
         if (student == null) {
@@ -37,9 +44,9 @@ public class RegisterTaskCommand implements Command {
         else {
             TaskRegistration taskRegistration = new TaskRegistration(task, student);
             try {
-                receiver.create(taskRegistration);
+                taskRegistrationReceiver.create(taskRegistration);
                 /*
-                if (receiver.create(taskRegistration)) {
+                if (taskRegistrationReceiver.create(taskRegistration)) {
                     requestContent.setSessionAttribute(MESSAGE, messages.getMessage("taskRegistrationWasCreated"));
                 }*/
             }catch (UserNotFoundServiceException ex) {
