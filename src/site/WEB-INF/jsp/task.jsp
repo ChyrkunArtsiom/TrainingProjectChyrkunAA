@@ -27,6 +27,7 @@
                         <form name="DeleteTaskForm" method="post" action="${pageContext.request.contextPath}/session">
                             <input type="hidden" name="command" value="delete_task"/>
                             <input type="hidden" name="task_id" value="${task.id}"/>
+                            <input type="hidden" name="course_id" value="${task.course.id}"/>
                             <input type="submit" class="btn btn-dark" value="<fmt:message key="deleteTask"/>"/>
                         </form>
                         <div class="container">

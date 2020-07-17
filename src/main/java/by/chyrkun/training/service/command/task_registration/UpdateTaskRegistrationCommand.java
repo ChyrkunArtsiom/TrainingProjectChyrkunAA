@@ -22,8 +22,8 @@ public class UpdateTaskRegistrationCommand implements Command {
         String grade = requestContent.getRequestParameters().get("grade")[0];
         String review = requestContent.getRequestParameters().get("review")[0];
         if (!ParamValidator.isPresent(grade, review)) {
-            requestContent.setRequestAttribute(MESSAGE, messages.getMessage("lineIsEmpty"));
-            result.setPage(PageManager.getProperty("fullpath.page.createcourse"));
+            requestContent.setSessionAttribute(MESSAGE, messages.getMessage("lineIsEmpty"));
+            result.setPage(PageManager.getProperty("shortpath.page.exercise") + "/" + exercise_id);
         }else {
             review = InputSanitizer.sanitize(review);
             TaskRegistration taskRegistration = receiver.getById(Integer.parseInt(exercise_id));
@@ -35,8 +35,8 @@ public class UpdateTaskRegistrationCommand implements Command {
             }else {
                 result.setPage(PageManager.getProperty("shortpath.page.exercise") + "/" + exercise_id);
             }
-            result.setResponseType(CommandResult.ResponseType.REDIRECT);
         }
+        result.setResponseType(CommandResult.ResponseType.REDIRECT);
         return result;
     }
 }

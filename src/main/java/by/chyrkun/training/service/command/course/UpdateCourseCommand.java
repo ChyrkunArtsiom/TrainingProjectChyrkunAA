@@ -29,12 +29,14 @@ public class UpdateCourseCommand implements Command {
         String teacher_id = requestContent.getRequestParameters().get(PARAM_TEACHER_ID)[0];
         if (!ParamValidator.isPresent(name, teacher_id)) {
             requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("lineIsEmpty"));
+            result.setResponseType(CommandResult.ResponseType.FORWARD);
             result.setPage(PageManager.getProperty("fullpath.page.updatecourse"));
         }
         else {
             Course course = receiver.getById(Integer.parseInt(id));
             if (course == null) {
                 requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("courseNotFound"));
+                result.setResponseType(CommandResult.ResponseType.FORWARD);
                 result.setPage(PageManager.getProperty("fullpath.page.updatecourse"));
             }
             else {
@@ -42,14 +44,17 @@ public class UpdateCourseCommand implements Command {
                 User teacher = userReceiver.getById(Integer.parseInt(teacher_id));
                 if (teacher == null) {
                     requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("userNotFound"));
+                    result.setResponseType(CommandResult.ResponseType.FORWARD);
                     result.setPage(PageManager.getProperty("fullpath.page.updatecourse"));
                 }
                 else if (!teacher.getRole().getName().equals("teacher")) {
                     requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("userIsNotTeacher"));
+                    result.setResponseType(CommandResult.ResponseType.FORWARD);
                     result.setPage(PageManager.getProperty("fullpath.page.updatecourse"));
                 }
                 else if (!CourseValidator.isCourseNameValid(name)) {
                     requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("nameIsNotValid"));
+                    result.setResponseType(CommandResult.ResponseType.FORWARD);
                     result.setPage(PageManager.getProperty("fullpath.page.updatecourse"));
                 }
                 course = new Course(Integer.parseInt(id), name, teacher);
@@ -60,6 +65,7 @@ public class UpdateCourseCommand implements Command {
                 }
                 else {
                     requestContent.setRequestAttribute(ERROR_MESSAGE, "Course wasn't deleted for some reason");
+                    result.setResponseType(CommandResult.ResponseType.FORWARD);
                     result.setPage(PageManager.getProperty("fullpath.page.updatecourse"));
                 }
             }

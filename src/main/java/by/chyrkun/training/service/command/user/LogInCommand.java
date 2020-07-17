@@ -28,13 +28,15 @@ public class LogInCommand implements Command {
         String password = requestContent.getRequestParameters().get("password")[0];
         if (!ParamValidator.isPresent(login, password)) {
             requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("lineIsEmpty"));
+            result.setResponseType(CommandResult.ResponseType.FORWARD);
             result.setPage(PageManager.getProperty("fullpath.page.login"));
         }
         else {
             login = InputSanitizer.sanitize(login);
             User user = receiver.getByLogin(login);
-            if ((receiver.getByLogin(login) == null) || (!user.getPassword().equals(password))) {
+            if ((user == null) || (!user.getPassword().equals(password))) {
                 requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("loginDataIsNotValid"));
+                result.setResponseType(CommandResult.ResponseType.FORWARD);
                 result.setPage(PageManager.getProperty("fullpath.page.login"));
             }
             else {

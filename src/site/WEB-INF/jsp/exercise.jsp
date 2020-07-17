@@ -69,6 +69,12 @@
             <fmt:message key="exerciseNotFound"/>
         </c:otherwise>
     </c:choose>
+<div class="container">
+    <div class="row mt-1">
+        <p>${sessionScope.message}</p>
+        <c:remove var="message" scope="session"/>
+    </div>
+</div>
 <script>
     $("ReviewExerciseForm").submit(function(){
         var message = $("#inputcomment").val();

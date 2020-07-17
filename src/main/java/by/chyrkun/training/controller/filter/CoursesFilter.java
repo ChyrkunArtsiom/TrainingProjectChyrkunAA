@@ -24,7 +24,12 @@ public class CoursesFilter implements Filter {
         String URL = request.getServletPath();
         if (URL.lastIndexOf("courses/") != -1) {
             try {
-                return Integer.parseInt(URL.substring(URL.lastIndexOf("courses/") + "courses/".length()));
+                int num = Integer.parseInt(URL.substring(URL.lastIndexOf("courses/") + "courses/".length()));
+                if (num < 1) {
+                    return 1;
+                }else {
+                    return num;
+                }
             }catch (NumberFormatException ex) {
                 return 1;
             }

@@ -36,10 +36,12 @@ class DeleteTaskCommandTest {
     @BeforeEach
     void setUp() {
         String[] task_id = {"1"};
+        String[] course_id = {"1"};
 
         requestContent = new RequestContent();
         requestContent.setSessionAttribute("lang", "en_US");
         requestContent.setRequestParameter("task_id", task_id);
+        requestContent.setRequestParameter("course_id", course_id);
     }
 
     @Test

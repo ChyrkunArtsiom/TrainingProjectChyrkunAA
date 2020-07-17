@@ -47,6 +47,7 @@ public class CreateTaskCommand extends BaseCommand implements Command {
         first: try {
             if (!ParamValidator.isPresent(name, course_id, startdate)) {
                 requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("lineIsEmpty"));
+                result.setResponseType(CommandResult.ResponseType.FORWARD);
                 result.setPage(PageManager.getProperty("fullpath.page.createtask"));
                 break first;
             }
@@ -54,11 +55,13 @@ public class CreateTaskCommand extends BaseCommand implements Command {
                 Course course = courseReceiver.getById(Integer.parseInt(course_id));
                 if (course == null) {
                     requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("courseNotFound"));
+                    result.setResponseType(CommandResult.ResponseType.FORWARD);
                     result.setPage(PageManager.getProperty("fullpath.page.createtask"));
                     break first;
                 }
                 if (!TaskValidator.isNameValid(name)) {
                     requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("nameIsNotValid"));
+                    result.setResponseType(CommandResult.ResponseType.FORWARD);
                     result.setPage(PageManager.getProperty("fullpath.page.createtask"));
                     break first;
                 }
@@ -70,6 +73,7 @@ public class CreateTaskCommand extends BaseCommand implements Command {
                 }
                 if (!TaskValidator.isDateValid(start, end)) {
                     requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("dateIsNotValid"));
+                    result.setResponseType(CommandResult.ResponseType.FORWARD);
                     result.setPage(PageManager.getProperty("fullpath.page.createtask"));
                     break first;
                 }
@@ -83,10 +87,12 @@ public class CreateTaskCommand extends BaseCommand implements Command {
         }
         catch (DateTimeParseException ex) {
             requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("dateIsNotValid"));
+            result.setResponseType(CommandResult.ResponseType.FORWARD);
             result.setPage(PageManager.getProperty("fullpath.page.createtask"));
         }
         catch (EntityNotFoundServiceException ex) {
             requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("courseNotFound"));
+            result.setResponseType(CommandResult.ResponseType.FORWARD);
             result.setPage(PageManager.getProperty("fullpath.page.createtask"));
         }
         requestContent.setRequestAttribute("select", "for_task");

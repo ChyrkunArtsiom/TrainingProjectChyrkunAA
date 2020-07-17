@@ -43,6 +43,7 @@ public class CreateUserCommand extends BaseCommand implements Command {
             Role role = roleReceiver.getById(role_id);
             if (role == null) {
                 requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("roleNotFound"));
+                result.setResponseType(CommandResult.ResponseType.FORWARD);
                 result.setPage(CREATE_USER_PAGE);
                 break first;
             }
@@ -52,6 +53,7 @@ public class CreateUserCommand extends BaseCommand implements Command {
             StringBuffer message = new StringBuffer();
             if (!UserValidator.isUserValid(user, message, messages)) {
                 requestContent.setRequestAttribute(ERROR_MESSAGE, message);
+                result.setResponseType(CommandResult.ResponseType.FORWARD);
                 result.setPage(CREATE_USER_PAGE);
                 break first;
             }
@@ -63,11 +65,13 @@ public class CreateUserCommand extends BaseCommand implements Command {
                 }
                 else {
                     requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("suchUserAlreadyExists"));
+                    result.setResponseType(CommandResult.ResponseType.FORWARD);
                     result.setPage(CREATE_USER_PAGE);
                 }
             }
         }catch (EntityNotFoundServiceException ex) {
             requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("roleNotFound"));
+            result.setResponseType(CommandResult.ResponseType.FORWARD);
             result.setPage(CREATE_USER_PAGE);
         }
         next.execute(requestContent);

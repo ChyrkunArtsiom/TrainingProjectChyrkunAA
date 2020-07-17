@@ -31,11 +31,13 @@ public class DeleteUserCommand implements Command {
             }
             else {
                 requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("userNotFound"));
+                result.setResponseType(CommandResult.ResponseType.FORWARD);
                 result.setPage(PageManager.getProperty("fullpath.page.admin.deleteuser"));
             }
         }
         else {
             requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("lineIsEmpty"));
+            result.setResponseType(CommandResult.ResponseType.FORWARD);
             result.setPage(PageManager.getProperty("fullpath.page.admin.deleteuser"));
         }
         requestContent.setRequestAttribute(PARAM_NAME_USER_LOGIN, login);

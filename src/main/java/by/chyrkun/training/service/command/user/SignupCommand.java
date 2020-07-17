@@ -38,6 +38,7 @@ public class SignupCommand implements Command {
             Role role = roleReceiver.getById(student_id);
             if (role == null) {
                 requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("roleNotFound"));
+                result.setResponseType(CommandResult.ResponseType.FORWARD);
                 result.setPage(SIGN_UP_PAGE);
                 break first;
             }
@@ -47,6 +48,7 @@ public class SignupCommand implements Command {
             StringBuffer message = new StringBuffer();
             if (!UserValidator.isUserValid(user, message, messages)) {
                 requestContent.setRequestAttribute(ERROR_MESSAGE, message);
+                result.setResponseType(CommandResult.ResponseType.FORWARD);
                 result.setPage(SIGN_UP_PAGE);
                 break first;
             }
@@ -58,11 +60,13 @@ public class SignupCommand implements Command {
             }
             else {
                 requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("suchUserAlreadyExists"));
+                result.setResponseType(CommandResult.ResponseType.FORWARD);
                 result.setPage(SIGN_UP_PAGE);
             }
 
         }catch (EntityNotFoundServiceException ex) {
             requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("roleNotFound"));
+            result.setResponseType(CommandResult.ResponseType.FORWARD);
             result.setPage(SIGN_UP_PAGE);
         }
         requestContent.setRequestAttribute(PARAM_NAME_LOGIN, user.getLogin());

@@ -9,7 +9,6 @@ import by.chyrkun.training.service.resource.MessageManager;
 import by.chyrkun.training.service.resource.PageManager;
 
 public class DeleteTaskCommand implements Command {
-    private static final String MESSAGE = "message";
     private TaskReceiver receiver;
     private CommandResult result;
 
@@ -22,13 +21,13 @@ public class DeleteTaskCommand implements Command {
     public CommandResult execute(RequestContent requestContent) {
         MessageManager messages = setLang(requestContent);
         String task_id = requestContent.getRequestParameters().get("task_id")[0];
+        String course_id = requestContent.getRequestParameters().get("course_id")[0];
         Task task = receiver.getById(Integer.parseInt(task_id));
         if (task == null || !receiver.delete(Integer.parseInt(task_id))) {
             requestContent.setRequestAttribute("errorMessage", messages.getMessage("taskNotFound"));
-        } else {
-            result.setPage(PageManager.getProperty("shortpath.page.course") + "/" + task.getCourse().getId());
-            result.setResponseType(CommandResult.ResponseType.REDIRECT);
         }
+        result.setPage(PageManager.getProperty("shortpath.page.course") + "/" + course_id);
+        result.setResponseType(CommandResult.ResponseType.REDIRECT);
         return result;
     }
 }

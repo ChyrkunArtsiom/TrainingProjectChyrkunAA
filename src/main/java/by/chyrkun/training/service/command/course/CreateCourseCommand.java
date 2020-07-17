@@ -41,6 +41,7 @@ public class CreateCourseCommand extends BaseCommand implements Command {
         first: try {
             if (!ParamValidator.isPresent(name, teacher_id)) {
                 requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("lineIsEmpty"));
+                result.setResponseType(CommandResult.ResponseType.FORWARD);
                 result.setPage(PageManager.getProperty("fullpath.page.createcourse"));
                 break first;
             }
@@ -49,16 +50,19 @@ public class CreateCourseCommand extends BaseCommand implements Command {
                 User teacher = userReceiver.getById(Integer.parseInt(teacher_id));
                 if (teacher == null) {
                     requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("userNotFound"));
+                    result.setResponseType(CommandResult.ResponseType.FORWARD);
                     result.setPage(PageManager.getProperty("fullpath.page.createcourse"));
                     break first;
                 }
                 else if (!UserValidator.isTeacher(teacher)) {
                     requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("userIsNotTeacher"));
+                    result.setResponseType(CommandResult.ResponseType.FORWARD);
                     result.setPage(PageManager.getProperty("fullpath.page.createcourse"));
                     break first;
                 }
                 else if (!CourseValidator.isCourseNameValid(name)) {
                     requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("nameIsNotValid"));
+                    result.setResponseType(CommandResult.ResponseType.FORWARD);
                     result.setPage(PageManager.getProperty("fullpath.page.createcourse"));
                     break first;
                 }
@@ -71,6 +75,7 @@ public class CreateCourseCommand extends BaseCommand implements Command {
             }
         }catch (EntityNotFoundServiceException ex) {
             requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("userNotFound"));
+            result.setResponseType(CommandResult.ResponseType.FORWARD);
             result.setPage(PageManager.getProperty("fullpath.page.createcourse"));
         }finally {
             if (showTeachers) {

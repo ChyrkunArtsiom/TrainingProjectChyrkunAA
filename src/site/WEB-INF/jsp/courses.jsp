@@ -41,27 +41,45 @@
             </table>
             <nav>
                 <ul class="pagination">
-                    <c:if test="${page eq 1 and page ne max_pages}">
-                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page}">Previous</a></li>
-                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page}">${page}</a></li>
-                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page+1}">${page+1}</a></li>
-                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page+2}">${page+2}</a></li>
-                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page+1}">Next</a></li>
-                    </c:if>
-                    <c:if test="${page gt 1 and page lt max_pages}">
-                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page-1}">Previous</a></li>
-                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page-1}">${page-1}</a></li>
-                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page}">${page}</a></li>
-                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page+1}">${page+1}</a></li>
-                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page+1}">Next</a></li>
-                    </c:if>
-                    <c:if test="${page ne 1 and page eq max_pages}">
-                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page-1}">Previous</a></li>
-                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page-2}">${page-2}</a></li>
-                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page-1}">${page-1}</a></li>
-                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page}">${page}</a></li>
-                        <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page}">Next</a></li>
-                    </c:if>
+                    <c:choose>
+                        <c:when test="${max_pages eq 2}">
+                            <c:if test="${page eq 1}">
+                                <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page}"><fmt:message key="previous"/></a></li>
+                                <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page}">${page}</a></li>
+                                <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page+1}">${page+1}</a></li>
+                                <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page+1}"><fmt:message key="next"/></a></li>
+                            </c:if>
+                            <c:if test="${page eq 2}">
+                                <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page-1}"><fmt:message key="previous"/></a></li>
+                                <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page-1}">${page-1}</a></li>
+                                <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page}">${page}</a></li>
+                                <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page}"><fmt:message key="next"/></a></li>
+                            </c:if>
+                        </c:when>
+                        <c:otherwise>
+                            <c:if test="${page eq 1 and page ne max_pages}">
+                                <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page}"><fmt:message key="previous"/></a></li>
+                                <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page}">${page}</a></li>
+                                <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page+1}">${page+1}</a></li>
+                                <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page+2}">${page+2}</a></li>
+                                <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page+1}"><fmt:message key="next"/></a></li>
+                            </c:if>
+                            <c:if test="${page gt 1 and page lt max_pages}">
+                                <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page-1}"><fmt:message key="previous"/></a></li>
+                                <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page-1}">${page-1}</a></li>
+                                <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page}">${page}</a></li>
+                                <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page+1}">${page+1}</a></li>
+                                <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page+1}"><fmt:message key="next"/></a></li>
+                            </c:if>
+                            <c:if test="${page ne 1 and page eq max_pages}">
+                                <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page-1}"><fmt:message key="previous"/></a></li>
+                                <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page-2}">${page-2}</a></li>
+                                <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page-1}">${page-1}</a></li>
+                                <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page}">${page}</a></li>
+                                <li class="page-item"><a class="page-link" href="${pageContext.request.contextPath}/${role}/courses/${page}"><fmt:message key="next"/></a></li>
+                            </c:if>
+                        </c:otherwise>
+                    </c:choose>
                 </ul>
             </nav>
         </c:if>
