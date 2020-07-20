@@ -1,8 +1,8 @@
-package by.chyrkun.training.service.command.task_registration;
+package by.chyrkun.training.service.command.exercise;
 
 import by.chyrkun.training.controller.CommandResult;
 import by.chyrkun.training.controller.RequestContent;
-import by.chyrkun.training.model.TaskRegistration;
+import by.chyrkun.training.model.Exercise;
 import by.chyrkun.training.service.command.Command;
 import by.chyrkun.training.service.receiver.TaskRegistrationReceiver;
 import by.chyrkun.training.service.resource.MessageManager;
@@ -26,10 +26,10 @@ public class UpdateTaskRegistrationCommand implements Command {
             result.setPage(PageManager.getProperty("shortpath.page.exercise") + "/" + exercise_id);
         }else {
             review = InputSanitizer.sanitize(review);
-            TaskRegistration taskRegistration = receiver.getById(Integer.parseInt(exercise_id));
-            taskRegistration.setGrade(Integer.parseInt(grade));
-            taskRegistration.setReview(review);
-            if (receiver.update(taskRegistration) == null) {
+            Exercise exercise = receiver.getById(Integer.parseInt(exercise_id));
+            exercise.setGrade(Integer.parseInt(grade));
+            exercise.setReview(review);
+            if (receiver.update(exercise) == null) {
                 requestContent.setSessionAttribute(MESSAGE, messages.getMessage("taskRegistrationWasNotUpdated"));
                 result.setPage(PageManager.getProperty("shortpath.page.teacher.courses"));
             }else {

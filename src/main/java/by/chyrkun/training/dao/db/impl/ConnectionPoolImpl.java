@@ -15,11 +15,22 @@ import java.util.List;
 
 import static by.chyrkun.training.dao.db.config.AppProperties.DB_PROPERTIES;
 
+/**
+ * Enumeration for database connection pool.
+ */
 public enum ConnectionPoolImpl implements ConnectionPoolDAO {
+    /**
+     * Connection pool instance.
+     */
     CONNECTION_POOL_INSTANCE;
 
+    /** Field for logging. */
     private final Logger LOGGER = LogManager.getLogger(ConnectionPoolImpl.class);
+
+    /** List of unused connections. */
     private List<Connection$Proxy> connectionPool = new ArrayList<>();
+
+    /** List of used connections. */
     private List<Connection$Proxy> usedConnections = new ArrayList<>();
 
     public static ConnectionPoolImpl getInstance() {
@@ -27,15 +38,25 @@ public enum ConnectionPoolImpl implements ConnectionPoolDAO {
         return CONNECTION_POOL_INSTANCE;
     }
 
+    /** Constructor for enumeration. Initiates pools. */
     ConnectionPoolImpl() {
         LOGGER.log(Level.INFO, "Initializing connection pool...");
         initConnectionPool();
     }
 
+    /**
+     * Calls {@link #createConnections(int)}.
+     */
     public void initConnectionPool() {
         createConnections(DB_PROPERTIES.getInitialPoolSize());
     }
 
+    /**
+     * Gets properties and creates connection pool based on them.
+     *
+     * @param poolSize size of connection pools
+     * @throws UncheckedDAOException if SQLException is thrown during driver registration or connection creating
+     */
     private void createConnections(int poolSize) {
         String url = DB_PROPERTIES.getUrl();
         String user = DB_PROPERTIES.getUser();
@@ -59,20 +80,35 @@ public enum ConnectionPoolImpl implements ConnectionPoolDAO {
         }
     }
 
+    /**
+     * Gets connection from pool of unused connections and moves it to pool of used connections.
+     * Initiates new pools if there are no pools.
+     *
+     * @return the connection
+     * @throws UncheckedDAOException if there are no connections in pool of unused connections
+     */
     @Override
     public Connection$Proxy getConnection() {
         if (connectionPool.size() < 1 && usedConnections.size() == 0) {
             initConnectionPool();
         }
         if (connectionPool.size() < 1) {
-            LOGGER.log(Level.FATAL, "Connection pool is emopty");
-            throw new UncheckedDAOException("Connection pool is emopty");
+            LOGGER.log(Level.FATAL, "Connection pool is empty");
+            throw new UncheckedDAOException("Connection pool is empty");
         }
         Connection$Proxy connection$Proxy = connectionPool.remove(connectionPool.size()-1);
         usedConnections.add(connection$Proxy);
         return connection$Proxy;
     }
 
+    /**
+     * Releases connection by moving it from pool of used connections to unused.
+     * Returns {@code true} if connection was moved to unused connections pool.
+     *
+     * @param connection the connection
+     * @return {@code true} if connection was moved to unused connections pool
+     * @throws UncheckedDAOException if SQLException is thrown in it
+     */
     @Override
     public boolean releaseConnection(Connection$Proxy connection) {
         try{
@@ -88,6 +124,11 @@ public enum ConnectionPoolImpl implements ConnectionPoolDAO {
         return usedConnections.remove(connection);
     }
 
+    /**
+     * Closes all connections, deregisters drivers.
+     *
+     * @throws UncheckedDAOException if SQLException is thrown in it
+     */
     @Override
     public void shutdown() {
         LOGGER.log(Level.INFO, "Shutting down connections...");

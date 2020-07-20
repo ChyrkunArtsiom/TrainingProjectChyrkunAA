@@ -2,8 +2,8 @@ package by.chyrkun.training.service.receiver;
 
 import by.chyrkun.training.dao.exception.TaskNotFoundDAOException;
 import by.chyrkun.training.dao.exception.UserNotFoundDAOException;
-import by.chyrkun.training.dao.impl.TaskRegistrationDAO;
-import by.chyrkun.training.model.TaskRegistration;
+import by.chyrkun.training.dao.impl.ExerciseDAO;
+import by.chyrkun.training.model.Exercise;
 import by.chyrkun.training.service.exception.TaskNotFoundServiceException;
 import by.chyrkun.training.service.exception.UserNotFoundServiceException;
 
@@ -12,88 +12,88 @@ import java.util.Optional;
 
 public class TaskRegistrationReceiver {
     public boolean isPerformed(int task_id, int student_id) {
-        TaskRegistrationDAO taskRegistrationDAO = new TaskRegistrationDAO();
+        ExerciseDAO exerciseDAO = new ExerciseDAO();
         try {
-            return taskRegistrationDAO.isPerformed(task_id, student_id);
+            return exerciseDAO.isPerformed(task_id, student_id);
         }finally {
-            taskRegistrationDAO.close();
+            exerciseDAO.close();
         }
     }
 
-    public boolean create(TaskRegistration taskRegistration) throws UserNotFoundServiceException, TaskNotFoundServiceException {
-        TaskRegistrationDAO taskRegistrationDAO = new TaskRegistrationDAO();
+    public boolean create(Exercise exercise) throws UserNotFoundServiceException, TaskNotFoundServiceException {
+        ExerciseDAO exerciseDAO = new ExerciseDAO();
         try {
-            return taskRegistrationDAO.create(taskRegistration);
+            return exerciseDAO.create(exercise);
         }catch (TaskNotFoundDAOException ex){
             throw new TaskNotFoundServiceException(ex.getMessage(), ex);
         }catch (UserNotFoundDAOException ex) {
             throw new UserNotFoundServiceException(ex.getMessage(), ex);
         }finally {
-            taskRegistrationDAO.close();
+            exerciseDAO.close();
         }
     }
 
-    public TaskRegistration getById(int taskRegistration_id) {
-        Optional<TaskRegistration> exercise;
-        TaskRegistrationDAO taskRegistrationDAO = new TaskRegistrationDAO();
+    public Exercise getById(int taskRegistration_id) {
+        Optional<Exercise> exercise;
+        ExerciseDAO exerciseDAO = new ExerciseDAO();
         try {
-            exercise = taskRegistrationDAO.getEntityById(taskRegistration_id);
+            exercise = exerciseDAO.getEntityById(taskRegistration_id);
             return exercise.orElse(null);
         }finally {
-            taskRegistrationDAO.close();
+            exerciseDAO.close();
         }
     }
 
-    public TaskRegistration update(TaskRegistration taskRegistration) {
-        Optional<TaskRegistration> optional;
-        TaskRegistrationDAO taskRegistrationDAO = new TaskRegistrationDAO();
+    public Exercise update(Exercise exercise) {
+        Optional<Exercise> optional;
+        ExerciseDAO exerciseDAO = new ExerciseDAO();
         try {
-            optional = taskRegistrationDAO.update(taskRegistration);
+            optional = exerciseDAO.update(exercise);
             return optional.orElse(null);
         }finally {
-            taskRegistrationDAO.close();
+            exerciseDAO.close();
         }
     }
 
     public boolean delete(int exercise_id) {
-        TaskRegistrationDAO taskRegistrationDAO = new TaskRegistrationDAO();
+        ExerciseDAO exerciseDAO = new ExerciseDAO();
         try {
-            Optional<TaskRegistration> task = taskRegistrationDAO.getEntityById(exercise_id);
-            return task.map(taskRegistrationDAO::delete).orElse(false);
+            Optional<Exercise> task = exerciseDAO.getEntityById(exercise_id);
+            return task.map(exerciseDAO::delete).orElse(false);
         }finally {
-            taskRegistrationDAO.close();
+            exerciseDAO.close();
         }
     }
 
     public boolean deleteByTaskStudent(int task_id, int student_id) {
-        TaskRegistrationDAO taskRegistrationDAO = new TaskRegistrationDAO();
+        ExerciseDAO exerciseDAO = new ExerciseDAO();
         try {
-            Optional<TaskRegistration> task = taskRegistrationDAO.getTaskRegistrationByTaskStudent(task_id, student_id);
-            return task.map(taskRegistrationDAO::delete).orElse(false);
+            Optional<Exercise> task = exerciseDAO.getExerciseByTaskStudent(task_id, student_id);
+            return task.map(exerciseDAO::delete).orElse(false);
         }finally {
-            taskRegistrationDAO.close();
+            exerciseDAO.close();
         }
     }
 
-    public TaskRegistration getByTaskStudent(int task_id, int student_id) {
-        Optional<TaskRegistration> exercise;
-        TaskRegistrationDAO taskRegistrationDAO = new TaskRegistrationDAO();
+    public Exercise getByTaskStudent(int task_id, int student_id) {
+        Optional<Exercise> exercise;
+        ExerciseDAO exerciseDAO = new ExerciseDAO();
         try {
-            exercise = taskRegistrationDAO.getTaskRegistrationByTaskStudent(task_id, student_id);
+            exercise = exerciseDAO.getExerciseByTaskStudent(task_id, student_id);
             return exercise.orElse(null);
         }finally {
-            taskRegistrationDAO.close();
+            exerciseDAO.close();
         }
     }
 
-    public List<TaskRegistration> getAllByTask(int task_id) {
-        List<TaskRegistration> registrations;
-        TaskRegistrationDAO taskRegistrationDAO = new TaskRegistrationDAO();
+    public List<Exercise> getAllByTask(int task_id) {
+        List<Exercise> registrations;
+        ExerciseDAO exerciseDAO = new ExerciseDAO();
         try {
-            registrations = taskRegistrationDAO.getAllByTask(task_id);
+            registrations = exerciseDAO.getAllByTask(task_id);
             return registrations;
         }finally {
-            taskRegistrationDAO.close();
+            exerciseDAO.close();
         }
     }
 }

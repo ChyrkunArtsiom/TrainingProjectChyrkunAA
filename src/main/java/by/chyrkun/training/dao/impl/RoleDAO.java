@@ -16,20 +16,47 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Class for interacting with {@link Role} table in database.
+ * Implements {@link ResultMapper}.
+ */
 public class RoleDAO extends AbstractDAO<Role> implements ResultMapper<List<Role>> {
+    /** SQL query for creating role using id and name. */
     private final static String SQL_CREATE_ROLE_FULL = "INSERT INTO training_schema.roles (role_id, name) VALUES (?,?)";
+
+    /** SQL query for creating role using name. */
     private final static String SQL_CREATE_ROLE = "INSERT INTO training_schema.roles (name) VALUES (?)";
+
+    /** SQL query for updating role. */
     private final static String SQL_UPDATE_ROLE = "UPDATE training_schema.roles SET name = (?) WHERE role_id = (?)";
+
+    /** SQL query for deleting role. */
     private final static String SQL_DELETE_ROLE = "DELETE FROM training_schema.roles WHERE role_id = (?)";
+
+    /** SQL query for getting role by id. */
     private final static String SQL_GET_ROLE_BY_ID = "SELECT role_id, name FROM training_schema.roles WHERE role_id = (?)";
+
+    /** SQL query for getting role by name. */
     private final static String SQL_GET_ROLE_BY_NAME = "SELECT role_id, name FROM training_schema.roles WHERE name = (?)";
+
+    /** SQL query for getting roles. */
     private final static String SQL_GET_ROLES = "SELECT role_id, name FROM training_schema.roles";
+
+    /** Field for logging. */
     private final static Logger LOGGER = LogManager.getLogger(RoleDAO.class);
 
+    /**
+     * Constructor with no parameters.
+     */
     public RoleDAO(){
         setConnection(ConnectionPoolImpl.getInstance().getConnection());
     }
 
+    /**
+     * Constructor with connection.
+     *
+     * @param connection the connection
+     */
     public RoleDAO(Connection$Proxy connection){
         setConnection(connection);
     }
@@ -43,7 +70,7 @@ public class RoleDAO extends AbstractDAO<Role> implements ResultMapper<List<Role
         }else {
             query = SQL_CREATE_ROLE;
         }
-        if (getEntityByName(role.getName()).isPresent()){
+        if (getRoleByName(role.getName()).isPresent()){
             return false;
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -105,39 +132,50 @@ public class RoleDAO extends AbstractDAO<Role> implements ResultMapper<List<Role
             ResultSet  resultSet = preparedStatement.executeQuery();
             if (!resultSet.isBeforeFirst()) {
                 return Optional.empty();
+            } else {
+                List<Role> roles = getFromResult(resultSet);
+                return Optional.of(roles.get(0));
             }
-            List<Role> roles = convert(resultSet);
-            return Optional.of(roles.get(0));
         }catch (SQLException ex) {
             LOGGER.log(Level.FATAL, "Exception during role reading");
             throw new UncheckedDAOException("Exception during role reading", ex);
         }
     }
 
-    public Optional<Role> getEntityByName(String name) {
+    /**
+     * Gets role by name. Returns Optional of {@link Role}.
+     *
+     * @param name the name of role
+     * @return Optional of {@link Role}
+     * @throws UncheckedDAOException if SQLException was thrown
+     */
+    public Optional<Role> getRoleByName(String name) {
         LOGGER.log(Level.INFO, "Selecting role column by fields...");
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_ROLE_BY_NAME)) {
             preparedStatement.setString(1, name);
             ResultSet  resultSet = preparedStatement.executeQuery();
             if (!resultSet.isBeforeFirst()) {
                 return Optional.empty();
+            }else {
+                List<Role> roles = getFromResult(resultSet);
+                return Optional.of(roles.get(0));
             }
-            List<Role> roles = convert(resultSet);
-            return Optional.of(roles.get(0));
         }catch (SQLException ex) {
             LOGGER.log(Level.FATAL, "Exception during role reading");
             throw new UncheckedDAOException("Exception during role reading", ex);
         }
     }
 
+    @Override
     public List<Role> getAll() {
         LOGGER.log(Level.INFO, "Selecting all roles...");
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_ROLES)) {
             ResultSet  resultSet = preparedStatement.executeQuery();
             if (!resultSet.isBeforeFirst()) {
                 return null;
+            }else {
+                return getFromResult(resultSet);
             }
-            return convert(resultSet);
         }catch (SQLException ex) {
             LOGGER.log(Level.FATAL, "Exception during getting roles");
             throw new UncheckedDAOException("Exception during getting roles", ex);
@@ -145,7 +183,7 @@ public class RoleDAO extends AbstractDAO<Role> implements ResultMapper<List<Role
     }
 
     @Override
-    public List<Role> convert(ResultSet resultSet) throws SQLException {
+    public List<Role> getFromResult(ResultSet resultSet) throws SQLException {
         List<Role> roles = new ArrayList<>();
         String name;
         int role_id;

@@ -4,6 +4,7 @@ import by.chyrkun.training.dao.AbstractDAO;
 import by.chyrkun.training.dao.db.impl.Connection$Proxy;
 import by.chyrkun.training.dao.db.impl.ConnectionPoolImpl;
 import by.chyrkun.training.dao.exception.EntityNotFoundDAOException;
+import by.chyrkun.training.dao.exception.RoleNotFoundDAOException;
 import by.chyrkun.training.dao.exception.UncheckedDAOException;
 import by.chyrkun.training.model.Role;
 import by.chyrkun.training.model.User;
@@ -18,40 +19,71 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class UserDAO extends AbstractDAO<User> {
+/**
+ * Class for interacting with {@link User} table in database.
+ * Implements {@link ResultMapper}.
+ */
+public class UserDAO extends AbstractDAO<User> implements ResultMapper<List<User>> {
+    /** SQL query for creating user using all columns. */
     private final static String SQL_CREATE_USER_FULL =
             "INSERT INTO training_schema.users (user_id, login, password, firstname, secondname, role_id) VALUES (?,?,?,?,?,?)";
+
+    /** SQL query for creating user. */
     private final static String SQL_CREATE_USER =
             "INSERT INTO training_schema.users (login, password, firstname, secondname, role_id) VALUES (?,?,?,?,?)";
+
+    /** SQL query for updating user. */
     private final static String SQL_UPDATE_USER = "UPDATE training_schema.users SET " +
             "password = (?), firstname = (?), secondname = (?), role_id = (?)  WHERE login = (?)";
+
+    /** SQL query for deleting user. */
     private final static String SQL_DELETE_USER = "DELETE FROM training_schema.users WHERE user_id = (?)";
+
+    /** SQL query for getting user by id. */
     private final static String SQL_GET_USER_BY_ID = "SELECT user_id, login, firstname, secondname, role_id " +
             "FROM training_schema.users WHERE user_id = (?)";
+
+    /** SQL query for getting user by login. */
     private final static String SQL_GET_USER_BY_LOGIN = "SELECT user_id, login, password, firstname, secondname, role_id " +
             "FROM training_schema.users WHERE login = (?)";
+
+    /** SQL query for getting teachers. */
     private final static String SQL_GET_ALL_TEACHERS = "SELECT user_id, firstname, secondname" +
             " FROM training_schema.users " +
             "INNER JOIN training_schema.roles ON users.role_id = roles.role_id WHERE name = 'teacher'";
+
+    /** SQL query for getting users. */
+    private final static String SQL_GET_USERS = "SELECT user_id, firstname, secondname" +
+            " FROM training_schema.users ";
+
+    /** Field for logging. */
     private final static Logger LOGGER = LogManager.getLogger(RoleDAO.class);
 
+    /**
+     * Constructor with no parameters.
+     */
     public UserDAO() {
         setConnection(ConnectionPoolImpl.getInstance().getConnection());
     }
 
+    /**
+     * Constructor with connection.
+     *
+     * @param connection the connection
+     */
     public UserDAO(Connection$Proxy connection){
         setConnection(connection);
     }
 
     @Override
-    public boolean create(User user) throws EntityNotFoundDAOException {
+    public boolean create(User user) throws RoleNotFoundDAOException {
         LOGGER.log(Level.INFO, "Creating user column...");
-        if (getEntityByLogin(user.getLogin()).isPresent()) {
+        if (getUserByLogin(user.getLogin()).isPresent()) {
             return false;
         }
         AbstractDAO roleDAO = new RoleDAO(connection);
         if (roleDAO.getEntityById(user.getRole().getId()).isEmpty()) {
-            throw new EntityNotFoundDAOException("Cannot create user. Role not found");
+            throw new RoleNotFoundDAOException("Cannot create user. Role not found");
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_CREATE_USER)) {
             preparedStatement.setString(1, user.getLogin());
@@ -87,7 +119,7 @@ public class UserDAO extends AbstractDAO<User> {
     @Override
     public Optional<User> update(User user) {
         LOGGER.log(Level.INFO, "Updating user column...");
-        Optional<User> optionalUser = getEntityByLogin(user.getLogin());
+        Optional<User> optionalUser = getUserByLogin(user.getLogin());
         if (optionalUser.isPresent()) {
             try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_USER)) {
                 preparedStatement.setString(1, user.getPassword());
@@ -123,7 +155,29 @@ public class UserDAO extends AbstractDAO<User> {
         }
     }
 
-    public Optional<User> getEntityByLogin(String login) {
+    @Override
+    public List<User> getAll() {
+        LOGGER.log(Level.INFO, "Selecting all users...");
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_USERS)) {
+            ResultSet  resultSet = preparedStatement.executeQuery();
+            if (!resultSet.isBeforeFirst()) {
+                return null;
+            }
+            return getFromResult(resultSet);
+        }catch (SQLException ex) {
+            LOGGER.log(Level.FATAL, "Exception during getting users");
+            throw new UncheckedDAOException("Exception during getting users", ex);
+        }
+    }
+
+    /**
+     * Gets user by login. Returns Optional of {@link User}.
+     *
+     * @param login the login of user
+     * @return Optional of {@link User}
+     * @throws UncheckedDAOException if SQLException was thrown
+     */
+    public Optional<User> getUserByLogin(String login) {
         LOGGER.log(Level.INFO, "Selecting user column by name...");
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_USER_BY_LOGIN)) {
             preparedStatement.setString(1, login);
@@ -139,6 +193,12 @@ public class UserDAO extends AbstractDAO<User> {
         }
     }
 
+    /**
+     * Gets teachers. Returns list of teachers.
+     *
+     * @return list of teachers
+     * @throws UncheckedDAOException if SQLException was thrown
+     */
     public List<User> getTeachers() {
         LOGGER.log(Level.INFO, "Selecting all teachers...");
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_ALL_TEACHERS)) {
@@ -163,6 +223,15 @@ public class UserDAO extends AbstractDAO<User> {
         }
     }
 
+    /**
+     * Gets list of users from {@link ResultSet} object with or without password, depending on parameter.
+     * Returns list of users.
+     *
+     * @param resultSet the {@link ResultSet} object of executed SQL query
+     * @param hasPassword if {@code true} user will contain password, if {@code false} user will not contain password
+     * @return list of users
+     * @throws SQLException if SQLException is thrown in method
+     */
     private List<User> getList(ResultSet resultSet, boolean hasPassword) throws SQLException {
         List<User> users = new ArrayList<>();
         String login;
@@ -183,6 +252,28 @@ public class UserDAO extends AbstractDAO<User> {
             role_id = resultSet.getInt("role_id");
             AbstractDAO roleDAO = new RoleDAO(connection);
             Role role = (Role) roleDAO.getEntityById(role_id).get();
+            user = new User(user_id, login, password, firstname, secondname, role);
+            users.add(user);
+        }
+        return users;
+    }
+
+    @Override
+    public List<User> getFromResult(ResultSet resultSet) throws SQLException {
+        RoleDAO roleDAO = new RoleDAO(connection);
+        List<User> users = new ArrayList<>();
+        String login, password, firstname, secondname;
+        int role_id, user_id;
+        Role role;
+        User user;
+        while (resultSet.next()) {
+            user_id = resultSet.getInt("user_id");
+            login = resultSet.getString("login");
+            password = resultSet.getString("password");
+            firstname = resultSet.getString("firstname");
+            secondname = resultSet.getString("secondname");
+            role_id = resultSet.getInt("role_id");
+            role = roleDAO.getEntityById(role_id).get();
             user = new User(user_id, login, password, firstname, secondname, role);
             users.add(user);
         }

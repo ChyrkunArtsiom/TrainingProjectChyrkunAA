@@ -59,7 +59,7 @@ class CourseRegistrationDAOTest {
 
         User user = new User("Teacher", "Password","First name", "Second name", role);
         assertTrue(userDAO.create(user));
-        assertNotNull(user = userDAO.getEntityByLogin(user.getLogin()).orElse(null));
+        assertNotNull(user = userDAO.getUserByLogin(user.getLogin()).orElse(null));
 
         Course course = new Course("Course name", user);
         assertTrue(courseDAO.create(course));

@@ -13,13 +13,13 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class TaskRegistrationDAOTest {
+class ExerciseDAOTest {
     private static ConnectionPoolImpl connectionPool;
     private RoleDAO roleDAO;
     private UserDAO userDAO;
     private CourseDAO courseDAO;
     private TaskDAO taskDAO;
-    private TaskRegistrationDAO taskRegistrationDAO;
+    private ExerciseDAO exerciseDAO;
 
     @BeforeAll
     static void setUp() throws SQLException {
@@ -33,12 +33,12 @@ class TaskRegistrationDAOTest {
         userDAO = new UserDAO();
         courseDAO = new CourseDAO();
         taskDAO = new TaskDAO();
-        taskRegistrationDAO = new TaskRegistrationDAO();
+        exerciseDAO = new ExerciseDAO();
     }
 
     @AfterEach
     void close() {
-        taskRegistrationDAO.close();
+        exerciseDAO.close();
         taskDAO.close();
         courseDAO.close();
         userDAO.close();
@@ -57,7 +57,7 @@ class TaskRegistrationDAOTest {
 
         User user = new User("Teacher", "Password","First name", "Second name", role);
         assertTrue(userDAO.create(user));
-        assertNotNull(user = userDAO.getEntityByLogin(user.getLogin()).orElse(null));
+        assertNotNull(user = userDAO.getUserByLogin(user.getLogin()).orElse(null));
 
         Course course = new Course("Course name", user);
         assertTrue(courseDAO.create(course));
@@ -67,11 +67,11 @@ class TaskRegistrationDAOTest {
         assertTrue(taskDAO.create(task));
         assertNotNull(task = taskDAO.getAll().get(0));
 
-        TaskRegistration taskRegistration = new TaskRegistration(task, user, 7, "Review test");
-        assertTrue(taskRegistrationDAO.create(taskRegistration));
-        assertNotNull(taskRegistration = taskRegistrationDAO.getAll().get(0));
+        Exercise exercise = new Exercise(task, user, 7, "Review test");
+        assertTrue(exerciseDAO.create(exercise));
+        assertNotNull(exercise = exerciseDAO.getAll().get(0));
 
-        assertTrue(taskRegistrationDAO.delete(taskRegistration));
+        assertTrue(exerciseDAO.delete(exercise));
         assertTrue(taskDAO.delete(task));
         assertTrue(courseDAO.delete(course));
         assertTrue(userDAO.delete(user));

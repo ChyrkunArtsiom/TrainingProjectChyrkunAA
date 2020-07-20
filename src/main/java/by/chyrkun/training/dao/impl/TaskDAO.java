@@ -17,24 +17,49 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Class for interacting with {@link Task} table in database.
+ * Implements {@link StatementSetter}, {@link ResultMapper}.
+ */
 public class TaskDAO extends AbstractDAO<Task> implements StatementSetter<Task>, ResultMapper<Task>{
+    /** SQL query for creating task. */
     private final static String SQL_CREATE_TASK =
             "INSERT INTO training_schema.tasks (name, course_id, startdate, deadline) VALUES (?,?,?,?)";
+
+    /** SQL query for updating task. */
     private final static String SQL_UPDATE_TASK = "UPDATE training_schema.tasks SET " +
             "name = (?), course_id = (?), startdate = (?), deadline = (?) WHERE task_id = (?)";
+
+    /** SQL query for deleting task. */
     private final static String SQL_DELETE_TASK = "DELETE FROM training_schema.tasks WHERE task_id = (?)";
+
+    /** SQL query for getting task. */
     private final static String SQL_GET_TASK = "SELECT task_id, name, course_id, startdate, deadline " +
             "FROM training_schema.tasks WHERE task_id = (?)";
+
+    /** SQL query for getting tasks. */
     private final static String SQL_GET_TASKS = "SELECT task_id, name, course_id, startdate, deadline " +
             "FROM training_schema.tasks";
+
+    /** SQL query for getting tasks by the course. */
     private final static String SQL_GET_TASKS_BY_COURSE = "SELECT task_id, name, course_id, startdate, deadline " +
             "FROM training_schema.tasks WHERE course_id = (?) ORDER BY name";
+
+    /** Field for logging. */
     private final static Logger LOGGER = LogManager.getLogger(RoleDAO.class);
 
+    /**
+     * Constructor with no parameters.
+     */
     public TaskDAO(){
         setConnection(ConnectionPoolImpl.getInstance().getConnection());
     }
 
+    /**
+     * Constructor with connection.
+     *
+     * @param connection the connection
+     */
     public TaskDAO(Connection$Proxy connection){
         setConnection(connection);
     }
@@ -47,7 +72,7 @@ public class TaskDAO extends AbstractDAO<Task> implements StatementSetter<Task>,
             throw new EntityNotFoundDAOException("Cannot create task. Course not found");
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_CREATE_TASK)) {
-            set(preparedStatement, task);
+            setValuesToStatement(preparedStatement, task);
             if (preparedStatement.executeUpdate() > 0) {
                 return true;
             }
@@ -79,7 +104,7 @@ public class TaskDAO extends AbstractDAO<Task> implements StatementSetter<Task>,
         Optional<Task> optional = getEntityById(task.getId());
         if (optional.isPresent()) {
             try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_TASK)) {
-                set(preparedStatement, task);
+                setValuesToStatement(preparedStatement, task);
                 if (preparedStatement.executeUpdate() > 0) {
                     return optional;
                 }
@@ -102,7 +127,7 @@ public class TaskDAO extends AbstractDAO<Task> implements StatementSetter<Task>,
                 return Optional.empty();
             }
             while (resultSet.next()) {
-                task = convert(resultSet);
+                task = getFromResult(resultSet);
             }
             return Optional.of(task);
         }catch (SQLException ex) {
@@ -111,7 +136,7 @@ public class TaskDAO extends AbstractDAO<Task> implements StatementSetter<Task>,
         }
     }
 
-
+    @Override
     public List<Task> getAll() {
         LOGGER.log(Level.INFO, "Selecting all tasks...");
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_TASKS)) {
@@ -129,6 +154,13 @@ public class TaskDAO extends AbstractDAO<Task> implements StatementSetter<Task>,
         }
     }
 
+    /**
+     * Gets courses by the teacher. Returns list of tasks.
+     *
+     * @param teacher_id the teacher id
+     * @return list of tasks
+     * @throws UncheckedDAOException if SQLException was thrown
+     */
     public List<Task> getByCourse(int teacher_id) {
         LOGGER.log(Level.INFO, "Selecting all tasks by course...");
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_TASKS_BY_COURSE)) {
@@ -148,7 +180,7 @@ public class TaskDAO extends AbstractDAO<Task> implements StatementSetter<Task>,
     }
 
     @Override
-    public void set(PreparedStatement preparedStatement, Task task) throws SQLException{
+    public void setValuesToStatement(PreparedStatement preparedStatement, Task task) throws SQLException{
         preparedStatement.setString(1, task.getName());
         preparedStatement.setInt(2, task.getCourse().getId());
         preparedStatement.setDate(3, Date.valueOf(task.getStartdate()));
@@ -163,18 +195,25 @@ public class TaskDAO extends AbstractDAO<Task> implements StatementSetter<Task>,
         }
     }
 
+    /**
+     * Gets list of tasks from {@link ResultSet} object. Returns list of tasks.
+     *
+     * @param resultSet {@link ResultSet} object
+     * @return list of tasks
+     * @throws SQLException if SQLException is thrown in method
+     */
     public List<Task> convertToList(ResultSet resultSet) throws SQLException {
         List<Task> tasks = new ArrayList<>();
         Task task;
         while (resultSet.next()) {
-            task = convert(resultSet);
+            task = getFromResult(resultSet);
             tasks.add(task);
         }
         return tasks;
     }
 
     @Override
-    public Task convert(ResultSet resultSet) throws SQLException {
+    public Task getFromResult(ResultSet resultSet) throws SQLException {
         String name;
         int task_id, course_id;
         Task task;

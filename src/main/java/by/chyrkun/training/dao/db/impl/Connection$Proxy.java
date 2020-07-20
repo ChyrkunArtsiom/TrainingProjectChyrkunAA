@@ -10,19 +10,37 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
+/** Wrapper class for Connection class. */
 public class Connection$Proxy implements Connection {
+    /** The connection. */
     private Connection connection;
+
+    /** Field of logging. */
     private final static Logger LOGGER = LogManager.getLogger(Connection$Proxy.class);
 
+    /**
+     * Class constructor.
+     *
+     * @param connection the connection
+     */
     Connection$Proxy(Connection connection){
         this.connection = connection;
     }
 
+    /**
+     * Calls {@link ConnectionPoolImpl#releaseConnection(Connection$Proxy)} instead of {@link Connection#close()}
+     * to prevent closing connections by using Connection class method.
+     */
     @Override
     public void close() {
         ConnectionPoolImpl.getInstance().releaseConnection(this);
     }
 
+    /**
+     * Closes connection.
+     * @throws UncheckedDAOException if SQLException is thrown
+     * @see Connection#close()
+     */
     void connectionClose() {
         try{
             connection.close();

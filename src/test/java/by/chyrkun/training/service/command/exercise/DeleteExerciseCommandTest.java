@@ -1,4 +1,4 @@
-package by.chyrkun.training.service.command.task_registration;
+package by.chyrkun.training.service.command.exercise;
 
 import by.chyrkun.training.controller.CommandResult;
 import by.chyrkun.training.controller.RequestContent;
@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 @RunWith(JUnitPlatform.class)
-class DeleteTaskRegistrationCommandTest {
+class DeleteExerciseCommandTest {
     private RequestContent requestContent;
 
     @Mock

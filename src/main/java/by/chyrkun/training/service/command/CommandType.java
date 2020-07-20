@@ -6,10 +6,10 @@ import by.chyrkun.training.service.command.role.GetRolesCommand;
 import by.chyrkun.training.service.command.task.CreateTaskCommand;
 import by.chyrkun.training.service.command.task.DeleteTaskCommand;
 import by.chyrkun.training.service.command.task.GetTaskCommand;
-import by.chyrkun.training.service.command.task_registration.DeleteTaskRegistrationCommand;
-import by.chyrkun.training.service.command.task_registration.GetTaskRegistrationCommand;
-import by.chyrkun.training.service.command.task_registration.RegisterTaskCommand;
-import by.chyrkun.training.service.command.task_registration.UpdateTaskRegistrationCommand;
+import by.chyrkun.training.service.command.exercise.DeleteTaskRegistrationCommand;
+import by.chyrkun.training.service.command.exercise.GetTaskRegistrationCommand;
+import by.chyrkun.training.service.command.exercise.RegisterTaskCommand;
+import by.chyrkun.training.service.command.exercise.UpdateTaskRegistrationCommand;
 import by.chyrkun.training.service.command.user.*;
 
 public enum CommandType {

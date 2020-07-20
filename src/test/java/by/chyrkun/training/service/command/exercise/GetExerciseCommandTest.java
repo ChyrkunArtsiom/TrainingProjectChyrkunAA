@@ -1,4 +1,4 @@
-package by.chyrkun.training.service.command.task_registration;
+package by.chyrkun.training.service.command.exercise;
 
 import by.chyrkun.training.controller.RequestContent;
 import by.chyrkun.training.model.*;
@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 @RunWith(JUnitPlatform.class)
-class GetTaskRegistrationCommandTest {
+class GetExerciseCommandTest {
     private RequestContent requestContent;
 
     @Mock
@@ -46,7 +46,7 @@ class GetTaskRegistrationCommandTest {
                 "Firstname", "Surname", role2);
         Course course = new Course("Course", teacher);
         Task task = new Task(1, "Task", LocalDate.now(), LocalDate.now().plusDays(1), course);
-        TaskRegistration registration = new TaskRegistration(task, student);
+        Exercise registration = new Exercise(task, student);
         Mockito.lenient().when(receiver.getById(Mockito.anyInt())).thenReturn(registration);
         command.execute(requestContent);
         assertEquals(registration, requestContent.getRequestAttributes().get("exercise"));

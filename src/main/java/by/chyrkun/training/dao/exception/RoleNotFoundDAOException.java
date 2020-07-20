@@ -1,13 +1,13 @@
 package by.chyrkun.training.dao.exception;
 
 /**
- * Thrown to indicate that object of {@link by.chyrkun.training.model.User} was not found in database.
+ * Thrown to indicate that object of {@link by.chyrkun.training.model.Role} was not found in database.
  */
-public class UserNotFoundDAOException extends EntityNotFoundDAOException {
+public class RoleNotFoundDAOException extends EntityNotFoundDAOException {
     /**
      * Constructs a new exception.
      */
-    public UserNotFoundDAOException(){
+    public RoleNotFoundDAOException(){
         super();
     }
 
@@ -16,7 +16,7 @@ public class UserNotFoundDAOException extends EntityNotFoundDAOException {
      *
      * @param message the message
      */
-    public UserNotFoundDAOException(String message){
+    public RoleNotFoundDAOException(String message){
         super(message);
     }
 
@@ -27,7 +27,7 @@ public class UserNotFoundDAOException extends EntityNotFoundDAOException {
      * @param message the message
      * @param cause   the cause
      */
-    public UserNotFoundDAOException(String message, Throwable cause){
+    public RoleNotFoundDAOException(String message, Throwable cause){
         super(message, cause);
     }
 }

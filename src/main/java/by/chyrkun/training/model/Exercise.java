@@ -2,14 +2,14 @@ package by.chyrkun.training.model;
 
 import java.util.Objects;
 
-public class TaskRegistration extends Entity {
+public class Exercise extends Entity {
     private int id;
     private Task task;
     private User student;
     private int grade;
     private String review;
 
-    public TaskRegistration(int id, Task task, User student, int grade, String review) {
+    public Exercise(int id, Task task, User student, int grade, String review) {
         setId(id);
         setTask(task);
         setStudent(student);
@@ -17,24 +17,24 @@ public class TaskRegistration extends Entity {
         setReview(review);
     }
 
-    public TaskRegistration(Task task, User student, int grade, String review) {
+    public Exercise(Task task, User student, int grade, String review) {
         setTask(task);
         setStudent(student);
         setGrade(grade);
         setReview(review);
     }
 
-    public TaskRegistration(Task task, User student) {
+    public Exercise(Task task, User student) {
         setTask(task);
         setStudent(student);
     }
 
-    public TaskRegistration(TaskRegistration taskRegistration) {
-        setId(taskRegistration.getId());
-        setTask(taskRegistration.getTask());
-        setStudent(taskRegistration.getStudent());
-        setGrade(taskRegistration.getGrade());
-        setReview(taskRegistration.getReview());
+    public Exercise(Exercise exercise) {
+        setId(exercise.getId());
+        setTask(exercise.getTask());
+        setStudent(exercise.getStudent());
+        setGrade(exercise.getGrade());
+        setReview(exercise.getReview());
     }
 
     public int getId() {
@@ -90,7 +90,7 @@ public class TaskRegistration extends Entity {
         if (obj == null || getClass() != obj.getClass()){
             return false;
         }
-        TaskRegistration that = (TaskRegistration) obj;
+        Exercise that = (Exercise) obj;
         return id == that.id &&
                 task.equals(that.task) &&
                 student.equals(that.student) &&

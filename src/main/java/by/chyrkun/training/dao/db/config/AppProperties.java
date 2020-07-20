@@ -2,8 +2,14 @@ package by.chyrkun.training.dao.db.config;
 
 import java.util.ResourceBundle;
 
+/**
+ * Enumeration for holding database properties
+ */
 public enum AppProperties {
 
+    /**
+     * Database properties instance.
+     */
     DB_PROPERTIES;
 
     private String url;
@@ -12,6 +18,9 @@ public enum AppProperties {
     private int initialPoolSize = 10;
     private final ResourceBundle resourceBundle;
 
+    /**
+     * Constructor for enumeration. Takes properties from bundle.
+     */
     AppProperties() {
         resourceBundle = ResourceBundle.getBundle("application");
         url = resourceBundle.getString("dbUrl");

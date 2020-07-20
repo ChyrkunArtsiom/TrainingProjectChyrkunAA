@@ -1,4 +1,4 @@
-package by.chyrkun.training.service.command.task_registration;
+package by.chyrkun.training.service.command.exercise;
 
 import by.chyrkun.training.controller.CommandResult;
 import by.chyrkun.training.controller.RequestContent;

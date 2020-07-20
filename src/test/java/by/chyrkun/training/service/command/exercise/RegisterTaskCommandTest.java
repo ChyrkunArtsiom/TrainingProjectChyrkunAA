@@ -1,4 +1,4 @@
-package by.chyrkun.training.service.command.task_registration;
+package by.chyrkun.training.service.command.exercise;
 
 import by.chyrkun.training.controller.CommandResult;
 import by.chyrkun.training.controller.RequestContent;
@@ -56,7 +56,7 @@ class RegisterTaskCommandTest {
         Task task = new Task(1, "Task", LocalDate.now(), LocalDate.now().plusDays(1), course);
         Mockito.lenient().when(userReceiver.getById(Mockito.anyInt())).thenReturn(student);
         Mockito.lenient().when(taskReceiver.getById(Mockito.anyInt())).thenReturn(task);
-        Mockito.lenient().when(taskRegistrationReceiver.create(Mockito.any(TaskRegistration.class))).thenReturn(true);
+        Mockito.lenient().when(taskRegistrationReceiver.create(Mockito.any(Exercise.class))).thenReturn(true);
         CommandResult result = command.execute(requestContent);
         assertEquals(PageManager.getProperty("shortpath.page.task") + "/" + task.getId(), result.getPage());
         assertEquals(CommandResult.ResponseType.REDIRECT, result.getResponseType());

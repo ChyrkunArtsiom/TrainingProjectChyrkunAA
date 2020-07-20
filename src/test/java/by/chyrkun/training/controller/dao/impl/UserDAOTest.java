@@ -47,11 +47,11 @@ class UserDAOTest {
     void testUserDAO() throws EntityNotFoundDAOException {
         role = new Role("test_role");
         assertTrue(roleDAO.create(role));
-        role = roleDAO.getEntityByName(role.getName()).orElseThrow(EntityNotFoundDAOException::new);
+        role = roleDAO.getRoleByName(role.getName()).orElseThrow(EntityNotFoundDAOException::new);
 
         User user = new User("logintest", "passwordtest", "firstname", "secondname", role);
         assertTrue(userDAO.create(user));
-        assertNotNull(user = userDAO.getEntityByLogin(user.getLogin()).orElse(null));
+        assertNotNull(user = userDAO.getUserByLogin(user.getLogin()).orElse(null));
 
         assertTrue(userDAO.delete(user));
         assertTrue(roleDAO.delete(role));

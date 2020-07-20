@@ -3,8 +3,8 @@ package by.chyrkun.training.dao.impl;
 import by.chyrkun.training.dao.AbstractDAO;
 import by.chyrkun.training.dao.db.impl.Connection$Proxy;
 import by.chyrkun.training.dao.db.impl.ConnectionPoolImpl;
-import by.chyrkun.training.dao.exception.EntityNotFoundDAOException;
 import by.chyrkun.training.dao.exception.UncheckedDAOException;
+import by.chyrkun.training.dao.exception.UserNotFoundDAOException;
 import by.chyrkun.training.model.Course;
 import by.chyrkun.training.model.User;
 import org.apache.logging.log4j.Level;
@@ -18,58 +18,95 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Class for interacting with {@link Course} table in database. Implements {@link ResultMapper}.
+ */
 public class CourseDAO extends AbstractDAO<Course> implements ResultMapper<List<Course>> {
+    /** SQL query for creating course. */
     private final static String SQL_CREATE_COURSE =
             "INSERT INTO training_schema.courses (name, teacher_id) VALUES (?,?)";
+
+    /** SQL query for updating course. */
     private final static String SQL_UPDATE_COURSE = "UPDATE training_schema.courses SET " +
             "name = (?), teacher_id = (?) WHERE course_id = (?)";
+
+    /** SQL query for deleting course. */
     private final static String SQL_DELETE_COURSE = "DELETE FROM training_schema.courses WHERE course_id = (?)";
+
+    /** SQL query for getting course. */
     private final static String SQL_GET_COURSE = "SELECT course_id, name, teacher_id " +
             "FROM training_schema.courses WHERE course_id = (?)";
+
+    /** SQL query for getting courses. */
     private final static String SQL_GET_COURSES = "SELECT course_id, name, teacher_id " +
             "FROM training_schema.courses";
+
+    /** SQL query for getting courses for teacher on one page. */
     private final static String SQL_GET_COURSES_BY_TEACHER_PAGE = "SELECT course_id, name, teacher_id " +
             "FROM training_schema.courses WHERE teacher_id = (?) ORDER BY course_id OFFSET (?) LIMIT (?)";
+
+    /** SQL query for getting courses for the teacher. */
     private final static String SQL_GET_COURSES_BY_TEACHER = "SELECT course_id, name, teacher_id " +
             "FROM training_schema.courses WHERE teacher_id = (?) ORDER BY course_id";
+
+    /** SQL query for getting count of courses for the teacher. */
     private final static String SQL_GET_COUNT_BY_TEACHER = "SELECT COUNT(*) FROM training_schema.courses " +
             "WHERE teacher_id = (?)";
+
+    /** SQL query for getting not chosen by the student courses. */
     private final static String SQL_GET_UNCHOSEN_COURSES = "SELECT course_id, name, teacher_id " +
             "FROM training_schema.courses " +
             "WHERE course_id NOT IN (SELECT course_registration.course_id " +
             "FROM training_schema.courses INNER JOIN training_schema.course_registration " +
             "ON courses.course_id = course_registration.course_id WHERE student_id = (?)) " +
             "ORDER BY course_id OFFSET (?) LIMIT (?)";
+
+    /** SQL query for getting chosen by the student courses. */
     private final static String SQL_GET_CHOSEN_COURSES = "SELECT courses.course_id, name, teacher_id " +
             "FROM training_schema.courses LEFT JOIN training_schema.course_registration " +
             "ON courses.course_id = course_registration.course_id WHERE student_id = (?)" +
             "ORDER BY course_id OFFSET (?) LIMIT (?)";
+
+    /** SQL query for counting not chosen by the student courses. */
     private final static String SQL_GET_COUNT_UNCHOSEN_COURSES = "SELECT COUNT(*) " +
             "FROM training_schema.courses " +
             "WHERE course_id NOT IN (SELECT course_registration.course_id " +
             "FROM training_schema.courses INNER JOIN training_schema.course_registration " +
             "ON courses.course_id = course_registration.course_id WHERE student_id = (?))";
+
+    /** SQL query for counting chosen by the student courses. */
     private final static String SQL_GET_COUNT_CHOSEN_COURSES = "SELECT COUNT(*) " +
             "FROM training_schema.courses LEFT JOIN training_schema.course_registration " +
             "ON courses.course_id = course_registration.course_id WHERE student_id = (?)";
 
+    /** Field for logging. */
     private final static Logger LOGGER = LogManager.getLogger(RoleDAO.class);
+
+    /** Rows to show in table on one page. */
     private final static int ROWS_PER_PAGE = 3;
 
+    /**
+     * Constructor with no parameters.
+     */
     public CourseDAO(){
         setConnection(ConnectionPoolImpl.getInstance().getConnection());
     }
 
+    /**
+     * Constructor with connection.
+     *
+     * @param connection the connection
+     */
     public CourseDAO(Connection$Proxy connection){
         setConnection(connection);
     }
 
     @Override
-    public boolean create(Course course) throws EntityNotFoundDAOException {
+    public boolean create(Course course) throws UserNotFoundDAOException {
         LOGGER.log(Level.INFO, "Creating course column...");
         AbstractDAO userDAO = new UserDAO(connection);
         if (userDAO.getEntityById(course.getTeacher().getId()).isEmpty()) {
-            throw new EntityNotFoundDAOException("Cannot create course. User not found");
+            throw new UserNotFoundDAOException("Cannot create course. User not found");
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_CREATE_COURSE)) {
             preparedStatement.setString(1, course.getName());
@@ -145,6 +182,14 @@ public class CourseDAO extends AbstractDAO<Course> implements ResultMapper<List<
         }
     }
 
+    /**
+     * Gets list of courses for teacher depending on page number. Returns ArrayList of courses.
+     *
+     * @param teacher_id the teacher id
+     * @param page       the page number
+     * @return ArrayList of courses for teacher
+     * @throws UncheckedDAOException if SQLException was thrown
+     */
     public List<Course> getByTeacher(int teacher_id, int page) {
         LOGGER.log(Level.INFO, "Selecting courses by teacher on page...");
         List<Course> courses = new ArrayList<>();
@@ -157,7 +202,7 @@ public class CourseDAO extends AbstractDAO<Course> implements ResultMapper<List<
             query = SQL_GET_COURSES_BY_TEACHER_PAGE;
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            set(preparedStatement, teacher_id, page);
+            setValues(preparedStatement, teacher_id, page);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (!resultSet.isBeforeFirst()) {
                 return null;
@@ -176,6 +221,13 @@ public class CourseDAO extends AbstractDAO<Course> implements ResultMapper<List<
         }
     }
 
+    /**
+     * Gets count of courses for teacher.
+     *
+     * @param teacher_id the teacher id
+     * @return the count of courses for teacher
+     * @throws UncheckedDAOException if SQLException was thrown
+     */
     public int getCountByTeacher(int teacher_id) {
         LOGGER.log(Level.INFO, "Counting courses by teacher...");
         try {
@@ -186,6 +238,14 @@ public class CourseDAO extends AbstractDAO<Course> implements ResultMapper<List<
         }
     }
 
+    /**
+     * Gets count of courses for student.
+     *
+     * @param student_id the student id
+     * @param chosen     {@code true} if chosen by student, {@code false} if not chosen by student
+     * @return the count of courses for student
+     * @throws UncheckedDAOException if SQLException was thrown
+     */
     public int getCountByStudent(int student_id, boolean chosen) {
         LOGGER.log(Level.INFO, "Counting chosen courses by student...");
         String query;
@@ -202,6 +262,15 @@ public class CourseDAO extends AbstractDAO<Course> implements ResultMapper<List<
         }
     }
 
+    /**
+     * Gets list of courses for student depending on page number. Returns ArrayList of courses.
+     *
+     * @param student_id the student id
+     * @param chosen     {@code true} if chosen by student, {@code false} if not chosen by student
+     * @param page       the page number
+     * @return ArrayList of courses for student
+     * @throws UncheckedDAOException if SQLException was thrown
+     */
     public List<Course> getCoursesByStudent(int student_id, boolean chosen, int page) {
         LOGGER.log(Level.INFO, "Selecting courses for student...");
         List<Course> courses = new ArrayList<>();
@@ -213,7 +282,7 @@ public class CourseDAO extends AbstractDAO<Course> implements ResultMapper<List<
             query = SQL_GET_UNCHOSEN_COURSES;
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            set(preparedStatement, student_id, page);
+            setValues(preparedStatement, student_id, page);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (!resultSet.isBeforeFirst()) {
                 return null;
@@ -235,6 +304,7 @@ public class CourseDAO extends AbstractDAO<Course> implements ResultMapper<List<
         }
     }
 
+    @Override
     public List<Course> getAll() {
         LOGGER.log(Level.INFO, "Selecting all courses...");
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_COURSES)) {
@@ -242,13 +312,21 @@ public class CourseDAO extends AbstractDAO<Course> implements ResultMapper<List<
             if (!resultSet.isBeforeFirst()) {
                 return null;
             }
-            return convert(resultSet);
+            return getFromResult(resultSet);
         }catch (SQLException ex) {
             LOGGER.log(Level.FATAL, "Exception during getting courses");
             throw new UncheckedDAOException("Exception during getting courses", ex);
         }
     }
 
+    /**
+     * Gets count of courses for user depending on type of query.
+     *
+     * @param id the user id
+     * @param query type of query
+     * @return count of courses
+     * @throws SQLException if SQLException is thrown in method
+     */
     private int getCountUsingQuery(int id, String query) throws SQLException{
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setInt(1, id);
@@ -263,7 +341,7 @@ public class CourseDAO extends AbstractDAO<Course> implements ResultMapper<List<
     }
 
     @Override
-    public List<Course> convert(ResultSet resultSet) throws SQLException {
+    public List<Course> getFromResult(ResultSet resultSet) throws SQLException {
         UserDAO userDAO = new UserDAO(connection);
         List<Course> courses = new ArrayList<>();
         int course_id, teacher_id;
@@ -280,7 +358,15 @@ public class CourseDAO extends AbstractDAO<Course> implements ResultMapper<List<
         return courses;
     }
 
-    private void set(PreparedStatement preparedStatement, int id, int page) throws SQLException {
+    /**
+     * Sets values in {@link PreparedStatement} object
+     *
+     * @param preparedStatement the {@link PreparedStatement} object
+     * @param id the user id
+     * @param page the page number
+     * @throws SQLException if SQLException is thrown in method
+     */
+    private void setValues(PreparedStatement preparedStatement, int id, int page) throws SQLException {
         preparedStatement.setInt(1, id);
         if (page != 0) {
             preparedStatement.setInt(2, (page - 1) * ROWS_PER_PAGE);

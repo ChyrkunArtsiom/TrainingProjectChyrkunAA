@@ -1,9 +1,9 @@
-package by.chyrkun.training.service.command.task_registration;
+package by.chyrkun.training.service.command.exercise;
 
 import by.chyrkun.training.controller.CommandResult;
 import by.chyrkun.training.controller.RequestContent;
 import by.chyrkun.training.model.Task;
-import by.chyrkun.training.model.TaskRegistration;
+import by.chyrkun.training.model.Exercise;
 import by.chyrkun.training.model.User;
 import by.chyrkun.training.service.command.Command;
 import by.chyrkun.training.service.exception.TaskNotFoundServiceException;
@@ -42,11 +42,11 @@ public class RegisterTaskCommand implements Command {
             requestContent.setSessionAttribute(MESSAGE, messages.getMessage("taskNotFound"));
         }
         else {
-            TaskRegistration taskRegistration = new TaskRegistration(task, student);
+            Exercise exercise = new Exercise(task, student);
             try {
-                taskRegistrationReceiver.create(taskRegistration);
+                taskRegistrationReceiver.create(exercise);
                 /*
-                if (taskRegistrationReceiver.create(taskRegistration)) {
+                if (taskRegistrationReceiver.create(exercise)) {
                     requestContent.setSessionAttribute(MESSAGE, messages.getMessage("taskRegistrationWasCreated"));
                 }*/
             }catch (UserNotFoundServiceException ex) {

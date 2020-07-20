@@ -20,33 +20,59 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Class for interacting with {@link CourseRegistration} table in database.
+ * Implements {@link StatementSetter}, {@link ResultMapper}.
+ */
 public class CourseRegistrationDAO extends AbstractDAO<CourseRegistration>
         implements StatementSetter<CourseRegistration>, ResultMapper<List<CourseRegistration>>{
+    /** SQL query for creating course registration. */
     private final static String SQL_CREATE_COURSE_REGISTRATION =
             "INSERT INTO training_schema.course_registration (student_id, course_id) VALUES (?,?)";
+
+    /** SQL query for updating course registration. */
     private final static String SQL_UPDATE_COURSE_REGISTRATION = "UPDATE training_schema.course_registration SET " +
             "student_id = (?), course_id = (?) WHERE course_registration_id = (?)";
+
+    /** SQL query for deleting course registration. */
     private final static String SQL_DELETE_COURSE_REGISTRATION =
             "DELETE FROM training_schema.course_registration WHERE course_registration_id = (?)";
+
+    /** SQL query for getting course registration. */
     private final static String SQL_GET_COURSE_REGISTRATION =
             "SELECT student_id, course_id, course_registration_id " +
                     "FROM training_schema.course_registration WHERE course_registration_id = (?)";
+
+    /** SQL query for getting course registrations. */
     private final static String SQL_GET_COURSE_REGISTRATIONS =
             "SELECT student_id, course_id, course_registration_id FROM training_schema.course_registration";
+
+    /** SQL query for getting course registrations for the student by the course. */
     private final static String SQL_GET_COURSE_REGISTRATION_BY_COURSE_STUDENT = "SELECT course_registration_id " +
             "FROM training_schema.course_registration WHERE course_id = (?) AND student_id = (?)";
+
+    /** Field for logging. */
     private final static Logger LOGGER = LogManager.getLogger(RoleDAO.class);
 
+    /**
+     * Constructor with no parameters.
+     */
     public CourseRegistrationDAO(){
         setConnection(ConnectionPoolImpl.getInstance().getConnection());
     }
 
+    /**
+     * Constructor with connection.
+     *
+     * @param connection the connection
+     */
     public CourseRegistrationDAO(Connection$Proxy connection){
         setConnection(connection);
     }
 
     @Override
-    public boolean create(CourseRegistration courseRegistration) throws CourseNotFoundDAOException, UserNotFoundDAOException {
+    public boolean create(CourseRegistration courseRegistration)
+            throws CourseNotFoundDAOException, UserNotFoundDAOException {
         LOGGER.log(Level.INFO, "Creating course_registration column...");
         AbstractDAO userDAO = new UserDAO(connection);
         AbstractDAO courseDAO = new CourseDAO(connection);
@@ -90,7 +116,7 @@ public class CourseRegistrationDAO extends AbstractDAO<CourseRegistration>
         Optional<CourseRegistration> optionalCourseRegistration = getEntityById(courseRegistration.getId());
         if (optionalCourseRegistration.isPresent()) {
             try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_COURSE_REGISTRATION)) {
-                set(preparedStatement, courseRegistration);
+                setValuesToStatement(preparedStatement, courseRegistration);
                 if (preparedStatement.executeUpdate() > 0) {
                     return optionalCourseRegistration;
                 }
@@ -130,6 +156,15 @@ public class CourseRegistrationDAO extends AbstractDAO<CourseRegistration>
         }
     }
 
+    /**
+     * Checks if student is registered for this course.
+     * Returns {@code true} if student is registered.
+     *
+     * @param course_id the course id
+     * @param student_id the student id
+     * @return {@code true} if student is registered to the course
+     * @throws UncheckedDAOException if SQLException was thrown
+     */
     public boolean isCourseRegistered(int course_id, int student_id){
         LOGGER.log(Level.INFO, "Checking course_registration column by course, student...");
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_COURSE_REGISTRATION_BY_COURSE_STUDENT)) {
@@ -143,6 +178,7 @@ public class CourseRegistrationDAO extends AbstractDAO<CourseRegistration>
         }
     }
 
+    @Override
     public List<CourseRegistration> getAll() {
         LOGGER.log(Level.INFO, "Selecting all course registrations...");
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_COURSE_REGISTRATIONS)) {
@@ -151,7 +187,7 @@ public class CourseRegistrationDAO extends AbstractDAO<CourseRegistration>
                 return null;
             }else {
                 List<CourseRegistration> courseRegistrations;
-                courseRegistrations = convert(resultSet);
+                courseRegistrations = getFromResult(resultSet);
                 return courseRegistrations;
             }
         }catch (SQLException ex) {
@@ -161,7 +197,7 @@ public class CourseRegistrationDAO extends AbstractDAO<CourseRegistration>
     }
 
     @Override
-    public void set(PreparedStatement preparedStatement, CourseRegistration courseRegistration) throws SQLException {
+    public void setValuesToStatement(PreparedStatement preparedStatement, CourseRegistration courseRegistration) throws SQLException {
         preparedStatement.setInt(1, courseRegistration.getStudent().getId());
         preparedStatement.setInt(2, courseRegistration.getCourse().getId());
         if (courseRegistration.getId() != 0){
@@ -170,7 +206,7 @@ public class CourseRegistrationDAO extends AbstractDAO<CourseRegistration>
     }
 
     @Override
-    public List<CourseRegistration> convert(ResultSet resultSet) throws SQLException {
+    public List<CourseRegistration> getFromResult(ResultSet resultSet) throws SQLException {
         List<CourseRegistration> courseRegistrations = new ArrayList<>();
         int student_id, course_id, course_registration_id;
         while (resultSet.next()) {

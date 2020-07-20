@@ -36,7 +36,7 @@ public class UserReceiver {
     public boolean delete(String login) {
         UserDAO userDAO = new UserDAO();
         try {
-            Optional<User> user = userDAO.getEntityByLogin(login);
+            Optional<User> user = userDAO.getUserByLogin(login);
             return user.map(userDAO::delete).orElse(false);
         }finally {
             userDAO.close();
@@ -58,7 +58,7 @@ public class UserReceiver {
         Optional<User> user;
         UserDAO userDAO = new UserDAO();
         try {
-            user = userDAO.getEntityByLogin(login);
+            user = userDAO.getUserByLogin(login);
             return user.orElse(null);
         }finally {
             userDAO.close();
