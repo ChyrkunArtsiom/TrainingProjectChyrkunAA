@@ -25,7 +25,7 @@ public class DeleteTaskRegistrationCommand implements Command {
         if (!receiver.delete(Integer.parseInt(exercise_id))) {
             requestContent.setSessionAttribute(MESSAGE, messages.getMessage("taskIsNotRegistered"));
         }
-        result.setPage(PageManager.getProperty("shortpath.page.task") + "/" + task_id);
+        result.setPage(PageManager.getPage("shortpath.page.task") + "/" + task_id);
         result.setResponseType(CommandResult.ResponseType.REDIRECT);
         return result;
     }

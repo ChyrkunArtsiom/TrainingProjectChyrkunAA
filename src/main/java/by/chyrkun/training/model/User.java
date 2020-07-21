@@ -2,14 +2,38 @@ package by.chyrkun.training.model;
 
 import java.util.Objects;
 
+/**
+ * Class for user entity.
+ */
 public class User extends Entity {
+    /** An id. */
     private int id;
+
+    /** A string of login. */
     private String login;
+
+    /** A string of password. */
     private String password;
+
+    /** A string of first name. */
     private String firstname;
+
+    /** A string of second name. */
     private String secondname;
+
+    /** A {@link Role} object of role. */
     private Role role;
 
+    /**
+     * Constructor with all fields.
+     *
+     * @param id         the id
+     * @param login      the string of login
+     * @param password   the string of password
+     * @param firstname  the string of first name
+     * @param secondname the string of second name
+     * @param role       the {@link Role} object of role
+     */
     public User(int id, String login, String password, String firstname, String secondname, Role role) {
         setId(id);
         setLogin(login);
@@ -19,6 +43,15 @@ public class User extends Entity {
         setRole(role);
     }
 
+    /**
+     * Constructor without id.
+     *
+     * @param login      the string of login
+     * @param password   the string of password
+     * @param firstname  the string of first name
+     * @param secondname the string of second name
+     * @param role       the {@link Role} object of role
+     */
     public User(String login, String password, String firstname, String secondname, Role role) {
         setLogin(login);
         setPassword(password);
@@ -27,6 +60,14 @@ public class User extends Entity {
         setRole(role);
     }
 
+    /**
+     * Constructor without id and role.
+     *
+     * @param login      the string of login
+     * @param password   the string of password
+     * @param firstname  the string of first name
+     * @param secondname the string of second name
+     */
     public User(String login, String password, String firstname, String secondname) {
         setLogin(login);
         setPassword(password);
@@ -34,12 +75,24 @@ public class User extends Entity {
         setSecondname(secondname);
     }
 
+    /**
+     * Constructor without password and role
+     *
+     * @param id         the id
+     * @param firstname  the string of first name
+     * @param secondname the string of second name
+     */
     public User(int id, String firstname, String secondname) {
         setId(id);
         setFirstname(firstname);
         setSecondname(secondname);
     }
 
+    /**
+     * Constructor for creating a clone of other user.
+     *
+     * @param user the {@link User} object of user
+     */
     public User(User user) {
         setId(user.getId());
         setLogin(user.getLogin());

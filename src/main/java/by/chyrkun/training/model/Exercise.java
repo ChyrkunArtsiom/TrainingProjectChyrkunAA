@@ -2,13 +2,34 @@ package by.chyrkun.training.model;
 
 import java.util.Objects;
 
+/**
+ * Class for exercise entity.
+ */
 public class Exercise extends Entity {
+    /** An id. */
     private int id;
+
+    /** A {@link Task} object of task. */
     private Task task;
+
+    /** An {@link User} object of student. */
     private User student;
+
+    /** A grade */
     private int grade;
+
+    /** A string for review */
     private String review;
 
+    /**
+     * Constructor with all fields.
+     *
+     * @param id      the id
+     * @param task    the {@link Task} object for task
+     * @param student the {@link User} object for student
+     * @param grade   the grade
+     * @param review  the string of review
+     */
     public Exercise(int id, Task task, User student, int grade, String review) {
         setId(id);
         setTask(task);
@@ -17,6 +38,14 @@ public class Exercise extends Entity {
         setReview(review);
     }
 
+    /**
+     * Constructor without id.
+     *
+     * @param task    the {@link Task} object of task
+     * @param student the {@link User} object of student
+     * @param grade   the grade
+     * @param review  the string of review
+     */
     public Exercise(Task task, User student, int grade, String review) {
         setTask(task);
         setStudent(student);
@@ -24,11 +53,22 @@ public class Exercise extends Entity {
         setReview(review);
     }
 
+    /**
+     * Constructor for creating not reviewed exercise.
+     *
+     * @param task    the {@link Task} object of task
+     * @param student the {@link User} object of student
+     */
     public Exercise(Task task, User student) {
         setTask(task);
         setStudent(student);
     }
 
+    /**
+     * Constructor for creating a clone of other exercise.
+     *
+     * @param exercise the {@link Exercise} object of exercise
+     */
     public Exercise(Exercise exercise) {
         setId(exercise.getId());
         setTask(exercise.getTask());

@@ -2,19 +2,41 @@ package by.chyrkun.training.model;
 
 import java.util.Objects;
 
+/**
+ * Class for role entity.
+ */
 public class Role extends Entity {
+    /** An id. */
     private int id;
+
+    /** A string of name. */
     private String name;
 
+    /**
+     * Constructor without and id.
+     *
+     * @param name the string of name
+     */
     public Role(String name){
         this.name = name;
     }
 
+    /**
+     * Constructor with all fields.
+     *
+     * @param id   the id
+     * @param name the string of name
+     */
     public Role(int id, String name) {
         setId(id);
         setName(name);
     }
 
+    /**
+     * Constructor for creating a clone of other role.
+     *
+     * @param role the {@link Role} object of role
+     */
     public Role(Role role) {
         setId(role.getId());
         setName(role.getName());

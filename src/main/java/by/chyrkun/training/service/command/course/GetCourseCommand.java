@@ -42,7 +42,7 @@ public class GetCourseCommand extends BaseCommand implements Command {
             requestContent.setRequestAttribute("course", course);
             next.execute(requestContent);
         }
-        result.setPage(PageManager.getProperty("fullpath.page.course"));
+        result.setPage(PageManager.getPage("fullpath.page.course"));
         return result;
     }
 }

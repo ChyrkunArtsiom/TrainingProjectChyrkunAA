@@ -10,7 +10,7 @@ public class LogoutCommand implements Command {
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
-        result.setPage(PageManager.getProperty("shortpath.page.main"));
+        result.setPage(PageManager.getPage("shortpath.page.main"));
         result.setResponseType(CommandResult.ResponseType.SESSION_INVALIDATE);
         return result;
     }

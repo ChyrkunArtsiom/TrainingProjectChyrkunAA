@@ -25,7 +25,7 @@ public class DeleteCourseCommand implements Command {
         if (!receiver.delete(Integer.parseInt(course_id))) {
             requestContent.setSessionAttribute(MESSAGE, messages.getMessage("courseNotFound"));
         }
-        result.setPage(PageManager.getProperty("shortpath.page.teacher.courses"));
+        result.setPage(PageManager.getPage("shortpath.page.teacher.courses"));
         result.setResponseType(CommandResult.ResponseType.REDIRECT);
         requestContent.setRequestAttribute(PARAM_COURSE_ID, course_id);
         return result;

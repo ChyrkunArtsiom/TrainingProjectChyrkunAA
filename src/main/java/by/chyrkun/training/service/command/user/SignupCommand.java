@@ -18,7 +18,7 @@ public class SignupCommand implements Command {
     private static final String PARAM_NAME_FIRSTNAME = "firstname";
     private static final String PARAM_NAME_SECONDNAME = "secondname";
     private static final String ERROR_MESSAGE = "errorMessage";
-    private static final String SIGN_UP_PAGE = PageManager.getProperty("fullpath.page.signup");
+    private static final String SIGN_UP_PAGE = PageManager.getPage("fullpath.page.signup");
     private static final int student_id = 3;
     private UserReceiver userReceiver;
     private RoleReceiver roleReceiver;
@@ -55,7 +55,7 @@ public class SignupCommand implements Command {
             if (userReceiver.create(user)) {
                     requestContent.setSessionAttribute("user_id", user.getId());
                     requestContent.setSessionAttribute("userName", user.getLogin());
-                    result.setPage(PageManager.getProperty("shortpath.page.main"));
+                    result.setPage(PageManager.getPage("shortpath.page.main"));
                     result.setResponseType(CommandResult.ResponseType.REDIRECT);
             }
             else {

@@ -32,7 +32,7 @@ public class GetRolesCommand extends BaseCommand implements Command {
         }else {
             requestContent.setRequestAttribute(PARAM_NAME_ROLES, roles);
         }
-        result.setPage(PageManager.getProperty("fullpath.page.createuser"));
+        result.setPage(PageManager.getPage("fullpath.page.createuser"));
         return result;
     }
 }

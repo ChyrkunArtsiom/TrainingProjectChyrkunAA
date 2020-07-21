@@ -40,6 +40,6 @@ class GetTeachersCommandTest {
         Mockito.lenient().when(userReceiver.getTeachers()).thenReturn(null);
         CommandResult result = command.execute(requestContent);
         assertEquals(messages.getMessage("teachersNotFound"), requestContent.getRequestAttributes().get("errorMessage"));
-        assertEquals(PageManager.getProperty("fullpath.page.createcourse"), result.getPage());
+        assertEquals(PageManager.getPage("fullpath.page.createcourse"), result.getPage());
     }
 }

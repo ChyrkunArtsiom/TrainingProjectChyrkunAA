@@ -26,7 +26,7 @@ public class DeleteTaskCommand implements Command {
         if (task == null || !receiver.delete(Integer.parseInt(task_id))) {
             requestContent.setRequestAttribute("errorMessage", messages.getMessage("taskNotFound"));
         }
-        result.setPage(PageManager.getProperty("shortpath.page.course") + "/" + course_id);
+        result.setPage(PageManager.getPage("shortpath.page.course") + "/" + course_id);
         result.setResponseType(CommandResult.ResponseType.REDIRECT);
         return result;
     }

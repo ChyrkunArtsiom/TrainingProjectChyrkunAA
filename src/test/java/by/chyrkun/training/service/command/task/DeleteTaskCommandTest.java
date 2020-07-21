@@ -54,7 +54,7 @@ class DeleteTaskCommandTest {
         Mockito.lenient().when(receiver.getById(Mockito.anyInt())).thenReturn(task);
         Mockito.lenient().when(receiver.delete(Mockito.anyInt())).thenReturn(true);
         CommandResult result = command.execute(requestContent);
-        assertEquals(PageManager.getProperty("shortpath.page.course") + "/" + task.getCourse().getId(), result.getPage());
+        assertEquals(PageManager.getPage("shortpath.page.course") + "/" + task.getCourse().getId(), result.getPage());
         assertEquals(CommandResult.ResponseType.REDIRECT, result.getResponseType());
     }
 }

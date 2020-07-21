@@ -56,6 +56,6 @@ class SignupCommandTest {
         CommandResult result = command.execute(requestContent);
         assertEquals("Login", requestContent.getSessionAttributes().get("userName"));
         assertEquals(CommandResult.ResponseType.REDIRECT, result.getResponseType());
-        assertEquals(PageManager.getProperty("shortpath.page.main"), result.getPage());
+        assertEquals(PageManager.getPage("shortpath.page.main"), result.getPage());
     }
 }

@@ -56,6 +56,6 @@ class GetTaskCommandTest {
         Mockito.lenient().when(taskRegistrationReceiver.getAllByTask(Mockito.anyInt())).thenReturn(null);
         CommandResult result = command.execute(requestContent);
         assertEquals(task, requestContent.getRequestAttributes().get("task"));
-        assertEquals(PageManager.getProperty("fullpath.page.task"), result.getPage());
+        assertEquals(PageManager.getPage("fullpath.page.task"), result.getPage());
     }
 }

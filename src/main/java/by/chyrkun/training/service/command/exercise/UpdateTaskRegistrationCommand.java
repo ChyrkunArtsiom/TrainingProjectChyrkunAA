@@ -23,7 +23,7 @@ public class UpdateTaskRegistrationCommand implements Command {
         String review = requestContent.getRequestParameters().get("review")[0];
         if (!ParamValidator.isPresent(grade, review)) {
             requestContent.setSessionAttribute(MESSAGE, messages.getMessage("lineIsEmpty"));
-            result.setPage(PageManager.getProperty("shortpath.page.exercise") + "/" + exercise_id);
+            result.setPage(PageManager.getPage("shortpath.page.exercise") + "/" + exercise_id);
         }else {
             review = InputSanitizer.sanitize(review);
             Exercise exercise = receiver.getById(Integer.parseInt(exercise_id));
@@ -31,9 +31,9 @@ public class UpdateTaskRegistrationCommand implements Command {
             exercise.setReview(review);
             if (receiver.update(exercise) == null) {
                 requestContent.setSessionAttribute(MESSAGE, messages.getMessage("taskRegistrationWasNotUpdated"));
-                result.setPage(PageManager.getProperty("shortpath.page.teacher.courses"));
+                result.setPage(PageManager.getPage("shortpath.page.teacher.courses"));
             }else {
-                result.setPage(PageManager.getProperty("shortpath.page.exercise") + "/" + exercise_id);
+                result.setPage(PageManager.getPage("shortpath.page.exercise") + "/" + exercise_id);
             }
         }
         result.setResponseType(CommandResult.ResponseType.REDIRECT);

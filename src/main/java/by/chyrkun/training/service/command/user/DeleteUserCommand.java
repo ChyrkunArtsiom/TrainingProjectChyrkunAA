@@ -26,19 +26,19 @@ public class DeleteUserCommand implements Command {
         if (login != null) {
             login = InputSanitizer.sanitize(login);
             if (receiver.delete(login)) {
-                result.setPage(PageManager.getProperty("shortpath.page.admin.deleteuser"));
+                result.setPage(PageManager.getPage("shortpath.page.admin.deleteuser"));
                 result.setResponseType(CommandResult.ResponseType.REDIRECT);
             }
             else {
                 requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("userNotFound"));
                 result.setResponseType(CommandResult.ResponseType.FORWARD);
-                result.setPage(PageManager.getProperty("fullpath.page.admin.deleteuser"));
+                result.setPage(PageManager.getPage("fullpath.page.admin.deleteuser"));
             }
         }
         else {
             requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("lineIsEmpty"));
             result.setResponseType(CommandResult.ResponseType.FORWARD);
-            result.setPage(PageManager.getProperty("fullpath.page.admin.deleteuser"));
+            result.setPage(PageManager.getPage("fullpath.page.admin.deleteuser"));
         }
         requestContent.setRequestAttribute(PARAM_NAME_USER_LOGIN, login);
         return result;

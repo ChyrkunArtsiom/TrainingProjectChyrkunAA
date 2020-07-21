@@ -40,7 +40,7 @@ class DeleteUserCommandTest {
     void testExecute() {
         Mockito.lenient().when(userReceiver.delete(Mockito.anyString())).thenReturn(true);
         CommandResult result = command.execute(requestContent);
-        assertEquals(PageManager.getProperty("shortpath.page.admin.deleteuser"), result.getPage());
+        assertEquals(PageManager.getPage("shortpath.page.admin.deleteuser"), result.getPage());
         assertEquals(CommandResult.ResponseType.REDIRECT, result.getResponseType());
     }
 }

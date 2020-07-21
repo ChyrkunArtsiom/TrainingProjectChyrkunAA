@@ -56,7 +56,7 @@ class CreateUserCommandTest {
         CommandResult result = command.execute(requestContent);
         Mockito.verify(nextCommand, Mockito.times(1)).execute(Mockito.any(RequestContent.class));
         assertEquals(requestContent.getRequestParameters().get("username")[0], requestContent.getRequestAttributes().get("username").toString());
-        assertEquals(PageManager.getProperty("shortpath.page.admin.createuser"), result.getPage());
+        assertEquals(PageManager.getPage("shortpath.page.admin.createuser"), result.getPage());
         assertEquals(CommandResult.ResponseType.REDIRECT, result.getResponseType());
 
 

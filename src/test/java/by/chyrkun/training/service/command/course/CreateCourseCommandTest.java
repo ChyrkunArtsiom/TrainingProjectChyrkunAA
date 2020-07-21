@@ -49,7 +49,7 @@ class CreateCourseCommandTest {
         Mockito.lenient().when(userReceiver.getById(Mockito.anyInt())).thenReturn(user);
         Mockito.lenient().when(courseReceiver.create(Mockito.any(Course.class))).thenReturn(true);
         CommandResult result = command.execute(requestContent);
-        assertEquals(PageManager.getProperty("shortpath.page.createcourse"), result.getPage());
+        assertEquals(PageManager.getPage("shortpath.page.createcourse"), result.getPage());
         assertEquals(CommandResult.ResponseType.REDIRECT, result.getResponseType());
     }
 }

@@ -3,13 +3,33 @@ package by.chyrkun.training.model;
 import java.time.LocalDate;
 import java.util.Objects;
 
+/**
+ * Class for task entity.
+ */
 public class Task extends Entity {
+    /** An id. */
     private int id;
+
+    /** A string of name. */
     private String name;
+
+    /** A LocalDate of starting date. */
     private LocalDate startdate;
+
+    /** A LocalDate of deadline. */
     private LocalDate deadline;
+
+    /** A {@link Course} object of course. */
     private Course course;
 
+    /**
+     * Constructor without and id.
+     *
+     * @param name      the string of name
+     * @param startdate the LocalDate of starting date
+     * @param deadline  the LocalDate of deadline
+     * @param course    the {@link Course} object of course
+     */
     public Task(String name, LocalDate startdate, LocalDate deadline, Course course) {
         setName(name);
         setStartdate(startdate);
@@ -17,6 +37,15 @@ public class Task extends Entity {
         setCourse(course);
     }
 
+    /**
+     * Constructor with all fields.
+     *
+     * @param id        the id
+     * @param name      the string of name
+     * @param startdate the LocalDate of starting date
+     * @param deadline  the LocalDate of deadline
+     * @param course    the {@link Course} object of course
+     */
     public Task(Integer id, String name, LocalDate startdate, LocalDate deadline, Course course) {
         setId(id);
         setName(name);
@@ -25,6 +54,11 @@ public class Task extends Entity {
         setCourse(course);
     }
 
+    /**
+     * Constructor for creating a clone of other task.
+     *
+     * @param task the {@link Task} object of task
+     */
     public Task(Task task) {
         setId(task.getId());
         setName(task.getName());

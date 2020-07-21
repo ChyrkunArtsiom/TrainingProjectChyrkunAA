@@ -29,7 +29,7 @@ public class LogInCommand implements Command {
         if (!ParamValidator.isPresent(login, password)) {
             requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("lineIsEmpty"));
             result.setResponseType(CommandResult.ResponseType.FORWARD);
-            result.setPage(PageManager.getProperty("fullpath.page.login"));
+            result.setPage(PageManager.getPage("fullpath.page.login"));
         }
         else {
             login = InputSanitizer.sanitize(login);
@@ -37,13 +37,13 @@ public class LogInCommand implements Command {
             if ((user == null) || (!user.getPassword().equals(password))) {
                 requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("loginDataIsNotValid"));
                 result.setResponseType(CommandResult.ResponseType.FORWARD);
-                result.setPage(PageManager.getProperty("fullpath.page.login"));
+                result.setPage(PageManager.getPage("fullpath.page.login"));
             }
             else {
                 requestContent.setSessionAttribute("user_id", user.getId());
                 requestContent.setSessionAttribute("userName", user.getLogin());
                 requestContent.setSessionAttribute("role", user.getRole().getName());
-                result.setPage(PageManager.getProperty("shortpath.page.main"));
+                result.setPage(PageManager.getPage("shortpath.page.main"));
                 result.setResponseType(CommandResult.ResponseType.REDIRECT);
             }
         }

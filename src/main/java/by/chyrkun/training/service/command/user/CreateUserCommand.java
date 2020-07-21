@@ -22,7 +22,7 @@ public class CreateUserCommand extends BaseCommand implements Command {
     private static final String PARAM_NAME_ROLE_ID = "role_id";
     private static final String ERROR_MESSAGE = "errorMessage";
     private static final String MESSAGE = "message";
-    private static final String CREATE_USER_PAGE = PageManager.getProperty("fullpath.page.createuser");
+    private static final String CREATE_USER_PAGE = PageManager.getPage("fullpath.page.createuser");
     private UserReceiver userReceiver;
     private RoleReceiver roleReceiver;
     private CommandResult result;
@@ -60,7 +60,7 @@ public class CreateUserCommand extends BaseCommand implements Command {
             else {
                 if (userReceiver.create(user)) {
                     requestContent.setSessionAttribute(MESSAGE, messages.getMessage("userWasCreated"));
-                    result.setPage(PageManager.getProperty("shortpath.page.admin.createuser"));
+                    result.setPage(PageManager.getPage("shortpath.page.admin.createuser"));
                     result.setResponseType(CommandResult.ResponseType.REDIRECT);
                 }
                 else {

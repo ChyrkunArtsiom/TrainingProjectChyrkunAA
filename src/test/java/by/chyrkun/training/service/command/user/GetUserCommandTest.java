@@ -42,6 +42,6 @@ class GetUserCommandTest {
                 thenReturn(user);
         CommandResult result = command.execute(requestContent);
         assertEquals(user, requestContent.getRequestAttributes().get("user"));
-        assertEquals(PageManager.getProperty("fullpath.page.profile"), result.getPage());
+        assertEquals(PageManager.getPage("fullpath.page.profile"), result.getPage());
     }
 }

@@ -42,7 +42,7 @@ public class CreateCourseCommand extends BaseCommand implements Command {
             if (!ParamValidator.isPresent(name, teacher_id)) {
                 requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("lineIsEmpty"));
                 result.setResponseType(CommandResult.ResponseType.FORWARD);
-                result.setPage(PageManager.getProperty("fullpath.page.createcourse"));
+                result.setPage(PageManager.getPage("fullpath.page.createcourse"));
                 break first;
             }
             else {
@@ -51,32 +51,32 @@ public class CreateCourseCommand extends BaseCommand implements Command {
                 if (teacher == null) {
                     requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("userNotFound"));
                     result.setResponseType(CommandResult.ResponseType.FORWARD);
-                    result.setPage(PageManager.getProperty("fullpath.page.createcourse"));
+                    result.setPage(PageManager.getPage("fullpath.page.createcourse"));
                     break first;
                 }
                 else if (!UserValidator.isTeacher(teacher)) {
                     requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("userIsNotTeacher"));
                     result.setResponseType(CommandResult.ResponseType.FORWARD);
-                    result.setPage(PageManager.getProperty("fullpath.page.createcourse"));
+                    result.setPage(PageManager.getPage("fullpath.page.createcourse"));
                     break first;
                 }
                 else if (!CourseValidator.isCourseNameValid(name)) {
                     requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("nameIsNotValid"));
                     result.setResponseType(CommandResult.ResponseType.FORWARD);
-                    result.setPage(PageManager.getProperty("fullpath.page.createcourse"));
+                    result.setPage(PageManager.getPage("fullpath.page.createcourse"));
                     break first;
                 }
                 Course course = new Course(name, teacher);
                 if (courseReceiver.create(course)) {
                     showTeachers = false;
-                    result.setPage(PageManager.getProperty("shortpath.page.createcourse"));
+                    result.setPage(PageManager.getPage("shortpath.page.createcourse"));
                     result.setResponseType(CommandResult.ResponseType.REDIRECT);
                 }
             }
         }catch (EntityNotFoundServiceException ex) {
             requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("userNotFound"));
             result.setResponseType(CommandResult.ResponseType.FORWARD);
-            result.setPage(PageManager.getProperty("fullpath.page.createcourse"));
+            result.setPage(PageManager.getPage("fullpath.page.createcourse"));
         }finally {
             if (showTeachers) {
                 setNext(new GetTeachersCommand());

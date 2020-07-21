@@ -2,23 +2,49 @@ package by.chyrkun.training.model;
 
 import java.util.Objects;
 
+/**
+ * Class for course registration entity.
+ */
 public class CourseRegistration extends Entity {
+    /** An id. */
     private int id;
+
+    /** A {@link Course} object for course. */
     private Course course;
+
+    /** An {@link User} object for student. */
     private User student;
 
+    /**
+     * Constructor for creating a clone of other course registration.
+     *
+     * @param courseRegistration the {@link CourseRegistration} object for course registration
+     */
     public CourseRegistration(CourseRegistration courseRegistration) {
         setId(courseRegistration.getId());
         setCourse(courseRegistration.getCourse());
         setStudent(courseRegistration.getStudent());
     }
 
+    /**
+     * Constructor with all fields.
+     *
+     * @param id      the id
+     * @param course  the {@link Course} object for course
+     * @param student the {@link User} object for student
+     */
     public CourseRegistration(int id, Course course, User student) {
         setId(id);
         setCourse(course);
         setStudent(student);
     }
 
+    /**
+     * Constructor with course and student fields.
+     *
+     * @param course  the {@link Course} object for course
+     * @param student the {@link User} object for student
+     */
     public CourseRegistration(Course course, User student) {
         setCourse(course);
         setStudent(student);

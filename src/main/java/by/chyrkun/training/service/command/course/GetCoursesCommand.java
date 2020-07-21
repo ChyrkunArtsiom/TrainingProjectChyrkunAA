@@ -60,9 +60,9 @@ public class GetCoursesCommand extends BaseCommand implements Command {
             requestContent.setRequestAttribute("max_pages", max_pages);
         }
         if (select != null && select.equals("for_task")) {
-            result.setPage(PageManager.getProperty("fullpath.page.createtask"));
+            result.setPage(PageManager.getPage("fullpath.page.createtask"));
         } else {
-            result.setPage(PageManager.getProperty("fullpath.page.courses"));
+            result.setPage(PageManager.getPage("fullpath.page.courses"));
         }
         return result;
     }

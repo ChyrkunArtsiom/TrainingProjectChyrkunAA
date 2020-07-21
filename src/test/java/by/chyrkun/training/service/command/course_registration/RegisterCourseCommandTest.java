@@ -53,7 +53,7 @@ class RegisterCourseCommandTest {
         Mockito.lenient().when(courseReceiver.getById(Mockito.anyInt())).thenReturn(course);
         CommandResult result = command.execute(requestContent);
         Mockito.verify(courseRegistrationReceiver, Mockito.times(1)).create(Mockito.any(CourseRegistration.class));
-        assertEquals(PageManager.getProperty("shortpath.page.course") + "/" + course.getId(), result.getPage());
+        assertEquals(PageManager.getPage("shortpath.page.course") + "/" + course.getId(), result.getPage());
         assertEquals(CommandResult.ResponseType.REDIRECT, result.getResponseType());
     }
 }

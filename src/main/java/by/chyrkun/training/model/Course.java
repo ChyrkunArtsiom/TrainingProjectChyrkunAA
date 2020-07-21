@@ -2,11 +2,26 @@ package by.chyrkun.training.model;
 
 import java.util.Objects;
 
+/**
+ * Class for course entity.
+ */
 public class Course extends Entity {
+    /** An id. */
     private int id;
+
+    /** A string of name. */
     private String name;
+
+    /** An {@link User} object of teacher. */
     private User teacher;
 
+    /**
+     * Constructor with all fields.
+     *
+     * @param id      the id
+     * @param name    the string of name
+     * @param teacher the {@link User} object of teacher
+     */
     public Course(int id, String name, User teacher) {
         setId(id);
         setName(name);
@@ -15,11 +30,22 @@ public class Course extends Entity {
         }
     }
 
+    /**
+     * Constructor with name and teacher fields.
+     *
+     * @param name    the string of name
+     * @param teacher the {@link User} object of teacher
+     */
     public Course(String name, User teacher) {
         setName(name);
         setTeacher(teacher);
     }
 
+    /**
+     * Constructor for creating a clone of other course.
+     *
+     * @param course the {@link Course} object of course
+     */
     public Course(Course course) {
         setId(course.getId());
         setName(course.getName());

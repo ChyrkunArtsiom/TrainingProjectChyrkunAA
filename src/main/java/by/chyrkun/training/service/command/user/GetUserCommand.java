@@ -27,7 +27,7 @@ public class GetUserCommand implements Command {
         }else {
             requestContent.setRequestAttribute("user", user);
         }
-        result.setPage(PageManager.getProperty("fullpath.page.profile"));
+        result.setPage(PageManager.getPage("fullpath.page.profile"));
         return result;
     }
 }

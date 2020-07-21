@@ -58,7 +58,7 @@ class RegisterTaskCommandTest {
         Mockito.lenient().when(taskReceiver.getById(Mockito.anyInt())).thenReturn(task);
         Mockito.lenient().when(taskRegistrationReceiver.create(Mockito.any(Exercise.class))).thenReturn(true);
         CommandResult result = command.execute(requestContent);
-        assertEquals(PageManager.getProperty("shortpath.page.task") + "/" + task.getId(), result.getPage());
+        assertEquals(PageManager.getPage("shortpath.page.task") + "/" + task.getId(), result.getPage());
         assertEquals(CommandResult.ResponseType.REDIRECT, result.getResponseType());
     }
 }

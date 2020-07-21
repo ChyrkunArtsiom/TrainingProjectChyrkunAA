@@ -55,7 +55,7 @@ public class RegisterTaskCommand implements Command {
                 requestContent.setSessionAttribute(MESSAGE, messages.getMessage("taskNotFound"));
             }
         }
-        result.setPage(PageManager.getProperty("shortpath.page.task") + "/" + task_id);
+        result.setPage(PageManager.getPage("shortpath.page.task") + "/" + task_id);
         result.setResponseType(CommandResult.ResponseType.REDIRECT);
         return result;
     }

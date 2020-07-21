@@ -36,7 +36,7 @@ public class UpdateUserCommand implements Command {
             role_id_string = requestContent.getRequestParameters().get(PARAM_NAME_ROLE_ID)[0];
             if (!ParamValidator.isPresent(login, password, firstname, secondname, role_id_string)) {
                 requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("lineIsEmpty"));
-                result.setPage(PageManager.getProperty("fullpath.page.updateuser"));
+                result.setPage(PageManager.getPage("fullpath.page.updateuser"));
             }
             role_id = Integer.parseInt(role_id_string);
         }
@@ -44,7 +44,7 @@ public class UpdateUserCommand implements Command {
             login = requestContent.getSessionAttributes().get("userName").toString();
             if (!ParamValidator.isPresent(login, password, firstname, secondname)) {
                 requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("lineIsEmpty"));
-                result.setPage(PageManager.getProperty("fullpath.page.updateuser"));
+                result.setPage(PageManager.getPage("fullpath.page.updateuser"));
             }
             role_id = 2;
         }
@@ -52,28 +52,28 @@ public class UpdateUserCommand implements Command {
         Role role = roleReceiver.getById(role_id);
         if (role == null) {
             requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("roleNotFound"));
-            result.setPage(PageManager.getProperty("fullpath.page.updateuser"));
+            result.setPage(PageManager.getPage("fullpath.page.updateuser"));
         }
         else if (!UserValidator.isLoginValid(login)) {
             requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("usernameIsNotValid"));
-            result.setPage(PageManager.getProperty("fullpath.page.updateuser"));
+            result.setPage(PageManager.getPage("fullpath.page.updateuser"));
         }
         else if (!UserValidator.isPasswordValid(password)) {
             requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("passwordIsNotValid"));
-            result.setPage(PageManager.getProperty("fullpath.page.updateuser"));
+            result.setPage(PageManager.getPage("fullpath.page.updateuser"));
         }
         else if (!UserValidator.isNameValid(firstname) || !UserValidator.isNameValid(secondname)) {
             requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("nameIsNotValid"));
-            result.setPage(PageManager.getProperty("fullpath.page.updateuser"));
+            result.setPage(PageManager.getPage("fullpath.page.updateuser"));
         }
         User user = new User(login, password, firstname, secondname, role);
         if (receiver.update(user) != null) {
             if (admin) {
-                result.setPage(PageManager.getProperty("shortpath.page.admin.updateuser"));
+                result.setPage(PageManager.getPage("shortpath.page.admin.updateuser"));
                 result.setResponseType(CommandResult.ResponseType.REDIRECT);
             }
             else {
-                result.setPage(PageManager.getProperty("shortpath.page.updateuser"));
+                result.setPage(PageManager.getPage("shortpath.page.updateuser"));
                 result.setResponseType(CommandResult.ResponseType.REDIRECT);
             }
         }

@@ -40,7 +40,7 @@ class DeleteCourseCommandTest {
     void testExecute() {
         Mockito.lenient().when(courseReceiver.delete(Mockito.anyInt())).thenReturn(true);
         CommandResult result = command.execute(requestContent);
-        assertEquals(PageManager.getProperty("shortpath.page.teacher.courses"), result.getPage());
+        assertEquals(PageManager.getPage("shortpath.page.teacher.courses"), result.getPage());
         assertEquals(CommandResult.ResponseType.REDIRECT, result.getResponseType());
     }
 }

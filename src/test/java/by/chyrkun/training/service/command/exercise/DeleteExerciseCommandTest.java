@@ -42,7 +42,7 @@ class DeleteExerciseCommandTest {
     void testExecute() {
         Mockito.lenient().when(receiver.delete(Mockito.anyInt())).thenReturn(true);
         CommandResult result = command.execute(requestContent);
-        assertEquals(PageManager.getProperty("shortpath.page.task") + "/" + "1", result.getPage());
+        assertEquals(PageManager.getPage("shortpath.page.task") + "/" + "1", result.getPage());
         assertEquals(CommandResult.ResponseType.REDIRECT, result.getResponseType());
     }
 }

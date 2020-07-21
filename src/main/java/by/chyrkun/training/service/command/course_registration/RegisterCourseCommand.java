@@ -55,7 +55,7 @@ public class RegisterCourseCommand implements Command {
                 requestContent.setSessionAttribute(MESSAGE, messages.getMessage("courseNotFound"));
             }
         }
-        result.setPage(PageManager.getProperty("shortpath.page.course") + "/" + course_id);
+        result.setPage(PageManager.getPage("shortpath.page.course") + "/" + course_id);
         result.setResponseType(CommandResult.ResponseType.REDIRECT);
         return result;
     }

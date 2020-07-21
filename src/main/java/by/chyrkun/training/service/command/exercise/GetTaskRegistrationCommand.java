@@ -29,7 +29,7 @@ public class GetTaskRegistrationCommand implements Command {
                 requestContent.setRequestAttribute("exercise", exercise);
             }
         }
-        result.setPage(PageManager.getProperty("fullpath.page.exercise"));
+        result.setPage(PageManager.getPage("fullpath.page.exercise"));
         return result;
     }
 }

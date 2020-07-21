@@ -52,7 +52,7 @@ public class GetTaskCommand implements Command {
                 }
             }
         }
-        result.setPage(PageManager.getProperty("fullpath.page.task"));
+        result.setPage(PageManager.getPage("fullpath.page.task"));
         return result;
     }
 }

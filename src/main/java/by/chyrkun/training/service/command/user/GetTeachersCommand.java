@@ -33,7 +33,7 @@ public class GetTeachersCommand extends BaseCommand implements Command {
         }else {
             requestContent.setRequestAttribute(TEACHERS, teachers);
         }
-        result.setPage(PageManager.getProperty("fullpath.page.createcourse"));
+        result.setPage(PageManager.getPage("fullpath.page.createcourse"));
         return result;
     }
 }
