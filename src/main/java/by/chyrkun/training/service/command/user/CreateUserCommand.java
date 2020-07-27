@@ -7,7 +7,7 @@ import by.chyrkun.training.model.User;
 import by.chyrkun.training.service.command.BaseCommand;
 import by.chyrkun.training.service.command.Command;
 import by.chyrkun.training.service.command.role.GetRolesCommand;
-import by.chyrkun.training.service.exception.EntityNotFoundServiceException;
+import by.chyrkun.training.service.exception.RoleNotFoundServiceException;
 import by.chyrkun.training.service.receiver.RoleReceiver;
 import by.chyrkun.training.service.receiver.UserReceiver;
 import by.chyrkun.training.service.resource.MessageManager;
@@ -15,6 +15,9 @@ import by.chyrkun.training.service.resource.PageManager;
 import by.chyrkun.training.service.util.GetterFromRequestContent;
 import by.chyrkun.training.service.validator.UserValidator;
 
+/**
+ * The class-command for user creation. Extends {@link BaseCommand}, implements {@link Command}.
+ */
 public class CreateUserCommand extends BaseCommand implements Command {
     private static final String PARAM_NAME_LOGIN = "username";
     private static final String PARAM_NAME_FIRSTNAME = "firstname";
@@ -27,6 +30,9 @@ public class CreateUserCommand extends BaseCommand implements Command {
     private RoleReceiver roleReceiver;
     private CommandResult result;
 
+    /**
+     * Instantiates a new Create user command.
+     */
     public CreateUserCommand() {
         userReceiver = new UserReceiver();
         roleReceiver = new RoleReceiver();
@@ -69,7 +75,7 @@ public class CreateUserCommand extends BaseCommand implements Command {
                     result.setPage(CREATE_USER_PAGE);
                 }
             }
-        }catch (EntityNotFoundServiceException ex) {
+        }catch (RoleNotFoundServiceException ex) {
             requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("roleNotFound"));
             result.setResponseType(CommandResult.ResponseType.FORWARD);
             result.setPage(CREATE_USER_PAGE);

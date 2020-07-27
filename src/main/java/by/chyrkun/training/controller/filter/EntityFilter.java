@@ -7,6 +7,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
+/**
+ * The webfilter for pages that display any entity.
+ */
 @WebFilter(urlPatterns = {"/profile/*", "/course/*", "/task/*", "/exercise/*"})
 public class EntityFilter implements Filter {
 

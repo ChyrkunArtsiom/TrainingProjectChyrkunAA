@@ -3,7 +3,6 @@ package by.chyrkun.training.dao.impl;
 import by.chyrkun.training.dao.AbstractDAO;
 import by.chyrkun.training.dao.db.impl.Connection$Proxy;
 import by.chyrkun.training.dao.db.impl.ConnectionPoolImpl;
-import by.chyrkun.training.dao.exception.EntityNotFoundDAOException;
 import by.chyrkun.training.dao.exception.RoleNotFoundDAOException;
 import by.chyrkun.training.dao.exception.UncheckedDAOException;
 import by.chyrkun.training.model.Role;

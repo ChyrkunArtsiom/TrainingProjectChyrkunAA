@@ -10,12 +10,18 @@ import by.chyrkun.training.service.resource.PageManager;
 import by.chyrkun.training.service.util.InputSanitizer;
 import by.chyrkun.training.service.validator.ParamValidator;
 
+/**
+ * The class-command for login. Implements {@link Command}.
+ */
 public class LogInCommand implements Command {
     private static final String PARAM_NAME_LOGIN = "login";
     private static final String ERROR_MESSAGE = "errorMessage";
     private UserReceiver receiver;
     private CommandResult result;
 
+    /**
+     * Instantiates a new Log in command.
+     */
     public LogInCommand() {
         receiver = new UserReceiver();
         result = new CommandResult();

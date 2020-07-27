@@ -4,8 +4,8 @@ import by.chyrkun.training.controller.CommandResult;
 import by.chyrkun.training.controller.RequestContent;
 import by.chyrkun.training.model.*;
 import by.chyrkun.training.service.exception.EntityNotFoundServiceException;
+import by.chyrkun.training.service.receiver.ExerciseReceiver;
 import by.chyrkun.training.service.receiver.TaskReceiver;
-import by.chyrkun.training.service.receiver.TaskRegistrationReceiver;
 import by.chyrkun.training.service.receiver.UserReceiver;
 import by.chyrkun.training.service.resource.PageManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +29,7 @@ class RegisterTaskCommandTest {
 
     @Mock private TaskReceiver taskReceiver;
     @Mock private UserReceiver userReceiver;
-    @Mock private TaskRegistrationReceiver taskRegistrationReceiver;
+    @Mock private ExerciseReceiver exerciseReceiver;
 
     @InjectMocks
     private RegisterTaskCommand command;
@@ -56,7 +56,7 @@ class RegisterTaskCommandTest {
         Task task = new Task(1, "Task", LocalDate.now(), LocalDate.now().plusDays(1), course);
         Mockito.lenient().when(userReceiver.getById(Mockito.anyInt())).thenReturn(student);
         Mockito.lenient().when(taskReceiver.getById(Mockito.anyInt())).thenReturn(task);
-        Mockito.lenient().when(taskRegistrationReceiver.create(Mockito.any(Exercise.class))).thenReturn(true);
+        Mockito.lenient().when(exerciseReceiver.create(Mockito.any(Exercise.class))).thenReturn(true);
         CommandResult result = command.execute(requestContent);
         assertEquals(PageManager.getPage("shortpath.page.task") + "/" + task.getId(), result.getPage());
         assertEquals(CommandResult.ResponseType.REDIRECT, result.getResponseType());

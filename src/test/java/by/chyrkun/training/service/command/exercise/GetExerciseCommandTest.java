@@ -2,7 +2,7 @@ package by.chyrkun.training.service.command.exercise;
 
 import by.chyrkun.training.controller.RequestContent;
 import by.chyrkun.training.model.*;
-import by.chyrkun.training.service.receiver.TaskRegistrationReceiver;
+import by.chyrkun.training.service.receiver.ExerciseReceiver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,7 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 @RunWith(JUnitPlatform.class)
@@ -23,10 +23,10 @@ class GetExerciseCommandTest {
     private RequestContent requestContent;
 
     @Mock
-    private TaskRegistrationReceiver receiver;
+    private ExerciseReceiver receiver;
 
     @InjectMocks
-    private GetTaskRegistrationCommand command;
+    private GetExerciseCommand command;
 
     @BeforeEach
     void setUp() {

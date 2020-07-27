@@ -4,18 +4,33 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
 import java.util.HashMap;
 
+/**
+ * This class is a storage for all attributes and parameters of HttpServletRequest object.
+ */
 public class RequestContent {
+    /** Attributes of request. */
     private HashMap<String, Object> requestAttributes;
-    private HashMap<String, String[]> requestParameters;
-    private HashMap<String, Object> sessionAttributes;
-//    private HashMap<String, String> headers;
 
+    /** Parameters of request. */
+    private HashMap<String, String[]> requestParameters;
+
+    /** Attributes of session. */
+    private HashMap<String, Object> sessionAttributes;
+
+    /**
+     * Instantiates a new Request content.
+     */
     public RequestContent() {
         requestParameters = new HashMap<>();
         requestAttributes = new HashMap<>();
         sessionAttributes = new HashMap<>();
     }
 
+    /**
+     * Extracts values from request.
+     *
+     * @param req the HttpServletRequest object
+     */
     public void extractValues(HttpServletRequest req) {
         requestParameters.putAll(req.getParameterMap());
         Enumeration<?> reqAttributeNames = req.getAttributeNames();
@@ -30,42 +45,79 @@ public class RequestContent {
             Object value = req.getSession().getAttribute(name);
             sessionAttributes.put(name, value);
         }
-    /*    Enumeration<String> headerNames = req.getHeaderNames();
-        while (headerNames.hasMoreElements()) {
-            String name = headerNames.nextElement();
-            String value = req.getHeader(name);
-            headers.put(name, value);
-        }*/
     }
 
+    /**
+     * Inserts request attributes into HttpServletRequest object.
+     *
+     * @param req the HttpServletRequest object
+     */
     public void insertRequestAttributes(HttpServletRequest req) {
         requestAttributes.forEach((key, value) -> req.setAttribute(key, value));
     }
 
+    /**
+     * Inserts session attributes into HttpServletRequest object.
+     *
+     * @param req the HttpServletRequest object
+     */
     public void insertSessionAttributes(HttpServletRequest req) {
         sessionAttributes.forEach((key, value) -> req.getSession().setAttribute(key, value));
     }
 
+    /**
+     * Gets request parameters.
+     *
+     * @return the hash map of request parameters
+     */
     public HashMap<String, String[]> getRequestParameters(){
         return requestParameters;
     }
 
+    /**
+     * Gets request attributes.
+     *
+     * @return the hash map of request attributes
+     */
     public HashMap<String, Object> getRequestAttributes() {
         return requestAttributes;
     }
 
+    /**
+     * Gets session attributes.
+     *
+     * @return the hash map of session attributes
+     */
     public HashMap<String, Object> getSessionAttributes(){
         return sessionAttributes;
     }
 
+    /**
+     * Sets request attribute.
+     *
+     * @param name  the name
+     * @param value the value
+     */
     public void setRequestAttribute(String name, Object value) {
         requestAttributes.put(name, value);
     }
 
+    /**
+     * Set session attribute.
+     *
+     * @param name  the name
+     * @param value the value
+     */
     public void setSessionAttribute(String name, Object value){
         sessionAttributes.put(name, value);
     }
 
+    /**
+     * Sets request parameter.
+     *
+     * @param name  the name
+     * @param value the value
+     */
     public void setRequestParameter(String name, String[] value) {
         requestParameters.put(name, value);
     }

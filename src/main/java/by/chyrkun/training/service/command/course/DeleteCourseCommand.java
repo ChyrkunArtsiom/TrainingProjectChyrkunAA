@@ -7,12 +7,18 @@ import by.chyrkun.training.service.receiver.CourseReceiver;
 import by.chyrkun.training.service.resource.MessageManager;
 import by.chyrkun.training.service.resource.PageManager;
 
+/**
+ * The class-command for course deletion. Implements {@link Command}.
+ */
 public class DeleteCourseCommand implements Command {
     private static final String PARAM_COURSE_ID = "course_id";
     private static final String MESSAGE = "message";
     private CourseReceiver receiver;
     private CommandResult result;
 
+    /**
+     * Instantiates a new Delete course command.
+     */
     public DeleteCourseCommand() {
         receiver = new CourseReceiver();
         result = new CommandResult();

@@ -2,7 +2,7 @@ package by.chyrkun.training.service.command.exercise;
 
 import by.chyrkun.training.controller.CommandResult;
 import by.chyrkun.training.controller.RequestContent;
-import by.chyrkun.training.service.receiver.TaskRegistrationReceiver;
+import by.chyrkun.training.service.receiver.ExerciseReceiver;
 import by.chyrkun.training.service.resource.PageManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,10 +22,10 @@ class DeleteExerciseCommandTest {
     private RequestContent requestContent;
 
     @Mock
-    private TaskRegistrationReceiver receiver;
+    private ExerciseReceiver receiver;
 
     @InjectMocks
-    private DeleteTaskRegistrationCommand command;
+    private DeleteExerciseCommand command;
 
     @BeforeEach
     void setUp() {

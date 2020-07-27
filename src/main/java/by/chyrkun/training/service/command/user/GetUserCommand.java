@@ -8,10 +8,16 @@ import by.chyrkun.training.service.receiver.UserReceiver;
 import by.chyrkun.training.service.resource.MessageManager;
 import by.chyrkun.training.service.resource.PageManager;
 
+/**
+ * The class-command for getting an user. Implements {@link Command}.
+ */
 public class GetUserCommand implements Command {
     private UserReceiver receiver;
     private CommandResult result;
 
+    /**
+     * Instantiates a new Get user command.
+     */
     public GetUserCommand() {
         receiver = new UserReceiver();
         result = new CommandResult();

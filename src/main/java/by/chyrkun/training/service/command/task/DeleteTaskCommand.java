@@ -8,10 +8,16 @@ import by.chyrkun.training.service.receiver.TaskReceiver;
 import by.chyrkun.training.service.resource.MessageManager;
 import by.chyrkun.training.service.resource.PageManager;
 
+/**
+ * The class-command for task deletion. Implements {@link Command}.
+ */
 public class DeleteTaskCommand implements Command {
     private TaskReceiver receiver;
     private CommandResult result;
 
+    /**
+     * Instantiates a new Delete task command.
+     */
     public DeleteTaskCommand() {
         receiver = new TaskReceiver();
         result = new CommandResult();

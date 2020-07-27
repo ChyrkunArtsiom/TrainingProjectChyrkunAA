@@ -6,8 +6,16 @@ import by.chyrkun.training.model.Role;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The class-receiver which calls methods of {@link Role} objects.
+ */
 public class RoleReceiver {
-
+    /**
+     * Gets a role by id.
+     *
+     * @param id the role id
+     * @return the Optional of {@link Role}
+     */
     public Role getById(int id) {
         Optional<Role> role;
         RoleDAO roleDAO = new RoleDAO();
@@ -19,6 +27,11 @@ public class RoleReceiver {
         }
     }
 
+    /**
+     * Gets all roles.
+     *
+     * @return all roles
+     */
     public List<Role> getAll() {
         RoleDAO roleDAO = new RoleDAO();
         try {

@@ -7,7 +7,7 @@ import by.chyrkun.training.model.Task;
 import by.chyrkun.training.service.command.BaseCommand;
 import by.chyrkun.training.service.command.Command;
 import by.chyrkun.training.service.command.course.GetCoursesCommand;
-import by.chyrkun.training.service.exception.EntityNotFoundServiceException;
+import by.chyrkun.training.service.exception.CourseNotFoundServiceException;
 import by.chyrkun.training.service.receiver.CourseReceiver;
 import by.chyrkun.training.service.receiver.TaskReceiver;
 import by.chyrkun.training.service.resource.MessageManager;
@@ -19,6 +19,9 @@ import by.chyrkun.training.service.validator.TaskValidator;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
+/**
+ * The class-command for task creation. Extends {@link BaseCommand}, implements {@link Command}.
+ */
 public class CreateTaskCommand extends BaseCommand implements Command {
     private static final String PARAM_NAME = "name";
     private static final String PARAM_COURSE_ID = "course_id";
@@ -30,6 +33,9 @@ public class CreateTaskCommand extends BaseCommand implements Command {
     private CourseReceiver courseReceiver;
     private CommandResult result;
 
+    /**
+     * Instantiates a new Create task command.
+     */
     public CreateTaskCommand() {
         taskReceiver = new TaskReceiver();
         courseReceiver = new CourseReceiver();
@@ -90,7 +96,7 @@ public class CreateTaskCommand extends BaseCommand implements Command {
             result.setResponseType(CommandResult.ResponseType.FORWARD);
             result.setPage(PageManager.getPage("fullpath.page.createtask"));
         }
-        catch (EntityNotFoundServiceException ex) {
+        catch (CourseNotFoundServiceException ex) {
             requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("courseNotFound"));
             result.setResponseType(CommandResult.ResponseType.FORWARD);
             result.setPage(PageManager.getPage("fullpath.page.createtask"));

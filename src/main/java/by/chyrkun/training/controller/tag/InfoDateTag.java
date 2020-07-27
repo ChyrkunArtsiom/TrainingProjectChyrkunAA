@@ -8,6 +8,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
+/**
+ * The class for <ctg> custom tag. It shows current time in chosen locale.
+ */
 public class InfoDateTag extends TagSupport {
     @Override
     public int doStartTag() throws JspException {

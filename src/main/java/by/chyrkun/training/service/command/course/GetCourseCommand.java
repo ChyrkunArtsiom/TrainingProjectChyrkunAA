@@ -11,10 +11,16 @@ import by.chyrkun.training.service.receiver.CourseRegistrationReceiver;
 import by.chyrkun.training.service.resource.MessageManager;
 import by.chyrkun.training.service.resource.PageManager;
 
+/**
+ * The class-command for getting a course. Extends {@link BaseCommand}, implements {@link Command}.
+ */
 public class GetCourseCommand extends BaseCommand implements Command {
     private CourseReceiver receiver;
     private CommandResult result;
 
+    /**
+     * Instantiates a new Get course command.
+     */
     public GetCourseCommand() {
         receiver = new CourseReceiver();
         result = new CommandResult();

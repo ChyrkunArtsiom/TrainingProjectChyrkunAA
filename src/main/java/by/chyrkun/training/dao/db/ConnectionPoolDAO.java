@@ -1,7 +1,6 @@
 package by.chyrkun.training.dao.db;
 
 import by.chyrkun.training.dao.db.impl.Connection$Proxy;
-import by.chyrkun.training.dao.exception.DAOException;
 import by.chyrkun.training.dao.exception.UncheckedDAOException;
 
 /**

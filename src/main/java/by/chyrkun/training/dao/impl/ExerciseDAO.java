@@ -118,12 +118,12 @@ public class ExerciseDAO extends AbstractDAO<Exercise>
     @Override
     public Optional<Exercise> update(Exercise exercise) {
         LOGGER.log(Level.INFO, "Updating exercise column...");
-        Optional<Exercise> optionalTaskRegistration = getEntityById(exercise.getId());
-        if (optionalTaskRegistration.isPresent()) {
+        Optional<Exercise> optionalExercise = getEntityById(exercise.getId());
+        if (optionalExercise.isPresent()) {
             try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_EXERCISE)) {
                 setValuesToStatement(preparedStatement, exercise);
                 if (preparedStatement.executeUpdate() > 0) {
-                    return optionalTaskRegistration;
+                    return optionalExercise;
                 }
             }catch (SQLException ex) {
                 LOGGER.log(Level.FATAL, "Exception during exercise updating");

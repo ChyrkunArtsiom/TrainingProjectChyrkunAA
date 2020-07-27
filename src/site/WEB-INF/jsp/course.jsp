@@ -75,13 +75,7 @@
     </div>
 </div>
 <script src="${pageContext.request.contextPath}/js/jquery-3.5.1.min.js"></script>
-<script>
-    jQuery(document).ready(function($) {
-        $(".clickable-row").click(function() {
-            window.location = $(this).data("href");
-        });
-    });
-</script>
+<script src="../../js/test.js"></script>
 </body>
 
 </html>

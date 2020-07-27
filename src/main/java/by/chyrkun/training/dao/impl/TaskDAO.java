@@ -3,7 +3,7 @@ package by.chyrkun.training.dao.impl;
 import by.chyrkun.training.dao.AbstractDAO;
 import by.chyrkun.training.dao.db.impl.Connection$Proxy;
 import by.chyrkun.training.dao.db.impl.ConnectionPoolImpl;
-import by.chyrkun.training.dao.exception.EntityNotFoundDAOException;
+import by.chyrkun.training.dao.exception.CourseNotFoundDAOException;
 import by.chyrkun.training.dao.exception.UncheckedDAOException;
 import by.chyrkun.training.model.Course;
 import by.chyrkun.training.model.Task;
@@ -65,11 +65,11 @@ public class TaskDAO extends AbstractDAO<Task> implements StatementSetter<Task>,
     }
 
     @Override
-    public boolean create(Task task) throws EntityNotFoundDAOException {
+    public boolean create(Task task) throws CourseNotFoundDAOException {
         LOGGER.log(Level.INFO, "Creating task column...");
         AbstractDAO courseDAO = new CourseDAO(this.connection);
         if (courseDAO.getEntityById(task.getCourse().getId()).isEmpty()) {
-            throw new EntityNotFoundDAOException("Cannot create task. Course not found");
+            throw new CourseNotFoundDAOException("Cannot create task. Course not found");
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_CREATE_TASK)) {
             setValuesToStatement(preparedStatement, task);

@@ -7,6 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * The webfilter for teacher pages.
+ */
 @WebFilter(filterName = "teacherFilter", urlPatterns = {"/teacher/*"}, initParams = {@WebInitParam(name = "INDEX_PATH", value = "/")})
 public class TeacherFilter implements Filter {
     private String indexPath;

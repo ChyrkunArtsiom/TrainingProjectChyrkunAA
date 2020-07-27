@@ -11,12 +11,18 @@ import by.chyrkun.training.service.resource.PageManager;
 
 import java.util.List;
 
+/**
+ * The class-command for getting roles. Extends {@link BaseCommand}, implements {@link Command}.
+ */
 public class GetRolesCommand extends BaseCommand implements Command {
     private static final String PARAM_NAME_ROLES = "roles";
     private static final String ERROR_MESSAGE = "errorMessage";
     private CommandResult result;
     private  RoleReceiver roleReceiver;
 
+    /**
+     * Instantiates a new Get roles command.
+     */
     public GetRolesCommand() {
         roleReceiver = new RoleReceiver();
         result = new CommandResult();

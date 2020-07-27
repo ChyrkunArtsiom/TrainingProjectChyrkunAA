@@ -51,7 +51,7 @@ class ExerciseDAOTest {
     }
 
     @Test
-    void testTaskRegistrationDAO() throws DAOException {
+    void testExerciseDAO() throws DAOException {
         Role role = new Role(1, "teacher");
         assertTrue(roleDAO.create(role));
 

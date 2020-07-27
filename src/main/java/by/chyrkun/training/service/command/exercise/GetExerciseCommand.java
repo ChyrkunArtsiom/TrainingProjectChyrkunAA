@@ -4,15 +4,21 @@ import by.chyrkun.training.controller.CommandResult;
 import by.chyrkun.training.controller.RequestContent;
 import by.chyrkun.training.model.Exercise;
 import by.chyrkun.training.service.command.Command;
-import by.chyrkun.training.service.receiver.TaskRegistrationReceiver;
+import by.chyrkun.training.service.receiver.ExerciseReceiver;
 import by.chyrkun.training.service.resource.PageManager;
 
-public class GetTaskRegistrationCommand implements Command {
-    private TaskRegistrationReceiver receiver;
+/**
+ * The class-command for getting an exercise. Implements {@link Command}.
+ */
+public class GetExerciseCommand implements Command {
+    private ExerciseReceiver receiver;
     private CommandResult result;
 
-    public GetTaskRegistrationCommand() {
-        receiver = new TaskRegistrationReceiver();
+    /**
+     * Instantiates a new Get exercise command.
+     */
+    public GetExerciseCommand() {
+        receiver = new ExerciseReceiver();
         result = new CommandResult();
     }
 

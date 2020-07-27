@@ -5,7 +5,7 @@ import by.chyrkun.training.controller.RequestContent;
 import by.chyrkun.training.model.Role;
 import by.chyrkun.training.model.User;
 import by.chyrkun.training.service.command.Command;
-import by.chyrkun.training.service.exception.EntityNotFoundServiceException;
+import by.chyrkun.training.service.exception.RoleNotFoundServiceException;
 import by.chyrkun.training.service.receiver.RoleReceiver;
 import by.chyrkun.training.service.receiver.UserReceiver;
 import by.chyrkun.training.service.resource.MessageManager;
@@ -13,6 +13,9 @@ import by.chyrkun.training.service.resource.PageManager;
 import by.chyrkun.training.service.util.GetterFromRequestContent;
 import by.chyrkun.training.service.validator.UserValidator;
 
+/**
+ * The class-command for signing up. Implements {@link Command}.
+ */
 public class SignupCommand implements Command {
     private static final String PARAM_NAME_LOGIN = "login";
     private static final String PARAM_NAME_FIRSTNAME = "firstname";
@@ -24,6 +27,9 @@ public class SignupCommand implements Command {
     private RoleReceiver roleReceiver;
     private CommandResult result;
 
+    /**
+     * Instantiates a new Signup command.
+     */
     public SignupCommand() {
         userReceiver = new UserReceiver();
         roleReceiver = new RoleReceiver();
@@ -64,7 +70,7 @@ public class SignupCommand implements Command {
                 result.setPage(SIGN_UP_PAGE);
             }
 
-        }catch (EntityNotFoundServiceException ex) {
+        }catch (RoleNotFoundServiceException ex) {
             requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("roleNotFound"));
             result.setResponseType(CommandResult.ResponseType.FORWARD);
             result.setPage(SIGN_UP_PAGE);

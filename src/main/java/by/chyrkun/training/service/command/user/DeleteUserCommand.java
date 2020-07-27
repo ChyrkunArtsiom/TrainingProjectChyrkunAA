@@ -8,12 +8,18 @@ import by.chyrkun.training.service.resource.MessageManager;
 import by.chyrkun.training.service.resource.PageManager;
 import by.chyrkun.training.service.util.InputSanitizer;
 
+/**
+ * The class-command for user deletion. Implements {@link Command}.
+ */
 public class DeleteUserCommand implements Command {
     private static final String PARAM_NAME_USER_LOGIN = "login";
     private static final String ERROR_MESSAGE = "errorMessage";
     private UserReceiver receiver;
     private CommandResult result;
 
+    /**
+     * Instantiates a new Delete user command.
+     */
     public DeleteUserCommand() {
         receiver = new UserReceiver();
         result = new CommandResult();

@@ -5,6 +5,9 @@ import by.chyrkun.training.controller.RequestContent;
 import by.chyrkun.training.service.command.Command;
 import by.chyrkun.training.service.resource.PageManager;
 
+/**
+ * The class-command for logout. Implements {@link Command}.
+ */
 public class LogoutCommand implements Command {
     private CommandResult result = new CommandResult();
 

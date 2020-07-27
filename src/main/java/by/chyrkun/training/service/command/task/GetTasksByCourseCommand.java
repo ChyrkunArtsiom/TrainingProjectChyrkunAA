@@ -9,11 +9,17 @@ import by.chyrkun.training.service.receiver.TaskReceiver;
 
 import java.util.List;
 
+/**
+ * The class-command for getting tasks by the course. Extends {@link BaseCommand}, implements {@link Command}.
+ */
 public class GetTasksByCourseCommand extends BaseCommand implements Command {
     private static final String TASKS = "tasks";
     private TaskReceiver receiver;
     private CommandResult result;
 
+    /**
+     * Instantiates a new Get tasks by course command.
+     */
     public GetTasksByCourseCommand() {
         result = new CommandResult();
         receiver = new TaskReceiver();

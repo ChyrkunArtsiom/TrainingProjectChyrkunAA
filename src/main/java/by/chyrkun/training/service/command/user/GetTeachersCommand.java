@@ -11,13 +11,18 @@ import by.chyrkun.training.service.resource.PageManager;
 
 import java.util.List;
 
-
+/**
+ * The class-command for getting users with role 'teacher'. Extends {@link BaseCommand}, implements {@link Command}.
+ */
 public class GetTeachersCommand extends BaseCommand implements Command {
     private static final String TEACHERS = "teachers";
     private static final String ERROR_MESSAGE = "errorMessage";
     private UserReceiver userReceiver;
     private CommandResult result;
 
+    /**
+     * Instantiates a new Get teachers command.
+     */
     public GetTeachersCommand() {
         userReceiver = new UserReceiver();
         result = new CommandResult();

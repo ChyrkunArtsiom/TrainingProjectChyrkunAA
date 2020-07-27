@@ -7,6 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * The webfilter for student pages.
+ */
 @WebFilter(filterName = "studentFilter", urlPatterns = {"/student/*"}, initParams = {@WebInitParam(name = "INDEX_PATH", value = "/")})
 public class StudentFilter implements Filter {
     private String indexPath;

@@ -14,6 +14,9 @@ import by.chyrkun.training.service.receiver.UserReceiver;
 import by.chyrkun.training.service.resource.MessageManager;
 import by.chyrkun.training.service.resource.PageManager;
 
+/**
+ * The class-command for course_registration creation. Implements {@link Command}.
+ */
 public class RegisterCourseCommand implements Command {
     private static final String MESSAGE = "message";
     private CourseRegistrationReceiver receiver;
@@ -21,6 +24,9 @@ public class RegisterCourseCommand implements Command {
     private CourseReceiver courseReceiver;
     private CommandResult result;
 
+    /**
+     * Instantiates a new Register course command.
+     */
     public RegisterCourseCommand() {
         receiver = new CourseRegistrationReceiver();
         userReceiver = new UserReceiver();

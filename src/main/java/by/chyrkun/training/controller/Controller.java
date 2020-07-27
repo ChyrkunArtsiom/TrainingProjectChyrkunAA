@@ -13,6 +13,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * The application controller.
+ */
 @WebServlet("/app")
 public class Controller extends HttpServlet {
     @Override

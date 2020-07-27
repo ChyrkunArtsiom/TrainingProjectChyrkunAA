@@ -7,7 +7,7 @@ import by.chyrkun.training.model.User;
 import by.chyrkun.training.service.command.BaseCommand;
 import by.chyrkun.training.service.command.Command;
 import by.chyrkun.training.service.command.user.GetTeachersCommand;
-import by.chyrkun.training.service.exception.EntityNotFoundServiceException;
+import by.chyrkun.training.service.exception.UserNotFoundServiceException;
 import by.chyrkun.training.service.receiver.CourseReceiver;
 import by.chyrkun.training.service.receiver.UserReceiver;
 import by.chyrkun.training.service.resource.MessageManager;
@@ -17,15 +17,20 @@ import by.chyrkun.training.service.validator.CourseValidator;
 import by.chyrkun.training.service.validator.ParamValidator;
 import by.chyrkun.training.service.validator.UserValidator;
 
+/**
+ * The class-command for course creation. Extends {@link BaseCommand}, implements {@link Command}.
+ */
 public class CreateCourseCommand extends BaseCommand implements Command {
     private static final String PARAM_NAME = "name";
     private static final String PARAM_TEACHER_ID = "teacher_id";
     private static final String ERROR_MESSAGE = "errorMessage";
     private CourseReceiver courseReceiver;
     private UserReceiver userReceiver;
-
     private CommandResult result;
 
+    /**
+     * Instantiates a new Create course command.
+     */
     public CreateCourseCommand() {
         courseReceiver = new CourseReceiver();
         userReceiver = new UserReceiver();
@@ -73,7 +78,7 @@ public class CreateCourseCommand extends BaseCommand implements Command {
                     result.setResponseType(CommandResult.ResponseType.REDIRECT);
                 }
             }
-        }catch (EntityNotFoundServiceException ex) {
+        }catch (UserNotFoundServiceException ex) {
             requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("userNotFound"));
             result.setResponseType(CommandResult.ResponseType.FORWARD);
             result.setPage(PageManager.getPage("fullpath.page.createcourse"));

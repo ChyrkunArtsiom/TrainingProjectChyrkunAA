@@ -11,12 +11,18 @@ import by.chyrkun.training.service.resource.PageManager;
 
 import java.util.List;
 
+/**
+ * The class-command for getting courses. Extends {@link BaseCommand}, implements {@link Command}.
+ */
 public class GetCoursesCommand extends BaseCommand implements Command {
     private static final String COURSES = "courses";
     private static final String ERROR_MESSAGE = "errorMessage";
     private CourseReceiver receiver;
     private CommandResult result;
 
+    /**
+     * Instantiates a new Get courses command.
+     */
     public GetCoursesCommand() {
         receiver = new CourseReceiver();
         result = new CommandResult();

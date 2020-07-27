@@ -35,7 +35,7 @@ public abstract class AbstractDAO<T extends Entity> {
     }
 
     /**
-     * Creates boolean. Returns {@code true} if entity in database was created.
+     * Creates entity. Returns {@code true} if entity in database was created.
      *
      * @param entity the object of {@link Entity}
      * @return {@code true} if entity in database was created

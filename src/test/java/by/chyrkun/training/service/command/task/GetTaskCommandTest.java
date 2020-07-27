@@ -6,8 +6,8 @@ import by.chyrkun.training.model.Course;
 import by.chyrkun.training.model.Role;
 import by.chyrkun.training.model.Task;
 import by.chyrkun.training.model.User;
+import by.chyrkun.training.service.receiver.ExerciseReceiver;
 import by.chyrkun.training.service.receiver.TaskReceiver;
-import by.chyrkun.training.service.receiver.TaskRegistrationReceiver;
 import by.chyrkun.training.service.resource.PageManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,7 +31,7 @@ class GetTaskCommandTest {
     @Mock
     private TaskReceiver taskReceiver;
     @Mock
-    private TaskRegistrationReceiver taskRegistrationReceiver;
+    private ExerciseReceiver exerciseReceiver;
 
     @InjectMocks
     private GetTaskCommand command;
@@ -53,7 +53,7 @@ class GetTaskCommandTest {
         Course course = new Course("Course", teacher);
         Task task = new Task(1, "Task", LocalDate.now(), LocalDate.now().plusDays(1), course);
         Mockito.lenient().when(taskReceiver.getById(Mockito.anyInt())).thenReturn(task);
-        Mockito.lenient().when(taskRegistrationReceiver.getAllByTask(Mockito.anyInt())).thenReturn(null);
+        Mockito.lenient().when(exerciseReceiver.getAllByTask(Mockito.anyInt())).thenReturn(null);
         CommandResult result = command.execute(requestContent);
         assertEquals(task, requestContent.getRequestAttributes().get("task"));
         assertEquals(PageManager.getPage("fullpath.page.task"), result.getPage());

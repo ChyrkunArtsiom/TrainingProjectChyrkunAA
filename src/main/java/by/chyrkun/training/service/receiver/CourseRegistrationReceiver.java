@@ -7,7 +7,18 @@ import by.chyrkun.training.model.CourseRegistration;
 import by.chyrkun.training.service.exception.CourseNotFoundServiceException;
 import by.chyrkun.training.service.exception.UserNotFoundServiceException;
 
+/**
+ * The class-receiver which calls methods of {@link CourseRegistration} objects.
+ */
 public class CourseRegistrationReceiver {
+    /**
+     * Creates a course_registration. Returns whether it was successful.
+     *
+     * @param courseRegistration the {@link CourseRegistration} object to create
+     * @return whether it was successful
+     * @throws CourseNotFoundServiceException if course was not found
+     * @throws UserNotFoundServiceException   if user was not found
+     */
     public boolean create(CourseRegistration courseRegistration) throws CourseNotFoundServiceException, UserNotFoundServiceException {
         CourseRegistrationDAO courseRegistrationDAO = new CourseRegistrationDAO();
         try {
@@ -21,6 +32,13 @@ public class CourseRegistrationReceiver {
         }
     }
 
+    /**
+     * Checks if given course is registered by given student
+     *
+     * @param course_id  the course id
+     * @param student_id the student id
+     * @return {@code true} if course is registered by the student
+     */
     public boolean isCourseRegistered(int course_id, int student_id) {
         CourseRegistrationDAO courseRegistrationDAO = new CourseRegistrationDAO();
         try {

@@ -2,24 +2,30 @@ package by.chyrkun.training.service.command.task;
 
 import by.chyrkun.training.controller.CommandResult;
 import by.chyrkun.training.controller.RequestContent;
-import by.chyrkun.training.model.Task;
 import by.chyrkun.training.model.Exercise;
+import by.chyrkun.training.model.Task;
 import by.chyrkun.training.service.command.Command;
 import by.chyrkun.training.service.receiver.CourseRegistrationReceiver;
+import by.chyrkun.training.service.receiver.ExerciseReceiver;
 import by.chyrkun.training.service.receiver.TaskReceiver;
-import by.chyrkun.training.service.receiver.TaskRegistrationReceiver;
 import by.chyrkun.training.service.resource.PageManager;
 
 import java.util.List;
 
+/**
+ * The class-command for getting a task. Implements {@link Command}.
+ */
 public class GetTaskCommand implements Command {
     private TaskReceiver taskReceiver;
-    private TaskRegistrationReceiver taskRegistrationReceiver;
+    private ExerciseReceiver exerciseReceiver;
     private CommandResult result;
 
+    /**
+     * Instantiates a new Get task command.
+     */
     public GetTaskCommand() {
         taskReceiver = new TaskReceiver();
-        taskRegistrationReceiver = new TaskRegistrationReceiver();
+        exerciseReceiver = new ExerciseReceiver();
         result = new CommandResult();
     }
 
@@ -32,16 +38,16 @@ public class GetTaskCommand implements Command {
         if (task != null) {
             if (role.equals("teacher") && task.getCourse().getTeacher().getId() == user_id) {
                 List<Exercise> registrations;
-                registrations = taskRegistrationReceiver.getAllByTask(task_id);
+                registrations = exerciseReceiver.getAllByTask(task_id);
                 requestContent.setRequestAttribute("registrations", registrations);
                 requestContent.setRequestAttribute("task", task);
             }else if (role.equals("student")) {
                 CourseRegistrationReceiver courseRegistrationReceiver = new CourseRegistrationReceiver();
                 boolean registered = courseRegistrationReceiver.isCourseRegistered(task.getCourse().getId(), user_id);
                 if (registered) {
-                    boolean performed = taskRegistrationReceiver.isPerformed(task_id, user_id);
+                    boolean performed = exerciseReceiver.isPerformed(task_id, user_id);
                     if (performed) {
-                        Exercise exercise = taskRegistrationReceiver.getByTaskStudent(task_id, user_id);
+                        Exercise exercise = exerciseReceiver.getByTaskStudent(task_id, user_id);
                         requestContent.setSessionAttribute("exercise", exercise);
                         if (exercise != null && exercise.getGrade() != 0) {
                             requestContent.setRequestAttribute("reviewed", "true");
