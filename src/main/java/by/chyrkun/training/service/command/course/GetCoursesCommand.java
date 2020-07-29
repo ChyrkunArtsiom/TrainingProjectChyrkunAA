@@ -59,9 +59,7 @@ public class GetCoursesCommand extends BaseCommand implements Command {
                 break;
             }
         }
-        if (courses == null) {
-            requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("coursesNotFound"));
-        }else {
+        if (courses != null) {
             requestContent.setRequestAttribute(COURSES, courses);
             requestContent.setRequestAttribute("max_pages", max_pages);
         }

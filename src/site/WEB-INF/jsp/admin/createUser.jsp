@@ -22,19 +22,22 @@
             <h1><fmt:message key="userCreation"/></h1>
 
             <div class="mb-3">
-                <label for="inputlogin"><fmt:message key="username" var="lang_username"/></label>
+                <fmt:message key="username" var="lang_username"/>
+                <label for="inputlogin">${lang_username}</label>
                 <div class="input-group">
                     <input type="text" id="inputlogin" name="username" placeholder="${lang_username}" required autofocus min="5" max="45" value="${username}"/>
                 </div>
             </div>
             <div class="mb-3">
-                <label for="inputfirstname"><fmt:message key="firstname" var="lang_firstname"/></label>
+                <fmt:message key="firstname" var="lang_firstname"/>
+                <label for="inputfirstname">${lang_firstname}</label>
                 <div class="input-group">
                     <input type="text" id="inputfirstname" name="firstname" placeholder="${lang_firstname}" required min="1" max="45" value="${firstname}"/>
                 </div>
             </div>
             <div class="mb-3">
-                <label for="inputsecondname"><fmt:message key="secondname" var="lang_secondname"/></label>
+                <fmt:message key="secondname" var="lang_secondname"/>
+                <label for="inputsecondname">${lang_secondname}</label>
                 <div class="input-group">
                     <input type="text" id="inputsecondname" name="secondname" placeholder="${lang_secondname}" required min="1" max="45" value="${secondname}"/>
                 </div>
@@ -52,7 +55,8 @@
                 </div>
             </div>
             <div class="mb-3">
-                <label for="inputpassword"><fmt:message key="password" var="lang_password"/></label>
+                <fmt:message key="password" var="lang_password"/>
+                <label for="inputpassword">${lang_password}</label>
                 <div class="input-group">
                     <input type="password" id="inputpassword" name="password" placeholder="${lang_password}" required min="8" max="15" value=""/>
                 </div>

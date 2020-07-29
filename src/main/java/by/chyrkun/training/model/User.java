@@ -76,6 +76,23 @@ public class User extends Entity {
     }
 
     /**
+     * Constructor password.
+     *
+     * @param id         the id
+     * @param login      the string of login
+     * @param firstname  the string of first name
+     * @param secondname the string of second name
+     * @param role       the {@link Role} object of role
+     */
+    public User(int id, String login, String firstname, String secondname, Role role) {
+        setId(id);
+        setLogin(login);
+        setFirstname(firstname);
+        setSecondname(secondname);
+        setRole(role);
+    }
+
+    /**
      * Constructor without password and role
      *
      * @param id         the id

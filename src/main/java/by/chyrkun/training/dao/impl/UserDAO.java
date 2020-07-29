@@ -33,13 +33,17 @@ public class UserDAO extends AbstractDAO<User> implements ResultMapper<List<User
 
     /** SQL query for updating user. */
     private final static String SQL_UPDATE_USER = "UPDATE training_schema.users SET " +
-            "password = (?), firstname = (?), secondname = (?), role_id = (?)  WHERE login = (?)";
+            "login = (?), password = (?), firstname = (?), secondname = (?), role_id = (?) WHERE user_id = (?)";
+
+    /** SQL query for updating user without password. */
+    private final static String SQL_UPDATE_USER_WITHOUT_PASSWORD = "UPDATE training_schema.users SET " +
+            "login = (?), firstname = (?), secondname = (?), role_id = (?)  WHERE user_id = (?)";
 
     /** SQL query for deleting user. */
     private final static String SQL_DELETE_USER = "DELETE FROM training_schema.users WHERE user_id = (?)";
 
     /** SQL query for getting user by id. */
-    private final static String SQL_GET_USER_BY_ID = "SELECT user_id, login, firstname, secondname, role_id " +
+    private final static String SQL_GET_USER_BY_ID = "SELECT user_id, login, password, firstname, secondname, role_id " +
             "FROM training_schema.users WHERE user_id = (?)";
 
     /** SQL query for getting user by login. */
@@ -118,14 +122,30 @@ public class UserDAO extends AbstractDAO<User> implements ResultMapper<List<User
     @Override
     public Optional<User> update(User user) {
         LOGGER.log(Level.INFO, "Updating user column...");
-        Optional<User> optionalUser = getUserByLogin(user.getLogin());
+        Optional<User> optionalUser = getEntityById(user.getId());
+        String query;
+        if (user.getPassword() == null) {
+            query = SQL_UPDATE_USER_WITHOUT_PASSWORD;
+        }else {
+            query = SQL_UPDATE_USER;
+        }
         if (optionalUser.isPresent()) {
-            try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_USER)) {
-                preparedStatement.setString(1, user.getPassword());
-                preparedStatement.setString(2, user.getFirstname());
-                preparedStatement.setString(3, user.getSecondname());
-                preparedStatement.setInt(4, user.getRole().getId());
-                preparedStatement.setString(5, user.getLogin());
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                if (user.getPassword() == null) {
+                    preparedStatement.setString(1, user.getLogin());
+                    preparedStatement.setString(2, user.getFirstname());
+                    preparedStatement.setString(3, user.getSecondname());
+                    preparedStatement.setInt(4, user.getRole().getId());
+                    preparedStatement.setInt(5, user.getId());
+                }else {
+                    preparedStatement.setString(1, user.getLogin());
+                    preparedStatement.setString(2, user.getPassword());
+                    preparedStatement.setString(3, user.getFirstname());
+                    preparedStatement.setString(4, user.getSecondname());
+                    preparedStatement.setInt(5, user.getRole().getId());
+                    preparedStatement.setInt(6, user.getId());
+                }
+
                 if (preparedStatement.executeUpdate() > 0) {
                     return optionalUser;
                 }
@@ -227,11 +247,11 @@ public class UserDAO extends AbstractDAO<User> implements ResultMapper<List<User
      * Returns list of users.
      *
      * @param resultSet the {@link ResultSet} object of executed SQL query
-     * @param hasPassword if {@code true} user will contain password, if {@code false} user will not contain password
+     * @param withPassword if {@code true} user will contain password, if {@code false} user will not contain password
      * @return list of users
      * @throws SQLException if SQLException is thrown in method
      */
-    private List<User> getList(ResultSet resultSet, boolean hasPassword) throws SQLException {
+    private List<User> getList(ResultSet resultSet, boolean withPassword) throws SQLException {
         List<User> users = new ArrayList<>();
         String login;
         String password = null;
@@ -243,7 +263,7 @@ public class UserDAO extends AbstractDAO<User> implements ResultMapper<List<User
         while (resultSet.next()) {
             user_id = resultSet.getInt("user_id");
             login = resultSet.getString("login");
-            if (hasPassword) {
+            if (withPassword) {
                 password = resultSet.getString("password");
             }
             firstname = resultSet.getString("firstname");

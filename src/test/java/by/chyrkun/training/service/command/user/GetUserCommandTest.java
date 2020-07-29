@@ -33,6 +33,7 @@ class GetUserCommandTest {
         requestContent = new RequestContent();
         requestContent.setSessionAttribute("lang", "en_US");
         requestContent.setRequestAttribute("id", 1);
+        requestContent.setSessionAttribute("role", "student");
     }
 
     @Test

@@ -49,6 +49,7 @@ public class LogInCommand implements Command {
                 requestContent.setSessionAttribute("user_id", user.getId());
                 requestContent.setSessionAttribute("userName", user.getLogin());
                 requestContent.setSessionAttribute("role", user.getRole().getName());
+                requestContent.setSessionAttribute("role_id", user.getRole().getId());
                 result.setPage(PageManager.getPage("shortpath.page.main"));
                 result.setResponseType(CommandResult.ResponseType.REDIRECT);
             }

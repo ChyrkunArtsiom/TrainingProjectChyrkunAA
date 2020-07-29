@@ -66,7 +66,13 @@
             </div>
         </c:when>
         <c:otherwise>
-            <fmt:message key="exerciseNotFound"/>
+            <div class="container">
+                <div class="row col mt-3">
+                    <div class="col">
+                        <p><fmt:message key="exerciseNotFound"/></p>
+                    </div>
+                </div>
+            </div>
         </c:otherwise>
     </c:choose>
 <div class="container">

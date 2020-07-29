@@ -91,7 +91,13 @@
         </div>
     </c:when>
     <c:otherwise>
-        <p>Such task doesn't exist</p>
+        <div class="container">
+            <div class="row col mt-3">
+                <div class="col">
+                    <p><fmt:message key="taskNotFound"/></p>
+                </div>
+            </div>
+        </div>
     </c:otherwise>
 </c:choose>
 

@@ -9,75 +9,100 @@ import by.chyrkun.training.service.receiver.RoleReceiver;
 import by.chyrkun.training.service.receiver.UserReceiver;
 import by.chyrkun.training.service.resource.MessageManager;
 import by.chyrkun.training.service.resource.PageManager;
+import by.chyrkun.training.service.util.InputSanitizer;
 import by.chyrkun.training.service.validator.ParamValidator;
 import by.chyrkun.training.service.validator.UserValidator;
 
 public class UpdateUserCommand implements Command {
-    private static final String PARAM_NAME_LOGIN = "login";
-    private static final String PARAM_NAME_PASSWORD = "password";
-    private static final String PARAM_NAME_FIRSTNAME = "firstname";
-    private static final String PARAM_NAME_SECONDNAME = "secondname";
-    private static final String PARAM_NAME_ROLE_ID = "role_id";
     private static final String ERROR_MESSAGE = "errorMessage";
-    private UserReceiver receiver = new UserReceiver();
+    private UserReceiver userReceiver;
+    private RoleReceiver roleReceiver;
+    private CommandResult result;
+
+    public UpdateUserCommand() {
+        userReceiver = new UserReceiver();
+        roleReceiver = new RoleReceiver();
+        result = new CommandResult();
+    }
+
     @Override
     public CommandResult execute(RequestContent requestContent) {
         MessageManager messages = setLang(requestContent);
-        CommandResult result = new CommandResult();
-        String login;
-        String password = requestContent.getRequestParameters().get(PARAM_NAME_PASSWORD)[0];
-        String firstname = requestContent.getRequestParameters().get(PARAM_NAME_FIRSTNAME)[0];
-        String secondname = requestContent.getRequestParameters().get(PARAM_NAME_SECONDNAME)[0];
-        String role_id_string;
-        int role_id;
+        String login = requestContent.getRequestParameters().get("login")[0];
+        String old_username = requestContent.getRequestParameters().get("old_username")[0];
+        String firstname = requestContent.getRequestParameters().get("firstname")[0];
+        String secondname = requestContent.getRequestParameters().get("secondname")[0];
+        String user_id = requestContent.getRequestParameters().get("user_id")[0];
+        String session_user_id = String.valueOf(requestContent.getSessionAttributes().get("user_id"));
+        String role_name;
+        String old_password;
+        String new_password = null;
         boolean admin = isAdmin(requestContent);
-        if (admin) {
-            login = requestContent.getRequestParameters().get(PARAM_NAME_LOGIN)[0];
-            role_id_string = requestContent.getRequestParameters().get(PARAM_NAME_ROLE_ID)[0];
-            if (!ParamValidator.isPresent(login, password, firstname, secondname, role_id_string)) {
-                requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("lineIsEmpty"));
-                result.setPage(PageManager.getPage("fullpath.page.updateuser"));
-            }
-            role_id = Integer.parseInt(role_id_string);
-        }
-        else {
-            login = requestContent.getSessionAttributes().get("userName").toString();
-            if (!ParamValidator.isPresent(login, password, firstname, secondname)) {
-                requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("lineIsEmpty"));
-                result.setPage(PageManager.getPage("fullpath.page.updateuser"));
-            }
-            role_id = 2;
-        }
-        RoleReceiver roleReceiver = new RoleReceiver();
-        Role role = roleReceiver.getById(role_id);
-        if (role == null) {
-            requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("roleNotFound"));
-            result.setPage(PageManager.getPage("fullpath.page.updateuser"));
-        }
-        else if (!UserValidator.isLoginValid(login)) {
-            requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("usernameIsNotValid"));
-            result.setPage(PageManager.getPage("fullpath.page.updateuser"));
-        }
-        else if (!UserValidator.isPasswordValid(password)) {
-            requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("passwordIsNotValid"));
-            result.setPage(PageManager.getPage("fullpath.page.updateuser"));
-        }
-        else if (!UserValidator.isNameValid(firstname) || !UserValidator.isNameValid(secondname)) {
-            requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("nameIsNotValid"));
-            result.setPage(PageManager.getPage("fullpath.page.updateuser"));
-        }
-        User user = new User(login, password, firstname, secondname, role);
-        if (receiver.update(user) != null) {
+        first: try {
             if (admin) {
-                result.setPage(PageManager.getPage("shortpath.page.admin.updateuser"));
-                result.setResponseType(CommandResult.ResponseType.REDIRECT);
+                role_name = requestContent.getRequestParameters().get("role_name")[0];
+                if (!ParamValidator.isPresent(login, firstname, secondname, role_name)) {
+                    requestContent.setSessionAttribute(ERROR_MESSAGE, messages.getMessage("lineIsEmpty"));
+                    break first;
+                }
             }
             else {
-                result.setPage(PageManager.getPage("shortpath.page.updateuser"));
-                result.setResponseType(CommandResult.ResponseType.REDIRECT);
+                role_name = requestContent.getSessionAttributes().get("role").toString();
+                old_password = requestContent.getRequestParameters().get("old_password")[0];
+                if (!requestContent.getRequestParameters().get("new_password")[0].isEmpty()) {
+                    new_password = requestContent.getRequestParameters().get("new_password")[0];
+                }
+
+                if (!ParamValidator.isPresent(login, old_password, firstname, secondname)) {
+                    requestContent.setSessionAttribute(ERROR_MESSAGE, messages.getMessage("lineIsEmpty"));
+                    break first;
+                }
+
+                User user = userReceiver.getByLogin(old_username);
+
+                if ((user == null) || (!user.getPassword().equals(old_password))) {
+                    requestContent.setSessionAttribute(ERROR_MESSAGE, messages.getMessage("loginDataIsNotValid"));
+                    break first;
+                }
+
+                if (new_password != null && !UserValidator.isPasswordValid(new_password)) {
+                    requestContent.setSessionAttribute(ERROR_MESSAGE, messages.getMessage("passwordIsNotValid"));
+                    break first;
+                }
             }
+
+            Role role = roleReceiver.getByName(role_name);
+            if (role == null) {
+                requestContent.setSessionAttribute(ERROR_MESSAGE, messages.getMessage("roleNotFound"));
+                break first;
+            }
+            if (!UserValidator.isLoginValid(login)) {
+                requestContent.setSessionAttribute(ERROR_MESSAGE, messages.getMessage("usernameIsNotValid"));
+                break first;
+            }
+            if (!UserValidator.isNameValid(firstname) || !UserValidator.isNameValid(secondname)) {
+                requestContent.setSessionAttribute(ERROR_MESSAGE, messages.getMessage("nameIsNotValid"));
+                break first;
+            }
+
+            User user;
+            if (admin) {
+                user = new User(Integer.parseInt(user_id), login, firstname, secondname, role);
+            }else {
+                user = new User(Integer.parseInt(user_id), login, new_password, firstname, secondname, role);
+            }
+
+            if (userReceiver.update(user) != null && user_id.equals(session_user_id)) {
+                requestContent.setSessionAttribute("userName", user.getLogin());
+                requestContent.setSessionAttribute("role", user.getRole().getName());
+                requestContent.setSessionAttribute("role_id", user.getRole().getId());
+
+            }
+        }finally {
+            result.setPage(PageManager.getPage("shortpath.page.profile") + "/" + user_id);
+            result.setResponseType(CommandResult.ResponseType.REDIRECT);
+            return result;
         }
-        return result;
     }
 
     boolean isAdmin(RequestContent requestContent) {

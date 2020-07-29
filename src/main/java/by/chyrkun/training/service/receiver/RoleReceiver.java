@@ -28,6 +28,23 @@ public class RoleReceiver {
     }
 
     /**
+     * Gets a role by name.
+     *
+     * @param name the string for name of role
+     * @return the Optional of {@link Role}
+     */
+    public Role getByName(String name) {
+        Optional<Role> role;
+        RoleDAO roleDAO = new RoleDAO();
+        try {
+            role = roleDAO.getRoleByName(name);
+            return role.orElse(null);
+        }finally {
+            roleDAO.close();
+        }
+    }
+
+    /**
      * Gets all roles.
      *
      * @return all roles
