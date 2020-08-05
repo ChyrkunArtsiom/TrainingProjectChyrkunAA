@@ -23,7 +23,7 @@
                 <thead>
                 <tr>
                     <th scope="col"><fmt:message key="coursename"/></th>
-                    <c:if test="${sessionScope.role eq 'student'}">
+                    <c:if test="${sessionScope.role eq 'student' or sessionScope.role eq 'admin'}">
                         <th scope="col"><fmt:message key="teacher"/></th>
                     </c:if>
                 </tr>
@@ -32,7 +32,7 @@
                 <c:forEach items="${courses}" var="course">
                     <tr class='clickable-row' data-href='${pageContext.request.contextPath}/course/${course.id}'>
                         <td>${course.name}</td>
-                        <c:if test="${sessionScope.role eq 'student'}">
+                        <c:if test="${sessionScope.role eq 'student' or sessionScope.role eq 'admin'}">
                             <td>${course.teacher.firstname} ${course.teacher.secondname}</td>
                         </c:if>
                     </tr>

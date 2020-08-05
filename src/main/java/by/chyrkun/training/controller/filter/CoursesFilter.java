@@ -9,7 +9,7 @@ import java.io.IOException;
 /**
  * The webfilter for pages that display courses.
  */
-@WebFilter(filterName = "coursesFilter", urlPatterns = {"/teacher/courses/*", "/student/courses/*", "/student/registered/*"})
+@WebFilter(filterName = "coursesFilter", urlPatterns = {"/admin/courses/*", "/teacher/courses/*", "/student/courses/*", "/student/registered/*"})
 public class CoursesFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {

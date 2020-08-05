@@ -13,7 +13,7 @@ import java.util.Optional;
  */
 public class CourseReceiver {
     /** The number of rows on per page in the table to show. */
-    private final static int ROWS_PER_PAGE = 3;
+    private int ROWS_PER_PAGE = CourseDAO.ROWS_PER_PAGE;
 
     /**
      * Creates a course. Returns whether it was successful.
@@ -61,6 +61,23 @@ public class CourseReceiver {
         try {
             course = courseDAO.getEntityById(id);
             return course.orElse(null);
+        }finally {
+            courseDAO.close();
+        }
+    }
+
+    /**
+     * Gets list of all courses depending on page number.
+     *
+     * @param page the number of page
+     * @return the list of courses
+     */
+    public List<Course> getAll(int page) {
+        List<Course> courses;
+        CourseDAO courseDAO = new CourseDAO();
+        try {
+            courses = courseDAO.getAll(page);
+            return courses;
         }finally {
             courseDAO.close();
         }
@@ -116,6 +133,20 @@ public class CourseReceiver {
             optional = courseDAO.update(course);
             return optional.orElse(null);
         }finally {
+            courseDAO.close();
+        }
+    }
+
+    /**
+     * Gets number of pages to show all courses.
+     *
+     * @return the number of pages to show
+     */
+    public int getPages() {
+        CourseDAO courseDAO = new CourseDAO();
+        try {
+            return (int)Math.ceil((double)courseDAO.getCount()/ROWS_PER_PAGE);
+        } finally {
             courseDAO.close();
         }
     }

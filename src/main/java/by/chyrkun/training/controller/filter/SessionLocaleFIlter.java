@@ -13,9 +13,7 @@ import java.io.IOException;
 public class SessionLocaleFIlter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        RequestDispatcher dispatcher;
         HttpServletRequest req = (HttpServletRequest) request;
-        HttpServletResponse resp = (HttpServletResponse) response;
 
         if (req.getParameter("sessionLocale") != null) {
             if (req.getParameter("sessionLocale").matches("[\\w]{2}_[\\w]{2}")) {

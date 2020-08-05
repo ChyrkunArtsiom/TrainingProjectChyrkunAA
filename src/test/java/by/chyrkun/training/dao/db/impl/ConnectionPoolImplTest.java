@@ -1,7 +1,5 @@
-package by.chyrkun.training.controller.dao.db.impl;
+package by.chyrkun.training.dao.db.impl;
 
-import by.chyrkun.training.dao.db.impl.Connection$Proxy;
-import by.chyrkun.training.dao.db.impl.ConnectionPoolImpl;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -16,7 +16,6 @@ import java.util.List;
  */
 public class GetCoursesCommand extends BaseCommand implements Command {
     private static final String COURSES = "courses";
-    private static final String ERROR_MESSAGE = "errorMessage";
     private CourseReceiver receiver;
     private CommandResult result;
 
@@ -30,7 +29,6 @@ public class GetCoursesCommand extends BaseCommand implements Command {
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
-        MessageManager messages = setLang(requestContent);
         List<Course> courses = null;
         int id = (Integer)requestContent.getSessionAttributes().get("user_id");
         int page;
@@ -57,6 +55,10 @@ public class GetCoursesCommand extends BaseCommand implements Command {
                 courses = receiver.getByStudent(id, chosen, page);
                 max_pages = receiver.getPagesForStudent(id, chosen);
                 break;
+            }
+            case "admin": {
+                courses = receiver.getAll(page);
+                max_pages = receiver.getPages();
             }
         }
         if (courses != null) {

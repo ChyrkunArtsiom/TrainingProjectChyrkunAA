@@ -13,8 +13,8 @@
 <body>
 <div class="list-group">
     <a href="${pageContext.request.contextPath}/admin/createuser" class="list-group-item list-group-item-action"><fmt:message key="createUser"/></a>
-<!--<a href="${pageContext.request.contextPath}/admin/deleteuser" class="list-group-item list-group-item-action"><fmt:message key="deleteUser"/></a>-->
     <a href="${pageContext.request.contextPath}/admin/createcourse" class="list-group-item list-group-item-action"><fmt:message key="createCourse"/></a>
+    <a href="${pageContext.request.contextPath}/admin/courses/1" class="list-group-item list-group-item-action"><fmt:message key="courses"/></a>
 </div>
 <!--<p><a href="${pageContext.request.contextPath}/admin/deletecourse">Delete course</a> </p>
 <p><a href="${pageContext.request.contextPath}/admin/updatecourse">Update course</a> </p>-->

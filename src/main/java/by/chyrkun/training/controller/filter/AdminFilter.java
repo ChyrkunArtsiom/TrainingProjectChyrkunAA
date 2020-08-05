@@ -29,52 +29,26 @@ public class AdminFilter implements Filter {
             resp.sendRedirect(req.getContextPath() + indexPath);
             return;
         }
-        switch(req.getRequestURI()) {
-            case "/training/admin": {
-                dispatcher = req.getRequestDispatcher("/WEB-INF/jsp/admin.jsp");
-                dispatcher.forward(req, resp);
-                break;
-            }
-            case "/training/admin/createuser": {
-                req.setAttribute("command", "get_roles");
-                dispatcher = req.getRequestDispatcher("/app");
-                dispatcher.forward(req, resp);
-                break;
-            }
-            case "/training/admin/updateuser": {
-                req.setAttribute("command", "update_user");
-                dispatcher = req.getRequestDispatcher("/app");
-                dispatcher.forward(req, resp);
-                break;
-            }
-            case "/training/admin/deleteuser": {
-                if (req.getParameter("command") != null) {
-                    dispatcher = req.getRequestDispatcher("/app");
-                } else {
-                    dispatcher = req.getRequestDispatcher("/WEB-INF/jsp/deleteUser.jsp");
-                }
-                dispatcher.forward(req, resp);
-                break;
-            }
-            case "/training/admin/createcourse": {
-                req.setAttribute("command", "get_teachers");
-                dispatcher = req.getRequestDispatcher("/app");
-                dispatcher.forward(req, resp);
-                break;
-            }
-            case "/training/admin/deletecourse": {
-                dispatcher = req.getRequestDispatcher("/WEB-INF/jsp/deleteCourse.jsp");
-                dispatcher.forward(req, resp);
-                break;
-            }
-            case "/training/admin/updatecourse": {
-                dispatcher = req.getRequestDispatcher("/WEB-INF/jsp/updateCourse.jsp");
-                dispatcher.forward(req, resp);
-                break;
-            }
-            default:{
-                resp.sendError(404, "Page is not found");
-            }
+
+        String path = req.getServletPath();
+        if (path.contains("admin/courses")) {
+            chain.doFilter(req, resp);
+        } else if (path.contains("admin/createuser")) {
+            req.setAttribute("command", "get_roles");
+            dispatcher = req.getRequestDispatcher("/app");
+            dispatcher.forward(req, resp);
+        } else if (path.contains("admin/createcourse")) {
+            req.setAttribute("command", "get_teachers");
+            dispatcher = req.getRequestDispatcher("/app");
+            dispatcher.forward(req, resp);
         }
+        else {
+            resp.sendError(404, "Page is not found");
+        }
+    }
+
+    private String getCommand(HttpServletRequest request) {
+        return request.getServletPath().
+                substring(request.getServletPath().indexOf("/admin/") + "/admin/".length(), request.getServletPath().lastIndexOf("/"));
     }
 }

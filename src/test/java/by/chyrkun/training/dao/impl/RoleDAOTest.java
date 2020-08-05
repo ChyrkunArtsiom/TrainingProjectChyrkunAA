@@ -1,4 +1,4 @@
-package by.chyrkun.training.controller.dao.impl;
+package by.chyrkun.training.dao.impl;
 
 import by.chyrkun.training.dao.db.impl.ConnectionPoolImpl;
 import by.chyrkun.training.dao.impl.RoleDAO;

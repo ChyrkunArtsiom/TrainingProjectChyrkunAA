@@ -41,6 +41,10 @@ public class CourseDAO extends AbstractDAO<Course> implements ResultMapper<List<
     private final static String SQL_GET_COURSES = "SELECT course_id, name, teacher_id " +
             "FROM training_schema.courses";
 
+    /** SQL query for getting courses on one page. */
+    private final static String SQL_GET_COURSES_PAGE = "SELECT course_id, name, teacher_id " +
+            "FROM training_schema.courses ORDER BY course_id OFFSET (?) LIMIT (?)";
+
     /** SQL query for getting courses for teacher on one page. */
     private final static String SQL_GET_COURSES_BY_TEACHER_PAGE = "SELECT course_id, name, teacher_id " +
             "FROM training_schema.courses WHERE teacher_id = (?) ORDER BY course_id OFFSET (?) LIMIT (?)";
@@ -48,6 +52,9 @@ public class CourseDAO extends AbstractDAO<Course> implements ResultMapper<List<
     /** SQL query for getting courses for the teacher. */
     private final static String SQL_GET_COURSES_BY_TEACHER = "SELECT course_id, name, teacher_id " +
             "FROM training_schema.courses WHERE teacher_id = (?) ORDER BY course_id";
+
+    /** SQL query for getting count of courses. */
+    private final static String SQL_GET_COUNT = "SELECT COUNT(*) FROM training_schema.courses ";
 
     /** SQL query for getting count of courses for the teacher. */
     private final static String SQL_GET_COUNT_BY_TEACHER = "SELECT COUNT(*) FROM training_schema.courses " +
@@ -82,8 +89,10 @@ public class CourseDAO extends AbstractDAO<Course> implements ResultMapper<List<
     /** Field for logging. */
     private final static Logger LOGGER = LogManager.getLogger(RoleDAO.class);
 
-    /** Rows to show in table on one page. */
-    private final static int ROWS_PER_PAGE = 3;
+    /**
+     * Rows to show in table on one page.
+     */
+    public final static int ROWS_PER_PAGE = 3;
 
     /**
      * Constructor with no parameters.
@@ -222,6 +231,22 @@ public class CourseDAO extends AbstractDAO<Course> implements ResultMapper<List<
     }
 
     /**
+     * Gets count of courses.
+     *
+     * @return the count of courses
+     * @throws UncheckedDAOException if SQLException was thrown
+     */
+    public int getCount() {
+        LOGGER.log(Level.INFO, "Counting courses...");
+        try {
+            return getCountUsingQuery(0, SQL_GET_COUNT );
+        }catch (SQLException ex) {
+            LOGGER.log(Level.FATAL, "Exception during course counting");
+            throw new UncheckedDAOException("Exception during course counting", ex);
+        }
+    }
+
+    /**
      * Gets count of courses for teacher.
      *
      * @param teacher_id the teacher id
@@ -320,6 +345,28 @@ public class CourseDAO extends AbstractDAO<Course> implements ResultMapper<List<
     }
 
     /**
+     * Gets all courses depending on page number. Returns ArrayList of courses.
+     *
+     * @param page the page number
+     * @return ArrayList of courses
+     */
+    public List<Course> getAll(int page) {
+        LOGGER.log(Level.INFO, "Selecting courses on page...");
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_COURSES_PAGE)) {
+            preparedStatement.setInt(1, (page - 1) * ROWS_PER_PAGE);
+            preparedStatement.setInt(2, ROWS_PER_PAGE);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (!resultSet.isBeforeFirst()) {
+                return null;
+            }
+            return getFromResult(resultSet);
+        }catch (SQLException ex) {
+            LOGGER.log(Level.FATAL, "Exception during course reading by teacher on page");
+            throw new UncheckedDAOException("Exception during course reading by teacher on page", ex);
+        }
+    }
+
+    /**
      * Gets count of courses for user depending on type of query.
      *
      * @param id the user id
@@ -329,7 +376,9 @@ public class CourseDAO extends AbstractDAO<Course> implements ResultMapper<List<
      */
     private int getCountUsingQuery(int id, String query) throws SQLException{
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setInt(1, id);
+            if (id != 0) {
+                preparedStatement.setInt(1, id);
+            }
             ResultSet resultSet = preparedStatement.executeQuery();
             if (!resultSet.isBeforeFirst()) {
                 return 0;
@@ -347,11 +396,15 @@ public class CourseDAO extends AbstractDAO<Course> implements ResultMapper<List<
         int course_id, teacher_id;
         String name;
         Course course;
+        User user;
         while (resultSet.next()) {
             course_id = resultSet.getInt("course_id");
             name = resultSet.getString("name");
             teacher_id = resultSet.getInt("teacher_id");
-            User user = userDAO.getEntityById(teacher_id).get();
+            Optional<User> optionalUser =  userDAO.getEntityById(teacher_id);
+            if (optionalUser.isPresent()) {
+                user = optionalUser.get();
+            } else break;
             course = new Course(course_id, name, user);
             courses.add(course);
         }
