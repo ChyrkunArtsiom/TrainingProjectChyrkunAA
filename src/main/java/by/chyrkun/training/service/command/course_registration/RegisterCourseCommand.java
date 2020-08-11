@@ -51,10 +51,6 @@ public class RegisterCourseCommand implements Command {
             CourseRegistration courseRegistration = new CourseRegistration(course, student);
             try {
                 receiver.create(courseRegistration);
-                /*
-                if (receiver.create(courseRegistration)) {
-                    requestContent.setSessionAttribute(MESSAGE, messages.getMessage("courseRegistrationWasCreated"));
-                }*/
             }catch (UserNotFoundServiceException ex) {
                 requestContent.setSessionAttribute(MESSAGE, messages.getMessage("userNotFound"));
             }catch (CourseNotFoundServiceException ex){

@@ -51,10 +51,6 @@ public class RegisterTaskCommand implements Command {
             Exercise exercise = new Exercise(task, student);
             try {
                 exerciseReceiver.create(exercise);
-                /*
-                if (exerciseReceiver.create(exercise)) {
-                    requestContent.setSessionAttribute(MESSAGE, messages.getMessage("exerciseWasCreated"));
-                }*/
             }catch (UserNotFoundServiceException ex) {
                 requestContent.setSessionAttribute(MESSAGE, messages.getMessage("userNotFound"));
             }catch (TaskNotFoundServiceException ex){

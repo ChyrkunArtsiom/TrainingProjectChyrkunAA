@@ -13,12 +13,18 @@ import by.chyrkun.training.service.util.InputSanitizer;
 import by.chyrkun.training.service.validator.ParamValidator;
 import by.chyrkun.training.service.validator.UserValidator;
 
+/**
+ * The class-command for updating user. Implements {@link Command}.
+ */
 public class UpdateUserCommand implements Command {
     private static final String ERROR_MESSAGE = "errorMessage";
     private UserReceiver userReceiver;
     private RoleReceiver roleReceiver;
     private CommandResult result;
 
+    /**
+     * Instantiates a new Update user command.
+     */
     public UpdateUserCommand() {
         userReceiver = new UserReceiver();
         roleReceiver = new RoleReceiver();
@@ -101,11 +107,11 @@ public class UpdateUserCommand implements Command {
         }finally {
             result.setPage(PageManager.getPage("shortpath.page.profile") + "/" + user_id);
             result.setResponseType(CommandResult.ResponseType.REDIRECT);
-            return result;
         }
+        return result;
     }
 
-    boolean isAdmin(RequestContent requestContent) {
+    private boolean isAdmin(RequestContent requestContent) {
         if ((requestContent.getSessionAttributes().get("role")!= null) &&
                 (requestContent.getSessionAttributes().get("role").equals("admin"))) {
             return true;

@@ -29,7 +29,38 @@
                             <fmt:message key="deleteCourse" var="lang_deleteCourse"/>
                             <input type="submit" class="btn btn-dark" value="${lang_deleteCourse}"/>
                         </form>
+
+                        <form name="UpdateCourseForm" method="post" action="${pageContext.request.contextPath}/session">
+                            <input type="hidden" name="command" value="update_course"/>
+                            <input type="hidden" name="course_id" value="${course.id}"/>
+
+                            <h1>Edit course</h1>
+                            <div class="mb-3">
+                                <label for="input_course_name">Course name</label>
+                                <div class="input-group">
+                                    <input type="text" id="input_course_name" name="course_name" placeholder="Course name" min="1" max="45" required value="${course.name}"/>
+                                </div>
+                            </div>
+                            <label for="teacher"><fmt:message key="teacher"/></label>
+                            <div class="row">
+                                <div class="mb-3 col-md-3">
+                                    <div class="input-group">
+                                        <select class="custom-select" id="teacher" name="teacher_id">
+                                            <c:forEach items="${teachers}" var="teacher">
+                                                <option value="${teacher.id}" selected>${teacher.firstname} ${teacher.secondname}</option>
+                                            </c:forEach>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <fmt:message key="edit" var="Edit"/>
+                            <input type="submit" class="btn btn-dark" value="${Edit}"/>
+                            <p>${sessionScope.errorMessage}</p>
+                            <c:remove var="message" scope="session"/>
+                        </form>
                     </c:if>
+
                     <c:if test="${sessionScope.role eq 'student' and registered eq 'false'}">
                         <form name="RegisterForm" method="post" action="${pageContext.request.contextPath}/session">
                             <input type="hidden" name="command" value="register_course"/>

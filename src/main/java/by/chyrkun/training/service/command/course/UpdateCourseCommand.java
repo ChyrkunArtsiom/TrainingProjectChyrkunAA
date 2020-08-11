@@ -9,70 +9,64 @@ import by.chyrkun.training.service.receiver.CourseReceiver;
 import by.chyrkun.training.service.receiver.UserReceiver;
 import by.chyrkun.training.service.resource.MessageManager;
 import by.chyrkun.training.service.resource.PageManager;
+import by.chyrkun.training.service.util.InputSanitizer;
 import by.chyrkun.training.service.validator.CourseValidator;
 import by.chyrkun.training.service.validator.ParamValidator;
 
+/**
+ * The class-command for updating course. Implements {@link Command}.
+ */
 public class UpdateCourseCommand implements Command {
-    private static final String PARAM_ID = "course_id";
-    private static final String PARAM_COURSE_NAME = "course_name";
-    private static final String PARAM_TEACHER_ID = "teacher_id";
     private static final String ERROR_MESSAGE = "errorMessage";
-    private static final String MESSAGE = "message";
-    private CourseReceiver receiver = new CourseReceiver();
+    private CourseReceiver courseReceiver;
+    private UserReceiver userReceiver;
+    private CommandResult result;
+
+    /**
+     * Instantiates a new Update course command.
+     */
+    public UpdateCourseCommand() {
+        courseReceiver = new CourseReceiver();
+        userReceiver = new UserReceiver();
+        result = new CommandResult();
+    }
 
     @Override
     public CommandResult execute(RequestContent requestContent) {
         MessageManager messages = setLang(requestContent);
-        CommandResult result = new CommandResult();
-        String id = requestContent.getRequestParameters().get(PARAM_ID)[0];
-        String name = requestContent.getRequestParameters().get(PARAM_COURSE_NAME)[0];
-        String teacher_id = requestContent.getRequestParameters().get(PARAM_TEACHER_ID)[0];
-        if (!ParamValidator.isPresent(name, teacher_id)) {
-            requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("lineIsEmpty"));
-            result.setResponseType(CommandResult.ResponseType.FORWARD);
-            result.setPage(PageManager.getPage("fullpath.page.updatecourse"));
+        String course_id = requestContent.getRequestParameters().get("course_id")[0];
+        String course_name = requestContent.getRequestParameters().get("course_name")[0];
+        String teacher_id = requestContent.getRequestParameters().get("teacher_id")[0];
+
+        if (!ParamValidator.isPresent(course_name, teacher_id)) {
+            requestContent.setSessionAttribute(ERROR_MESSAGE, messages.getMessage("lineIsEmpty"));
         }
         else {
-            Course course = receiver.getById(Integer.parseInt(id));
+            Course course = courseReceiver.getById(Integer.parseInt(course_id));
             if (course == null) {
-                requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("courseNotFound"));
-                result.setResponseType(CommandResult.ResponseType.FORWARD);
-                result.setPage(PageManager.getPage("fullpath.page.updatecourse"));
+                requestContent.setSessionAttribute(ERROR_MESSAGE, messages.getMessage("courseNotFound"));
             }
             else {
-                UserReceiver userReceiver = new UserReceiver();
                 User teacher = userReceiver.getById(Integer.parseInt(teacher_id));
                 if (teacher == null) {
-                    requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("userNotFound"));
-                    result.setResponseType(CommandResult.ResponseType.FORWARD);
-                    result.setPage(PageManager.getPage("fullpath.page.updatecourse"));
+                    requestContent.setSessionAttribute(ERROR_MESSAGE, messages.getMessage("userNotFound"));
                 }
                 else if (!teacher.getRole().getName().equals("teacher")) {
-                    requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("userIsNotTeacher"));
-                    result.setResponseType(CommandResult.ResponseType.FORWARD);
-                    result.setPage(PageManager.getPage("fullpath.page.updatecourse"));
+                    requestContent.setSessionAttribute(ERROR_MESSAGE, messages.getMessage("userIsNotTeacher"));
                 }
-                else if (!CourseValidator.isCourseNameValid(name)) {
-                    requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("nameIsNotValid"));
-                    result.setResponseType(CommandResult.ResponseType.FORWARD);
-                    result.setPage(PageManager.getPage("fullpath.page.updatecourse"));
+                else if (!CourseValidator.isCourseNameValid(course_name)) {
+                    requestContent.setSessionAttribute(ERROR_MESSAGE, messages.getMessage("nameIsNotValid"));
                 }
-                course = new Course(Integer.parseInt(id), name, teacher);
-                if (receiver.update(course) != null) {
-                    result.setPage(PageManager.getPage("shortpath.page.updatecourse"));
-                    requestContent.setSessionAttribute(MESSAGE, messages.getMessage("courseIsUpdated"));
-                    result.setResponseType(CommandResult.ResponseType.REDIRECT);
-                }
-                else {
-                    requestContent.setRequestAttribute(ERROR_MESSAGE, "Course wasn't deleted for some reason");
-                    result.setResponseType(CommandResult.ResponseType.FORWARD);
-                    result.setPage(PageManager.getPage("fullpath.page.updatecourse"));
+                course_name = InputSanitizer.sanitize(course_name);
+                course = new Course(Integer.parseInt(course_id), course_name, teacher);
+                if (courseReceiver.update(course) == null) {
+                    requestContent.setSessionAttribute(ERROR_MESSAGE, messages.getMessage("courseIsNotUpdated"));
                 }
             }
         }
-        requestContent.setRequestAttribute(PARAM_ID, id);
-        requestContent.setRequestAttribute(PARAM_COURSE_NAME, name);
-        requestContent.setRequestAttribute(PARAM_TEACHER_ID, teacher_id);
+
+        result.setResponseType(CommandResult.ResponseType.REDIRECT);
+        result.setPage(PageManager.getPage("shortpath.page.course") + "/" + course_id);
         return result;
     }
 }

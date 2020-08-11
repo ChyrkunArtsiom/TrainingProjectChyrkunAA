@@ -57,7 +57,7 @@ class UpdateUserCommandTest {
 
 
     @Test
-    void execute() {
+    void testExecute() {
         Role role = new Role(2, "teacher");
         User user = new User(1, "Test", "Firstname", "Surname", new Role(1, "admin"));
         Mockito.lenient().when(roleReceiver.getByName(Mockito.anyString())).thenReturn(role);

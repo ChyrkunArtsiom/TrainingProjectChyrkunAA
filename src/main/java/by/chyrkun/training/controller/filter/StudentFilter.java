@@ -23,7 +23,6 @@ public class StudentFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
-        RequestDispatcher dispatcher;
         Object role = ((HttpServletRequest) request).getSession().getAttribute("role");
         if (role == null || !role.toString().equals("student")) {
             resp.sendRedirect(req.getContextPath() + indexPath);
@@ -39,36 +38,5 @@ public class StudentFilter implements Filter {
         } else {
             resp.sendError(404, "Page is not found");
         }
-
-        /*
-        switch(req.getRequestURI()) {
-            case "/training/student": {
-                dispatcher = req.getRequestDispatcher("/WEB-INF/jsp/main.jsp");
-                dispatcher.forward(req, resp);
-                break;
-            }
-            case "/training/student/courses": {
-                req.setAttribute("command", "get_courses");
-                req.setAttribute("chosen", "false");
-                dispatcher = req.getRequestDispatcher("/app");
-                dispatcher.forward(req, resp);
-                break;
-            }
-            case "/training/student/registered": {
-                req.setAttribute("command", "get_courses");
-                req.setAttribute("chosen", "true");
-                dispatcher = req.getRequestDispatcher("/app");
-                dispatcher.forward(req, resp);
-                break;
-            }
-            default: {
-                resp.sendError(404, "Page is not found");
-            }
-        }*/
-    }
-
-    private String getCommand(HttpServletRequest request) {
-        return request.getServletPath().
-                substring(request.getServletPath().indexOf("/teacher/") + "/teacher/".length(), request.getServletPath().lastIndexOf("/"));
     }
 }

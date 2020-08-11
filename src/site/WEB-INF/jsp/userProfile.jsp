@@ -36,8 +36,7 @@
             <input type="hidden" name="old_username" value="${user.login}"/>
             <div class="container">
                 <div class="col-md-8">
-                    <h1>Edit profile</h1>
-
+                    <h1><fmt:message key="editProfile"/></h1>
                     <div class="mb-3">
                         <fmt:message key="username" var="lang_username"/>
                         <label for="inputlogin">${lang_username}</label>
@@ -92,8 +91,8 @@
                             </div>
                         </div>
                     </c:if>
-
-                    <input type="submit" class="btn btn-dark" value="Edit"/>
+                    <fmt:message key="edit" var="Edit"/>
+                    <input type="submit" class="btn btn-dark" value="${Edit}"/>
                     <p>${sessionScope.errorMessage}</p>
                     <c:remove var="message" scope="session"/>
                 </div>
