@@ -19,9 +19,6 @@ import by.chyrkun.training.service.validator.UserValidator;
  * The class-command for user creation. Extends {@link BaseCommand}, implements {@link Command}.
  */
 public class CreateUserCommand extends BaseCommand implements Command {
-    private static final String PARAM_NAME_LOGIN = "username";
-    private static final String PARAM_NAME_FIRSTNAME = "firstname";
-    private static final String PARAM_NAME_SECONDNAME = "secondname";
     private static final String PARAM_NAME_ROLE_ID = "role_id";
     private static final String ERROR_MESSAGE = "errorMessage";
     private static final String MESSAGE = "message";
@@ -43,6 +40,7 @@ public class CreateUserCommand extends BaseCommand implements Command {
     @Override
     public CommandResult execute(RequestContent requestContent) {
         MessageManager messages = setLang(requestContent);
+        String password = requestContent.getRequestParameters().get("password")[0];
         User user = GetterFromRequestContent.getUserFromRequest(requestContent);
         int role_id = Integer.parseInt(requestContent.getRequestParameters().get(PARAM_NAME_ROLE_ID)[0]);
         first: try {
@@ -57,6 +55,13 @@ public class CreateUserCommand extends BaseCommand implements Command {
                 user.setRole(role);
             }
             StringBuffer message = new StringBuffer();
+            if (!UserValidator.isPasswordValid(password)) {
+                message.append(messages.getMessage("passwordIsNotValid"));
+                requestContent.setRequestAttribute(ERROR_MESSAGE, message);
+                result.setResponseType(CommandResult.ResponseType.FORWARD);
+                result.setPage(CREATE_USER_PAGE);
+                break first;
+            }
             if (!UserValidator.isUserValid(user, message, messages)) {
                 requestContent.setRequestAttribute(ERROR_MESSAGE, message);
                 result.setResponseType(CommandResult.ResponseType.FORWARD);
@@ -81,9 +86,9 @@ public class CreateUserCommand extends BaseCommand implements Command {
             result.setPage(CREATE_USER_PAGE);
         }
         next.execute(requestContent);
-        requestContent.setRequestAttribute(PARAM_NAME_LOGIN, user.getLogin());
-        requestContent.setRequestAttribute(PARAM_NAME_FIRSTNAME, user.getFirstname());
-        requestContent.setRequestAttribute(PARAM_NAME_SECONDNAME, user.getSecondname());
+        requestContent.setRequestAttribute("login", user.getLogin());
+        requestContent.setRequestAttribute("firstname", user.getFirstname());
+        requestContent.setRequestAttribute("secondname", user.getSecondname());
         return result;
     }
 }

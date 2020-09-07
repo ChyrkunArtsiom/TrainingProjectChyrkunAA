@@ -6,6 +6,7 @@ import by.chyrkun.training.dao.impl.RoleDAO;
 import by.chyrkun.training.dao.impl.UserDAO;
 import by.chyrkun.training.model.Role;
 import by.chyrkun.training.model.User;
+import by.chyrkun.training.service.util.PasswordHasher;
 import org.junit.jupiter.api.*;
 
 import java.sql.DriverManager;
@@ -49,7 +50,7 @@ class UserDAOTest {
         assertTrue(roleDAO.create(role));
         role = roleDAO.getRoleByName(role.getName()).orElseThrow(EntityNotFoundDAOException::new);
 
-        User user = new User("logintest", "passwordtest", "firstname", "secondname", role);
+        User user = new User("logintest", PasswordHasher.getHash("passwordtest"), "firstname", "secondname", role);
         assertTrue(userDAO.create(user));
         assertNotNull(user = userDAO.getUserByLogin(user.getLogin()).orElse(null));
 

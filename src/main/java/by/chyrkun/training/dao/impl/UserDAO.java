@@ -47,7 +47,7 @@ public class UserDAO extends AbstractDAO<User> implements ResultMapper<List<User
             "FROM training_schema.users WHERE user_id = (?)";
 
     /** SQL query for getting user by login. */
-    private final static String SQL_GET_USER_BY_LOGIN = "SELECT user_id, login, password, firstname, secondname, role_id " +
+    private final static String SQL_GET_USER_BY_LOGIN = "SELECT user_id, login, password, password, firstname, secondname, role_id " +
             "FROM training_schema.users WHERE login = (?)";
 
     /** SQL query for getting teachers. */
@@ -90,7 +90,7 @@ public class UserDAO extends AbstractDAO<User> implements ResultMapper<List<User
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_CREATE_USER)) {
             preparedStatement.setString(1, user.getLogin());
-            preparedStatement.setString(2, user.getPassword());
+            preparedStatement.setBytes(2, user.getPassword());
             preparedStatement.setString(3, user.getFirstname());
             preparedStatement.setString(4, user.getSecondname());
             preparedStatement.setInt(5, user.getRole().getId());
@@ -139,7 +139,7 @@ public class UserDAO extends AbstractDAO<User> implements ResultMapper<List<User
                     preparedStatement.setInt(5, user.getId());
                 }else {
                     preparedStatement.setString(1, user.getLogin());
-                    preparedStatement.setString(2, user.getPassword());
+                    preparedStatement.setBytes(2, user.getPassword());
                     preparedStatement.setString(3, user.getFirstname());
                     preparedStatement.setString(4, user.getSecondname());
                     preparedStatement.setInt(5, user.getRole().getId());
@@ -254,7 +254,7 @@ public class UserDAO extends AbstractDAO<User> implements ResultMapper<List<User
     private List<User> getList(ResultSet resultSet, boolean withPassword) throws SQLException {
         List<User> users = new ArrayList<>();
         String login;
-        String password = null;
+        byte[] password = new byte[16];
         String firstname;
         String secondname;
         int user_id;
@@ -264,7 +264,7 @@ public class UserDAO extends AbstractDAO<User> implements ResultMapper<List<User
             user_id = resultSet.getInt("user_id");
             login = resultSet.getString("login");
             if (withPassword) {
-                password = resultSet.getString("password");
+                password = resultSet.getBytes("password");
             }
             firstname = resultSet.getString("firstname");
             secondname = resultSet.getString("secondname");
@@ -281,14 +281,15 @@ public class UserDAO extends AbstractDAO<User> implements ResultMapper<List<User
     public List<User> getFromResult(ResultSet resultSet) throws SQLException {
         RoleDAO roleDAO = new RoleDAO(connection);
         List<User> users = new ArrayList<>();
-        String login, password, firstname, secondname;
+        String login, firstname, secondname;
+        byte[] password;
         int role_id, user_id;
         Role role;
         User user;
         while (resultSet.next()) {
             user_id = resultSet.getInt("user_id");
             login = resultSet.getString("login");
-            password = resultSet.getString("password");
+            password = resultSet.getBytes("password");
             firstname = resultSet.getString("firstname");
             secondname = resultSet.getString("secondname");
             role_id = resultSet.getInt("role_id");

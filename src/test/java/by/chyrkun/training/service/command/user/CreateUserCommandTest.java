@@ -42,7 +42,7 @@ class CreateUserCommandTest {
 
         requestContent = new RequestContent();
         requestContent.setSessionAttribute("lang", "en_US");
-        requestContent.setRequestParameter("username", username);
+        requestContent.setRequestParameter("login", username);
         requestContent.setRequestParameter("password", password);
         requestContent.setRequestParameter("firstname", firstname);
         requestContent.setRequestParameter("secondname", secondname);
@@ -55,7 +55,7 @@ class CreateUserCommandTest {
         Mockito.lenient().when(userReceiver.create(Mockito.any(User.class))).thenReturn(true);
         CommandResult result = command.execute(requestContent);
         Mockito.verify(nextCommand, Mockito.times(1)).execute(Mockito.any(RequestContent.class));
-        assertEquals(requestContent.getRequestParameters().get("username")[0], requestContent.getRequestAttributes().get("username").toString());
+        assertEquals(requestContent.getRequestParameters().get("login")[0], requestContent.getRequestAttributes().get("login").toString());
         assertEquals(PageManager.getPage("shortpath.page.admin.createuser"), result.getPage());
         assertEquals(CommandResult.ResponseType.REDIRECT, result.getResponseType());
 

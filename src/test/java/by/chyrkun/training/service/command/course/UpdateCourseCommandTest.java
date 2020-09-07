@@ -8,6 +8,7 @@ import by.chyrkun.training.model.User;
 import by.chyrkun.training.service.receiver.CourseReceiver;
 import by.chyrkun.training.service.receiver.UserReceiver;
 import by.chyrkun.training.service.resource.PageManager;
+import by.chyrkun.training.service.util.PasswordHasher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,7 +51,7 @@ class UpdateCourseCommandTest {
     @Test
     void testExecute() {
         Role role = new Role(1, "teacher");
-        User teacher = new User(1, "TestTeacher", "Password", "FN", "SN", role);
+        User teacher = new User(1, "TestTeacher", PasswordHasher.getHash("Password"), "FN", "SN", role);
         Course course = new Course(1, "Course before updating", teacher);
         Mockito.lenient().when(courseReceiver.getById(Mockito.anyInt())).thenReturn(course);
         Mockito.lenient().when(userReceiver.getById(Mockito.anyInt())).thenReturn(teacher);

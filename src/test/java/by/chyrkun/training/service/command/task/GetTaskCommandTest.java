@@ -9,6 +9,7 @@ import by.chyrkun.training.model.User;
 import by.chyrkun.training.service.receiver.ExerciseReceiver;
 import by.chyrkun.training.service.receiver.TaskReceiver;
 import by.chyrkun.training.service.resource.PageManager;
+import by.chyrkun.training.service.util.PasswordHasher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -48,7 +49,7 @@ class GetTaskCommandTest {
     @Test
     void testExecute() {
         Role role = new Role(1, "teacher");
-        User teacher = new User(1, "Login", "Password",
+        User teacher = new User(1, "Login", PasswordHasher.getHash("Password"),
                 "Firstname", "Surname", role);
         Course course = new Course("Course", teacher);
         Task task = new Task(1, "Task", LocalDate.now(), LocalDate.now().plusDays(1), course);

@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 /**
- * The class for <ctg> custom tag. It shows current time in chosen locale.
+ * The class for <ctg> custom tag. It shows current date in chosen locale.
  */
 public class InfoDateTag extends TagSupport {
     @Override

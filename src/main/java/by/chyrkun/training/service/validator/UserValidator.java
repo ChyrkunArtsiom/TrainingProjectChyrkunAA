@@ -25,10 +25,6 @@ public class UserValidator {
             message.append(manager.getMessage("nameIsNotValid"));
             return false;
         }
-        if (!isPasswordValid(user.getPassword())) {
-            message.append(manager.getMessage("passwordIsNotValid"));
-            return false;
-        }
         return true;
     }
 

@@ -11,6 +11,7 @@ import by.chyrkun.training.service.receiver.UserReceiver;
 import by.chyrkun.training.service.resource.MessageManager;
 import by.chyrkun.training.service.resource.PageManager;
 import by.chyrkun.training.service.util.GetterFromRequestContent;
+import by.chyrkun.training.service.util.PasswordHasher;
 import by.chyrkun.training.service.validator.UserValidator;
 
 /**
@@ -39,6 +40,7 @@ public class SignupCommand implements Command {
     @Override
     public CommandResult execute(RequestContent requestContent) {
         MessageManager messages = setLang(requestContent);
+        String password = requestContent.getRequestParameters().get("password")[0];
         User user = GetterFromRequestContent.getUserFromRequest(requestContent);
         first: try {
             Role role = roleReceiver.getById(student_id);
@@ -52,6 +54,13 @@ public class SignupCommand implements Command {
                 user.setRole(role);
             }
             StringBuffer message = new StringBuffer();
+            if (!UserValidator.isPasswordValid(password)) {
+                message.append(messages.getMessage("passwordIsNotValid"));
+                requestContent.setRequestAttribute(ERROR_MESSAGE, message);
+                result.setResponseType(CommandResult.ResponseType.FORWARD);
+                result.setPage(SIGN_UP_PAGE);
+                break first;
+            }
             if (!UserValidator.isUserValid(user, message, messages)) {
                 requestContent.setRequestAttribute(ERROR_MESSAGE, message);
                 result.setResponseType(CommandResult.ResponseType.FORWARD);

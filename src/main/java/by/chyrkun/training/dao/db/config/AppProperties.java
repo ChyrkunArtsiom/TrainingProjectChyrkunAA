@@ -16,13 +16,12 @@ public enum AppProperties {
     private String user;
     private String password;
     private int initialPoolSize = 10;
-    private final ResourceBundle resourceBundle;
 
     /**
      * Constructor for enumeration. Takes properties from bundle.
      */
     AppProperties() {
-        resourceBundle = ResourceBundle.getBundle("application");
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("application");
         url = resourceBundle.getString("dbUrl");
         user = resourceBundle.getString("dbUser");
         password = resourceBundle.getString("dbPassword");

@@ -15,10 +15,11 @@ public class GetterFromRequestContent {
      * @return the {@link User} object
      */
     public static User getUserFromRequest(RequestContent requestContent) {
-        String login = requestContent.getRequestParameters().get("username")[0];
+        String login = requestContent.getRequestParameters().get("login")[0];
         String password = requestContent.getRequestParameters().get("password")[0];
         String firstname = requestContent.getRequestParameters().get("firstname")[0];
         String secondname = requestContent.getRequestParameters().get("secondname")[0];
-        return new User(login, password, firstname, secondname);
+        byte[] hash = PasswordHasher.getHash(password);
+        return new User(login, hash, firstname, secondname);
     }
 }

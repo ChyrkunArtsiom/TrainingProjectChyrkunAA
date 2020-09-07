@@ -3,6 +3,7 @@ package by.chyrkun.training.dao.impl;
 import by.chyrkun.training.dao.AbstractDAO;
 import by.chyrkun.training.dao.db.impl.Connection$Proxy;
 import by.chyrkun.training.dao.db.impl.ConnectionPoolImpl;
+import by.chyrkun.training.dao.exception.EntityNotFoundDAOException;
 import by.chyrkun.training.dao.exception.UncheckedDAOException;
 import by.chyrkun.training.dao.exception.UserNotFoundDAOException;
 import by.chyrkun.training.model.Course;
@@ -317,9 +318,7 @@ public class CourseDAO extends AbstractDAO<Course> implements ResultMapper<List<
                 course_id = resultSet.getInt("course_id");
                 name = resultSet.getString("name");
                 teacher_id = resultSet.getInt("teacher_id");
-                Optional<User> optionalUser = userDAO.getEntityById(teacher_id);
-                User teacher;
-                teacher = optionalUser.orElse(null);
+                User teacher = (User) userDAO.getEntityById(teacher_id).get();
                 courses.add(new Course(course_id, name, teacher));
             }
             return courses;

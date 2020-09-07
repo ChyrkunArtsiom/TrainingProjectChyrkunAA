@@ -3,6 +3,7 @@ package by.chyrkun.training.service.command.exercise;
 import by.chyrkun.training.controller.RequestContent;
 import by.chyrkun.training.model.*;
 import by.chyrkun.training.service.receiver.ExerciseReceiver;
+import by.chyrkun.training.service.util.PasswordHasher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,9 +41,9 @@ class GetExerciseCommandTest {
     void testExecute() {
         Role role1 = new Role(1, "teacher");
         Role role2 = new Role(2, "student");
-        User teacher = new User(1, "Teacher", "Password",
+        User teacher = new User(1, "Teacher", PasswordHasher.getHash("Password"),
                 "Firstname", "Surname", role1);
-        User student = new User(2, "Student", "Password",
+        User student = new User(2, "Student", PasswordHasher.getHash("Password"),
                 "Firstname", "Surname", role2);
         Course course = new Course("Course", teacher);
         Task task = new Task(1, "Task", LocalDate.now(), LocalDate.now().plusDays(1), course);

@@ -5,6 +5,7 @@ import by.chyrkun.training.model.Course;
 import by.chyrkun.training.model.Role;
 import by.chyrkun.training.model.User;
 import by.chyrkun.training.service.receiver.CourseReceiver;
+import by.chyrkun.training.service.util.PasswordHasher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,7 +42,7 @@ class GetCoursesCommandTest {
     @Test
     void testExecute() {
         Role role = new Role(1, "teacher");
-        User teacher = new User(1, "Login", "Password", "Firstname", "Surname", role);
+        User teacher = new User(1, "Login", PasswordHasher.getHash("Password"), "Firstname", "Surname", role);
         Course course1 = new Course("Course1", teacher);
         Course course2 = new Course("Course2", teacher);
         List<Course> courses = List.of(course1, course2);

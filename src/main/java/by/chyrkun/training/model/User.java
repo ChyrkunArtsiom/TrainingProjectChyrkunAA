@@ -12,8 +12,8 @@ public class User extends Entity {
     /** A string of login. */
     private String login;
 
-    /** A string of password. */
-    private String password;
+    /** An array of bytes of password. */
+    private byte[] password;
 
     /** A string of first name. */
     private String firstname;
@@ -29,12 +29,12 @@ public class User extends Entity {
      *
      * @param id         the id
      * @param login      the string of login
-     * @param password   the string of password
+     * @param password   the array of bytes of password
      * @param firstname  the string of first name
      * @param secondname the string of second name
      * @param role       the {@link Role} object of role
      */
-    public User(int id, String login, String password, String firstname, String secondname, Role role) {
+    public User(int id, String login, byte[] password, String firstname, String secondname, Role role) {
         setId(id);
         setLogin(login);
         setPassword(password);
@@ -52,7 +52,7 @@ public class User extends Entity {
      * @param secondname the string of second name
      * @param role       the {@link Role} object of role
      */
-    public User(String login, String password, String firstname, String secondname, Role role) {
+    public User(String login, byte[] password, String firstname, String secondname, Role role) {
         setLogin(login);
         setPassword(password);
         setFirstname(firstname);
@@ -68,7 +68,7 @@ public class User extends Entity {
      * @param firstname  the string of first name
      * @param secondname the string of second name
      */
-    public User(String login, String password, String firstname, String secondname) {
+    public User(String login, byte[] password, String firstname, String secondname) {
         setLogin(login);
         setPassword(password);
         setFirstname(firstname);
@@ -135,11 +135,11 @@ public class User extends Entity {
         this.login = login;
     }
 
-    public String getPassword() {
+    public byte[] getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(byte[] password) {
         this.password = password;
     }
 

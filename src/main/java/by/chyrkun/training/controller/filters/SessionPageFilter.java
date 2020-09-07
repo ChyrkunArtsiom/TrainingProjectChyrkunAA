@@ -1,4 +1,4 @@
-package by.chyrkun.training.controller.filter;
+package by.chyrkun.training.controller.filters;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;

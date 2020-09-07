@@ -4,6 +4,7 @@ import by.chyrkun.training.dao.db.impl.ConnectionPoolImpl;
 import by.chyrkun.training.dao.exception.DAOException;
 import by.chyrkun.training.dao.impl.*;
 import by.chyrkun.training.model.*;
+import by.chyrkun.training.service.util.PasswordHasher;
 import org.junit.jupiter.api.*;
 
 import java.sql.DriverManager;
@@ -55,7 +56,7 @@ class ExerciseDAOTest {
         Role role = new Role(1, "teacher");
         assertTrue(roleDAO.create(role));
 
-        User user = new User("Teacher", "Password","First name", "Second name", role);
+        User user = new User("Teacher", PasswordHasher.getHash("Password"),"First name", "Second name", role);
         assertTrue(userDAO.create(user));
         assertNotNull(user = userDAO.getUserByLogin(user.getLogin()).orElse(null));
 

@@ -6,6 +6,7 @@ import by.chyrkun.training.model.Role;
 import by.chyrkun.training.model.User;
 import by.chyrkun.training.service.command.task.GetTasksByCourseCommand;
 import by.chyrkun.training.service.receiver.CourseReceiver;
+import by.chyrkun.training.service.util.PasswordHasher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,7 +45,7 @@ class GetCourseCommandTest {
     @Test
     void testExecute() {
         Role role = new Role(1, "teacher");
-        User teacher = new User(1, "Login", "Password", "Firstname", "Surname", role);
+        User teacher = new User(1, "Login", PasswordHasher.getHash("Password"), "Firstname", "Surname", role);
         Course course = new Course("Course", teacher);
         Mockito.lenient().when(courseReceiver.getById(Mockito.anyInt())).thenReturn(course);
         command.execute(requestContent);

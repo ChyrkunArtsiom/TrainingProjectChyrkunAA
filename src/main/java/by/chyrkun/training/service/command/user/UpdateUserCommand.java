@@ -10,8 +10,11 @@ import by.chyrkun.training.service.receiver.UserReceiver;
 import by.chyrkun.training.service.resource.MessageManager;
 import by.chyrkun.training.service.resource.PageManager;
 import by.chyrkun.training.service.util.InputSanitizer;
+import by.chyrkun.training.service.util.PasswordHasher;
 import by.chyrkun.training.service.validator.ParamValidator;
 import by.chyrkun.training.service.validator.UserValidator;
+
+import java.util.Arrays;
 
 /**
  * The class-command for updating user. Implements {@link Command}.
@@ -66,7 +69,7 @@ public class UpdateUserCommand implements Command {
 
                 User user = userReceiver.getByLogin(old_username);
 
-                if ((user == null) || (!user.getPassword().equals(old_password))) {
+                if ((user == null) || (!Arrays.equals(user.getPassword(), PasswordHasher.getHash(old_password)))) {
                     requestContent.setSessionAttribute(ERROR_MESSAGE, messages.getMessage("loginDataIsNotValid"));
                     break first;
                 }
@@ -92,11 +95,7 @@ public class UpdateUserCommand implements Command {
             }
 
             User user;
-            if (admin) {
-                user = new User(Integer.parseInt(user_id), login, firstname, secondname, role);
-            }else {
-                user = new User(Integer.parseInt(user_id), login, new_password, firstname, secondname, role);
-            }
+            user = new User(Integer.parseInt(user_id), login, firstname, secondname, role);
 
             if (userReceiver.update(user) != null && user_id.equals(session_user_id)) {
                 requestContent.setSessionAttribute("userName", user.getLogin());

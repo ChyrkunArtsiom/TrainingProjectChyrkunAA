@@ -8,6 +8,7 @@ import by.chyrkun.training.dao.impl.UserDAO;
 import by.chyrkun.training.model.Course;
 import by.chyrkun.training.model.Role;
 import by.chyrkun.training.model.User;
+import by.chyrkun.training.service.util.PasswordHasher;
 import org.junit.jupiter.api.*;
 
 import java.sql.DriverManager;
@@ -52,7 +53,7 @@ class CourseDAOTest {
         Role role = new Role(1, "teacher");
         assertTrue(roleDAO.create(role));
 
-        User user = new User("Teacher", "Password","First name", "Second name", role);
+        User user = new User("Teacher", PasswordHasher.getHash("Password"),"First name", "Second name", role);
         assertTrue(userDAO.create(user));
         assertNotNull(user = userDAO.getUserByLogin(user.getLogin()).orElse(null));
 

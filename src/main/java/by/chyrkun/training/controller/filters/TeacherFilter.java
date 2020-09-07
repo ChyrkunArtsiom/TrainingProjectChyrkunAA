@@ -1,4 +1,4 @@
-package by.chyrkun.training.controller.filter;
+package by.chyrkun.training.controller.filters;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -8,10 +8,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * The webfilter for student pages.
+ * The webfilter for teacher pages.
  */
-@WebFilter(filterName = "studentFilter", urlPatterns = {"/student/*"}, initParams = {@WebInitParam(name = "INDEX_PATH", value = "/")})
-public class StudentFilter implements Filter {
+@WebFilter(filterName = "teacherFilter", urlPatterns = {"/teacher/*"}, initParams = {@WebInitParam(name = "INDEX_PATH", value = "/")})
+public class TeacherFilter implements Filter {
     private String indexPath;
 
     @Override
@@ -23,18 +23,20 @@ public class StudentFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
+        RequestDispatcher dispatcher;
         Object role = ((HttpServletRequest) request).getSession().getAttribute("role");
-        if (role == null || !role.toString().equals("student")) {
+        if (role == null || !role.toString().equals("teacher")) {
             resp.sendRedirect(req.getContextPath() + indexPath);
             return;
         }
         String path = req.getServletPath();
-        if (path.contains("courses")) {
-            req.setAttribute("chosen", "false");
+        if (path.contains("teacher/courses")) {
             chain.doFilter(req, resp);
-        } else if (path.contains("registered")) {
-            req.setAttribute("chosen", "true");
-            chain.doFilter(req, resp);
+        } else if (path.contains("teacher/createtask")) {
+            req.setAttribute("command", "get_courses");
+            req.setAttribute("select", "for_task");
+            dispatcher = req.getRequestDispatcher("/app");
+            dispatcher.forward(req, resp);
         } else {
             resp.sendError(404, "Page is not found");
         }

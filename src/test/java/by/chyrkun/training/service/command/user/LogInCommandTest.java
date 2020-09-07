@@ -5,6 +5,7 @@ import by.chyrkun.training.controller.RequestContent;
 import by.chyrkun.training.model.Role;
 import by.chyrkun.training.model.User;
 import by.chyrkun.training.service.receiver.UserReceiver;
+import by.chyrkun.training.service.util.PasswordHasher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,7 +43,7 @@ class LogInCommandTest {
     @Test
     void testExecute() {
         Role role = new Role(1, "teacher");
-        User user = new User(1, "Login", "Password", "Firstname", "Surname", role);
+        User user = new User(1, "Login", PasswordHasher.getHash("Password"), "Firstname", "Surname", role);
         Mockito.lenient().when(userReceiver.getByLogin(Mockito.anyString())).thenReturn(user);
         CommandResult result = command.execute(requestContent);
         assertEquals(1, requestContent.getSessionAttributes().get("user_id"));

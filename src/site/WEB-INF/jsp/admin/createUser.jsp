@@ -25,7 +25,7 @@
                 <fmt:message key="username" var="lang_username"/>
                 <label for="inputlogin">${lang_username}</label>
                 <div class="input-group">
-                    <input type="text" id="inputlogin" name="username" placeholder="${lang_username}" required autofocus min="5" max="45" value="${username}"/>
+                    <input type="text" id="inputlogin" name="login" placeholder="${lang_username}" required autofocus min="5" max="45" value="${login}"/>
                 </div>
             </div>
             <div class="mb-3">

@@ -11,6 +11,7 @@ import by.chyrkun.training.service.receiver.CourseReceiver;
 import by.chyrkun.training.service.receiver.CourseRegistrationReceiver;
 import by.chyrkun.training.service.receiver.UserReceiver;
 import by.chyrkun.training.service.resource.PageManager;
+import by.chyrkun.training.service.util.PasswordHasher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,7 +48,7 @@ class RegisterCourseCommandTest {
     @Test
     void testExecute() throws EntityNotFoundServiceException {
         Role role = new Role(1, "student");
-        User student = new User(1, "Login", "Password", "Firstname", "Surname", role);
+        User student = new User(1, "Login", PasswordHasher.getHash("Password"), "Firstname", "Surname", role);
         Course course = new Course(1, "Course1", student);
         Mockito.lenient().when(userReceiver.getById(Mockito.anyInt())).thenReturn(student);
         Mockito.lenient().when(courseReceiver.getById(Mockito.anyInt())).thenReturn(course);

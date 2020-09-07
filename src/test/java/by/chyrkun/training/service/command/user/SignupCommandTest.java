@@ -42,7 +42,7 @@ class SignupCommandTest {
 
         requestContent = new RequestContent();
         requestContent.setSessionAttribute("lang", "en_US");
-        requestContent.setRequestParameter("username", username);
+        requestContent.setRequestParameter("login", username);
         requestContent.setRequestParameter("password", password);
         requestContent.setRequestParameter("firstname", firstname);
         requestContent.setRequestParameter("secondname", secondname);

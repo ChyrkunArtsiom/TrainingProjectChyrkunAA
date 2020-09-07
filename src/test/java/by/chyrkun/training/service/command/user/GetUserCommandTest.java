@@ -5,6 +5,7 @@ import by.chyrkun.training.controller.RequestContent;
 import by.chyrkun.training.model.User;
 import by.chyrkun.training.service.receiver.UserReceiver;
 import by.chyrkun.training.service.resource.PageManager;
+import by.chyrkun.training.service.util.PasswordHasher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,7 +39,7 @@ class GetUserCommandTest {
 
     @Test
     void testExecute() {
-        User user = new User("Login", "Password", "Firstname", "Surname");
+        User user = new User("Login", PasswordHasher.getHash("Password"), "Firstname", "Surname");
         Mockito.lenient().when(userReceiver.getById(Mockito.anyInt())).
                 thenReturn(user);
         CommandResult result = command.execute(requestContent);

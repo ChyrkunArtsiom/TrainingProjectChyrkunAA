@@ -8,7 +8,10 @@ import by.chyrkun.training.service.receiver.UserReceiver;
 import by.chyrkun.training.service.resource.MessageManager;
 import by.chyrkun.training.service.resource.PageManager;
 import by.chyrkun.training.service.util.InputSanitizer;
+import by.chyrkun.training.service.util.PasswordHasher;
 import by.chyrkun.training.service.validator.ParamValidator;
+
+import java.util.Arrays;
 
 /**
  * The class-command for login. Implements {@link Command}.
@@ -40,7 +43,7 @@ public class LogInCommand implements Command {
         else {
             login = InputSanitizer.sanitize(login);
             User user = receiver.getByLogin(login);
-            if ((user == null) || (!user.getPassword().equals(password))) {
+            if ((user == null) || (!Arrays.equals(user.getPassword(), PasswordHasher.getHash(password)))) {
                 requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("loginDataIsNotValid"));
                 result.setResponseType(CommandResult.ResponseType.FORWARD);
                 result.setPage(PageManager.getPage("fullpath.page.login"));
