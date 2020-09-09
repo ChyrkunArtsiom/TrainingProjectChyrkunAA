@@ -23,6 +23,12 @@
                     <p><fmt:message key="taskName"/>: ${task.name}</p>
                     <p><fmt:message key="startdate"/>: ${task.startdate}</p>
                     <p><fmt:message key="deadline"/>: ${task.deadline}</p>
+
+                    <fmt:parseDate value="${task.deadline}" pattern="yyyy-MM-dd" var="pattern"/>
+                    <fmt:formatDate var="deadline" value="${pattern}" pattern="dd/MMM/yyyy"/>
+                    <jsp:useBean id="now" class="java.util.Date"/>
+                    <fmt:formatDate var="today" value="${now}" pattern="dd/MMM/yyyy"/>
+
                     <c:if test="${sessionScope.role eq 'teacher'}">
                         <form name="DeleteTaskForm" method="post" action="${pageContext.request.contextPath}/session">
                             <input type="hidden" name="command" value="delete_task"/>
@@ -66,23 +72,27 @@
                                         <p><fmt:message key="review"/>: ${exercise.review}</p>
                                     </c:when>
                                     <c:otherwise>
-                                        <form name="CancelTaskForm" method="post" action="${pageContext.request.contextPath}/session">
-                                            <input type="hidden" name="command" value="unregister_task"/>
-                                            <input type="hidden" name="exercise_id" value="${exercise.id}"/>
-                                            <input type="hidden" name="task_id" value="${task.id}"/>
-                                            <fmt:message key="cancelRegistration" var="lang_cancelRegistration"/>
-                                            <input type="submit" class="btn btn-dark" value="${lang_cancelRegistration}"/>
-                                        </form>
+                                        <c:if test="${deadline ge today}">
+                                            <form name="CancelTaskForm" method="post" action="${pageContext.request.contextPath}/session">
+                                                <input type="hidden" name="command" value="unregister_task"/>
+                                                <input type="hidden" name="exercise_id" value="${exercise.id}"/>
+                                                <input type="hidden" name="task_id" value="${task.id}"/>
+                                                <fmt:message key="cancelRegistration" var="lang_cancelRegistration"/>
+                                                <input type="submit" class="btn btn-dark" value="${lang_cancelRegistration}"/>
+                                            </form>
+                                        </c:if>
                                     </c:otherwise>
                                 </c:choose>
                             </c:when>
                             <c:otherwise>
-                                <form name="RegisterTaskForm" method="post" action="${pageContext.request.contextPath}/session">
-                                    <input type="hidden" name="command" value="register_task"/>
-                                    <input type="hidden" name="task_id" value="${task.id}"/>
-                                    <fmt:message key="submitResult" var="lang_submitResult"/>
-                                    <input type="submit" class="btn btn-dark" value="${lang_submitResult}"/>
-                                </form>
+                                <c:if test="${deadline ge today}">
+                                    <form name="RegisterTaskForm" method="post" action="${pageContext.request.contextPath}/session">
+                                        <input type="hidden" name="command" value="register_task"/>
+                                        <input type="hidden" name="task_id" value="${task.id}"/>
+                                        <fmt:message key="submitResult" var="lang_submitResult"/>
+                                        <input type="submit" class="btn btn-dark" value="${lang_submitResult}"/>
+                                    </form>
+                                </c:if>
                             </c:otherwise>
                         </c:choose>
                     </c:if>

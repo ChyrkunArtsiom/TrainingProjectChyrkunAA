@@ -46,9 +46,9 @@
                                 <input type="hidden" name="exercise_id" value="${exercise.id}"/>
                                 <h2><fmt:message key="reviewExercise"/></h2>
                                 <div class="mb-3">
-                                    <label for="inputcomment"><fmt:message key="reviewText"/></label>
-                                    <div class="input-group">
-                                        <input type="text" id="inputcomment" name="review" maxlength="100" value=""/>
+                                    <label for="testcomment"><fmt:message key="reviewText"/></label>
+                                    <div class="input-group w-25">
+                                        <textarea id="testcomment" name="review" class="form-control md-textarea"  maxlength="100" rows="3"></textarea>
                                     </div>
                                 </div>
                                 <div class="mb-3">
