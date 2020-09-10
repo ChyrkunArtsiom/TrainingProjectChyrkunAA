@@ -7,7 +7,7 @@ import by.chyrkun.training.model.User;
  * Class for getting different values from RequestContent and creating {@link by.chyrkun.training.model.Entity} objects
  * based on that.
  */
-public class GetterFromRequestContent {
+public class RequestContentMapper {
     /**
      * Gets user fields from RequestContent. Returns a {@link User} object.
      *
@@ -21,5 +21,18 @@ public class GetterFromRequestContent {
         String secondname = requestContent.getRequestParameters().get("secondname")[0];
         byte[] hash = PasswordHasher.getHash(password);
         return new User(login, hash, firstname, secondname);
+    }
+
+    /**
+     * Sets user fields in RequestContent.
+     *
+     * @param user           the user
+     * @param requestContent the RequestContent object
+     */
+    public static void setUserInRequest(User user, RequestContent requestContent) {
+        requestContent.setSessionAttribute("user_id", user.getId());
+        requestContent.setSessionAttribute("userName", user.getLogin());
+        requestContent.setSessionAttribute("role", user.getRole().getName());
+        requestContent.setSessionAttribute("role_id", user.getRole().getId());
     }
 }

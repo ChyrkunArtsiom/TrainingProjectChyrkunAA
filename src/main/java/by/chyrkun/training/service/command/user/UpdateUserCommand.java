@@ -97,11 +97,20 @@ public class UpdateUserCommand implements Command {
             User user;
             user = new User(Integer.parseInt(user_id), login, firstname, secondname, role);
 
+            if (new_password != null) {
+                user.setPassword(PasswordHasher.getHash(new_password));
+            }
+
+            if (!old_username.equals(user.getLogin()) && userReceiver.getByLogin(user.getLogin()) != null) {
+                requestContent.setSessionAttribute(ERROR_MESSAGE, messages.getMessage("suchUserAlreadyExists"));
+                break first;
+            }
+
             if (userReceiver.update(user) != null && user_id.equals(session_user_id)) {
                 requestContent.setSessionAttribute("userName", user.getLogin());
                 requestContent.setSessionAttribute("role", user.getRole().getName());
                 requestContent.setSessionAttribute("role_id", user.getRole().getId());
-
+                requestContent.deleteSessionAttribute(ERROR_MESSAGE);
             }
         }finally {
             result.setPage(PageManager.getPage("shortpath.page.profile") + "/" + user_id);

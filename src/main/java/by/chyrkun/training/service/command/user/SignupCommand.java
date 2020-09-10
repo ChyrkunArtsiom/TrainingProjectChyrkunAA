@@ -10,8 +10,7 @@ import by.chyrkun.training.service.receiver.RoleReceiver;
 import by.chyrkun.training.service.receiver.UserReceiver;
 import by.chyrkun.training.service.resource.MessageManager;
 import by.chyrkun.training.service.resource.PageManager;
-import by.chyrkun.training.service.util.GetterFromRequestContent;
-import by.chyrkun.training.service.util.PasswordHasher;
+import by.chyrkun.training.service.util.RequestContentMapper;
 import by.chyrkun.training.service.validator.UserValidator;
 
 /**
@@ -41,7 +40,7 @@ public class SignupCommand implements Command {
     public CommandResult execute(RequestContent requestContent) {
         MessageManager messages = setLang(requestContent);
         String password = requestContent.getRequestParameters().get("password")[0];
-        User user = GetterFromRequestContent.getUserFromRequest(requestContent);
+        User user = RequestContentMapper.getUserFromRequest(requestContent);
         first: try {
             Role role = roleReceiver.getById(student_id);
             if (role == null) {
@@ -68,10 +67,11 @@ public class SignupCommand implements Command {
                 break first;
             }
             if (userReceiver.create(user)) {
-                    requestContent.setSessionAttribute("user_id", user.getId());
-                    requestContent.setSessionAttribute("userName", user.getLogin());
-                    result.setPage(PageManager.getPage("shortpath.page.main"));
-                    result.setResponseType(CommandResult.ResponseType.REDIRECT);
+                User created = userReceiver.getByLogin(user.getLogin());
+                user.setId(created.getId());
+                RequestContentMapper.setUserInRequest(user, requestContent);
+                result.setPage(PageManager.getPage("shortpath.page.main"));
+                result.setResponseType(CommandResult.ResponseType.REDIRECT);
             }
             else {
                 requestContent.setRequestAttribute(ERROR_MESSAGE, messages.getMessage("suchUserAlreadyExists"));

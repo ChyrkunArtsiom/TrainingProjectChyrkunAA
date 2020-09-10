@@ -103,13 +103,23 @@ public class RequestContent {
     }
 
     /**
-     * Set session attribute.
+     * Sets session attribute.
      *
      * @param name  the name
      * @param value the value
      */
     public void setSessionAttribute(String name, Object value){
         sessionAttributes.put(name, value);
+    }
+
+    /**
+     * Deletes session attribute.
+     *
+     * @param name the name
+     * @return the value
+     */
+    public Object deleteSessionAttribute(String name) {
+        return sessionAttributes.remove(name);
     }
 
     /**

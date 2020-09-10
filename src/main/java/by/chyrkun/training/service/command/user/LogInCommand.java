@@ -9,6 +9,7 @@ import by.chyrkun.training.service.resource.MessageManager;
 import by.chyrkun.training.service.resource.PageManager;
 import by.chyrkun.training.service.util.InputSanitizer;
 import by.chyrkun.training.service.util.PasswordHasher;
+import by.chyrkun.training.service.util.RequestContentMapper;
 import by.chyrkun.training.service.validator.ParamValidator;
 
 import java.util.Arrays;
@@ -49,10 +50,7 @@ public class LogInCommand implements Command {
                 result.setPage(PageManager.getPage("fullpath.page.login"));
             }
             else {
-                requestContent.setSessionAttribute("user_id", user.getId());
-                requestContent.setSessionAttribute("userName", user.getLogin());
-                requestContent.setSessionAttribute("role", user.getRole().getName());
-                requestContent.setSessionAttribute("role_id", user.getRole().getId());
+                RequestContentMapper.setUserInRequest(user, requestContent);
                 result.setPage(PageManager.getPage("shortpath.page.main"));
                 result.setResponseType(CommandResult.ResponseType.REDIRECT);
             }

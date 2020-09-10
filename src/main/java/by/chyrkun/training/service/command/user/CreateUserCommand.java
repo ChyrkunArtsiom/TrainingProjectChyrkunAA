@@ -12,7 +12,7 @@ import by.chyrkun.training.service.receiver.RoleReceiver;
 import by.chyrkun.training.service.receiver.UserReceiver;
 import by.chyrkun.training.service.resource.MessageManager;
 import by.chyrkun.training.service.resource.PageManager;
-import by.chyrkun.training.service.util.GetterFromRequestContent;
+import by.chyrkun.training.service.util.RequestContentMapper;
 import by.chyrkun.training.service.validator.UserValidator;
 
 /**
@@ -41,7 +41,7 @@ public class CreateUserCommand extends BaseCommand implements Command {
     public CommandResult execute(RequestContent requestContent) {
         MessageManager messages = setLang(requestContent);
         String password = requestContent.getRequestParameters().get("password")[0];
-        User user = GetterFromRequestContent.getUserFromRequest(requestContent);
+        User user = RequestContentMapper.getUserFromRequest(requestContent);
         int role_id = Integer.parseInt(requestContent.getRequestParameters().get(PARAM_NAME_ROLE_ID)[0]);
         first: try {
             Role role = roleReceiver.getById(role_id);

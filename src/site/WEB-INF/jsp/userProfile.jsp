@@ -94,7 +94,7 @@
                     <fmt:message key="edit" var="Edit"/>
                     <input type="submit" class="btn btn-dark" value="${Edit}"/>
                     <p>${sessionScope.errorMessage}</p>
-                    <c:remove var="message" scope="session"/>
+                    <c:remove var="errorMessage" scope="session"/>
                 </div>
             </div>
         </form>

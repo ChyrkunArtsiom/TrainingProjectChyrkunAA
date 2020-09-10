@@ -66,6 +66,7 @@
                     <c:if test="${sessionScope.role eq 'student'}">
                         <c:choose>
                             <c:when test="${performed eq 'true'}">
+                                <p><fmt:message key="submitted"/></p>
                                 <c:choose>
                                     <c:when test="${reviewed eq 'true'}">
                                         <p><fmt:message key="grade"/>: ${exercise.grade}</p>

@@ -6,7 +6,7 @@
 <html>
 
 <head>
-    <title>Error Page</title>
+    <title><fmt:message key="pageNotFound"/></title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.css">
 </head>
 
@@ -14,12 +14,16 @@
 <header>
     <c:import url="../fragments/header.jsp"/>
 </header>
-<h1>PAGE IS NOT FOUND</h1>
+<h1><fmt:message key="pageNotFound"/></h1>
+<p class="list-group">
+    <p><fmt:message key="somethingHasGoneWrong"/></p>
+</div>
+<%--
 Request from ${pageContext.errorData.requestURI} is failed <br/>
 Servlet name: ${pageContext.errorData.servletName} <br/>
 Status code: ${pageContext.errorData.statusCode} <br/>
 Message: ${requestScope['javax.servlet.error.message']}<br/>
-Exception: ${pageContext.exception} <br/>
+Exception: ${pageContext.exception} <br/>--%>
 </body>
 
 </html>
