@@ -28,6 +28,7 @@ class SignupCommandTest {
     @Mock
     private RoleReceiver roleReceiver;
     @Mock private UserReceiver userReceiver;
+    @Mock private User user;
 
     @InjectMocks
     private SignupCommand command;
@@ -53,6 +54,8 @@ class SignupCommandTest {
     void testExecute() throws EntityNotFoundServiceException {
         Mockito.lenient().when(roleReceiver.getById(Mockito.anyInt())).thenReturn(new Role(1, "student"));
         Mockito.lenient().when(userReceiver.create(Mockito.any(User.class))).thenReturn(true);
+        Mockito.lenient().when(userReceiver.getByLogin(Mockito.anyString())).thenReturn(
+                new User(1, "firstname", "secondname"));
         CommandResult result = command.execute(requestContent);
         assertEquals("Login", requestContent.getSessionAttributes().get("userName"));
         assertEquals(CommandResult.ResponseType.REDIRECT, result.getResponseType());
